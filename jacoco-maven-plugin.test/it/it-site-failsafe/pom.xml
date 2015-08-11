@@ -58,6 +58,9 @@
             <goals>
               <goal>report-integration</goal>
             </goals>
+            <configuration>
+              <dataFile>${project.basedir}/target/jacoco-foo.exec</dataFile>
+            </configuration>
           </execution>
         </executions>
       </plugin>
