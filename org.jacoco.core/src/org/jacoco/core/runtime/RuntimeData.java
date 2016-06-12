@@ -29,9 +29,9 @@ public class RuntimeData {
 	/** store for execution data */
 	protected final ExecutionDataStore store;
 
-	private long startTimeStamp;
+	protected long startTimeStamp;
 
-	private String sessionId;
+	protected String sessionId;
 
 	/**
 	 * Creates a new runtime.
@@ -78,7 +78,7 @@ public class RuntimeData {
 	 *            if <code>true</code> the current coverage information is also
 	 *            cleared
 	 */
-	public final void collect(final IExecutionDataVisitor executionDataVisitor,
+	public void collect(final IExecutionDataVisitor executionDataVisitor,
 			final ISessionInfoVisitor sessionInfoVisitor, final boolean reset) {
 		synchronized (store) {
 			final SessionInfo info = new SessionInfo(sessionId, startTimeStamp,
@@ -94,7 +94,7 @@ public class RuntimeData {
 	/**
 	 * Resets all coverage information.
 	 */
-	public final void reset() {
+	public void reset() {
 		synchronized (store) {
 			store.reset();
 			startTimeStamp = System.currentTimeMillis();
@@ -160,6 +160,7 @@ public class RuntimeData {
 	public boolean equals(final Object args) {
 		if (args instanceof Object[]) {
 			getProbes((Object[]) args);
+			return false;
 		}
 		return super.equals(args);
 	}

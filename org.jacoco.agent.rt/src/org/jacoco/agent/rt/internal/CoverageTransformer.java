@@ -11,15 +11,23 @@
  *******************************************************************************/
 package org.jacoco.agent.rt.internal;
 
+import java.io.IOException;
 import java.lang.instrument.ClassFileTransformer;
 import java.lang.instrument.IllegalClassFormatException;
 import java.security.CodeSource;
 import java.security.ProtectionDomain;
 
-import org.jacoco.core.instr.Instrumenter;
+import org.jacoco.core.internal.flow.ClassProbesAdapter;
+import org.jacoco.core.internal.instr.ClassInstrumenter;
+import org.jacoco.core.internal.instr.IProbeArrayStrategy;
+import org.jacoco.core.internal.instr.ProbeArrayStrategyFactory;
 import org.jacoco.core.runtime.AgentOptions;
 import org.jacoco.core.runtime.IRuntime;
+import org.jacoco.core.runtime.RuntimeData;
 import org.jacoco.core.runtime.WildcardMatcher;
+import org.objectweb.asm.ClassReader;
+import org.objectweb.asm.ClassVisitor;
+import org.objectweb.asm.ClassWriter;
 
 /**
  * Class file transformer to instrument classes for code coverage analysis.
@@ -33,7 +41,9 @@ public class CoverageTransformer implements ClassFileTransformer {
 		AGENT_PREFIX = toVMName(name.substring(0, name.lastIndexOf('.')));
 	}
 
-	private final Instrumenter instrumenter;
+	private final IRuntime runtime;
+
+	private final RuntimeData runtimeData;
 
 	private final IExceptionLogger logger;
 
@@ -60,8 +70,10 @@ public class CoverageTransformer implements ClassFileTransformer {
 	 *            logger for exceptions during instrumentation
 	 */
 	public CoverageTransformer(final IRuntime runtime,
-			final AgentOptions options, final IExceptionLogger logger) {
-		this.instrumenter = new Instrumenter(runtime);
+			final RuntimeData runtimeData, final AgentOptions options,
+			final IExceptionLogger logger) {
+		this.runtime = runtime;
+		this.runtimeData = runtimeData;
 		this.logger = logger;
 		// Class names will be reported in VM notation:
 		includes = new WildcardMatcher(toVMName(options.getIncludes()));
@@ -88,7 +100,7 @@ public class CoverageTransformer implements ClassFileTransformer {
 
 		try {
 			classFileDumper.dump(classname, classfileBuffer);
-			return instrumenter.instrument(classfileBuffer, classname);
+			return instrument(classfileBuffer, classname);
 		} catch (final Exception ex) {
 			final IllegalClassFormatException wrapper = new IllegalClassFormatException(
 					ex.getMessage());
@@ -96,6 +108,27 @@ public class CoverageTransformer implements ClassFileTransformer {
 			// Report this, as the exception is ignored by the JVM:
 			logger.logExeption(wrapper);
 			throw wrapper;
+		}
+	}
+
+	private byte[] instrument(final byte[] buffer, final String className)
+			throws IOException {
+		try {
+			// TODO(Godin): Java 9 support
+			final ClassReader reader = new ClassReader(buffer);
+			final IProbeArrayStrategy strategy = ProbeArrayStrategyFactory
+					.createFor(reader, runtime, runtimeData);
+
+			final ClassWriter writer = new ClassWriter(reader, 0);
+			final ClassVisitor visitor = new ClassProbesAdapter(
+					new ClassInstrumenter(strategy, writer), true);
+			reader.accept(visitor, ClassReader.EXPAND_FRAMES);
+			return writer.toByteArray();
+		} catch (RuntimeException e) {
+			final IOException ex = new IOException(String.format(
+					"Error while instrumenting class %s.", className));
+			ex.initCause(e);
+			throw ex;
 		}
 	}
 

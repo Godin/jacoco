@@ -28,6 +28,7 @@ import org.jacoco.core.runtime.AbstractRuntime;
 import org.jacoco.core.runtime.AgentOptions;
 import org.jacoco.core.runtime.AgentOptions.OutputMode;
 import org.jacoco.core.runtime.RuntimeData;
+import org.jacoco.core.internal.runtime.RuntimeData4;
 
 /**
  * The agent manages the life cycle of JaCoCo runtime.
@@ -95,7 +96,7 @@ public class Agent implements IAgent {
 	Agent(final AgentOptions options, final IExceptionLogger logger) {
 		this.options = options;
 		this.logger = logger;
-		this.data = new RuntimeData();
+		this.data = new RuntimeData4();
 	}
 
 	/**
