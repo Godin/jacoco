@@ -83,4 +83,7 @@ public class TargetLoader extends ClassLoader {
 		return super.loadClass(name, resolve);
 	}
 
+	public Class<?> get(String name) {
+		return findLoadedClass(name);
+	}
 }
