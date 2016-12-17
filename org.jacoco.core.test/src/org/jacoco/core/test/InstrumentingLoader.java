@@ -11,7 +11,10 @@
  *******************************************************************************/
 package org.jacoco.core.test;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 
 import org.jacoco.core.data.ExecutionDataStore;
 import org.jacoco.core.data.SessionInfoStore;
@@ -64,14 +67,34 @@ public final class InstrumentingLoader extends ClassLoader {
 			} catch (IOException e) {
 				throw new ClassNotFoundException("Unable to instrument", e);
 			}
+
 			final Class<?> c = defineClass(name, instrumented, 0,
 					instrumented.length);
 			if (resolve) {
 				resolveClass(c);
 			}
+
+			try {
+				final String simpleName = name
+						.substring(name.lastIndexOf('.') + 1);
+				save(simpleName, instrumented);
+			} catch (IOException e) {
+				throw new ClassNotFoundException("Unable to save " +
+						"instrumented", e);
+			}
+
 			return c;
 		}
 		return super.loadClass(name, resolve);
+	}
+
+	private void save(String name, byte[] bytes) throws IOException {
+		final File dir = new File("target/instrumented");
+		dir.mkdir();
+		final File file = new File(dir, name + ".class");
+		final OutputStream out = new FileOutputStream(file);
+		out.write(bytes);
+		out.close();
 	}
 
 	public ExecutionDataStore collect() {
