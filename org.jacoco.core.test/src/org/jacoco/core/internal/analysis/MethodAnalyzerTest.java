@@ -503,6 +503,16 @@ public class MethodAnalyzerTest implements IProbeIdGenerator {
 
 	// === Scenario: try/catch block ===
 
+	/**
+	 * <pre>
+	 *     void m(Exception e) {
+	 *         try {
+	 *             e.printStackTrace()
+	 *         } catch (Exception ex) {
+	 *         }
+	 *     }
+	 * </pre>
+	 */
 	private void createTryCatchBlock() {
 		Label l1 = new Label();
 		Label l2 = new Label();
@@ -516,9 +526,11 @@ public class MethodAnalyzerTest implements IProbeIdGenerator {
 				"printStackTrace", "()V", false);
 		method.visitLabel(l2);
 		method.visitJumpInsn(Opcodes.GOTO, l4);
+		// exception handler
 		method.visitLabel(l3);
 		method.visitLineNumber(1002, l3);
 		method.visitVarInsn(Opcodes.ASTORE, 1);
+		// after exception handler
 		method.visitLabel(l4);
 		method.visitLineNumber(1004, l4);
 		method.visitInsn(Opcodes.RETURN);
