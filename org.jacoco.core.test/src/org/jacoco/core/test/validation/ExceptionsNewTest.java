@@ -38,12 +38,14 @@ public class ExceptionsNewTest extends ValidationTestBase {
         assertLine("case-3", ICounter.NOT_COVERED);
 
         assertLine("case-4_1", ICounter.NOT_COVERED);
-        assertLine("case-4_2", ICounter.FULLY_COVERED);
+        // TODO(Godin): affected by changes in javac
+        assertLine("case-4_2", ICounter.EMPTY);
 
         assertLine("case-5", ICounter.FULLY_COVERED);
 
         assertLine("case-6_1", ICounter.FULLY_COVERED);
-        assertLine("case-6_2", ICounter.FULLY_COVERED);
+        // TODO(Godin): affected by changes in javac
+        assertLine("case-6_2", ICounter.EMPTY);
     }
 
 }
