@@ -83,7 +83,7 @@
               <cloneProjectsTo>${project.build.directory}/it</cloneProjectsTo>
               <postBuildHookScript>../../../src/test/resources/verify</postBuildHookScript>
               <goals>
-                <goal>verify</goal>
+                <goal>verify --errors</goal>
               </goals>
             </configuration>
           </execution>
