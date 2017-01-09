@@ -104,7 +104,7 @@ public class LabelInfoTest {
 		testNeedsProbe(true, true, false, false);
 		testNeedsProbe(false, false, true, false);
 		testNeedsProbe(true, false, true, true);
-		testNeedsProbe(false, true, true, true);
+		testNeedsProbe(false, true, true, false);
 		testNeedsProbe(true, true, true, true);
 	}
 

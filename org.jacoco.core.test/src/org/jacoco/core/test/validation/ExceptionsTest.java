@@ -30,14 +30,14 @@ public class ExceptionsTest extends ValidationTestBase {
 		// 0. Implicit NullPointerException
 		// Currently no coverage at all, as we don't see when a block aborts
 		// somewhere in the middle.
-		assertLine("implicitNullPointerException.before", ICounter.NOT_COVERED);
+		assertLine("implicitNullPointerException.before", ICounter.FULLY_COVERED);
 		assertLine("implicitNullPointerException.exception",
 				ICounter.NOT_COVERED);
 		assertLine("implicitNullPointerException.after", ICounter.NOT_COVERED);
 
 		// 1. Implicit Exception
 		assertLine("implicitException.before", ICounter.FULLY_COVERED);
-		assertLine("implicitException.exception", ICounter.NOT_COVERED);
+		assertLine("implicitException.exception", ICounter.FULLY_COVERED);
 		assertLine("implicitException.after", ICounter.NOT_COVERED);
 
 		// 2. Explicit Exception
@@ -54,7 +54,7 @@ public class ExceptionsTest extends ValidationTestBase {
 		assertLine("implicitExceptionTryCatch.beforeBlock",
 				ICounter.FULLY_COVERED);
 		assertLine("implicitExceptionTryCatch.before", ICounter.FULLY_COVERED);
-		assertLine("implicitExceptionTryCatch.exception", ICounter.NOT_COVERED);
+		assertLine("implicitExceptionTryCatch.exception", ICounter.FULLY_COVERED);
 		assertLine("implicitExceptionTryCatch.after", ICounter.NOT_COVERED);
 		assertLine("implicitExceptionTryCatch.catchBlock",
 				ICounter.FULLY_COVERED);
@@ -65,7 +65,7 @@ public class ExceptionsTest extends ValidationTestBase {
 		assertLine("implicitExceptionTryCatchAfterCondition.condition",
 				ICounter.FULLY_COVERED, 1, 1);
 		assertLine("implicitExceptionTryCatchAfterCondition.exception",
-				ICounter.NOT_COVERED);
+				ICounter.FULLY_COVERED);
 		assertLine("implicitExceptionTryCatchAfterCondition.catchBlock",
 				ICounter.FULLY_COVERED);
 
@@ -88,7 +88,7 @@ public class ExceptionsTest extends ValidationTestBase {
 		assertLine("implicitExceptionFinally.beforeBlock",
 				ICounter.FULLY_COVERED);
 		assertLine("implicitExceptionFinally.before", ICounter.FULLY_COVERED);
-		assertLine("implicitExceptionFinally.exception", ICounter.NOT_COVERED);
+		assertLine("implicitExceptionFinally.exception", ICounter.FULLY_COVERED);
 		assertLine("implicitExceptionFinally.after", ICounter.NOT_COVERED);
 		assertLine("implicitExceptionFinally.finallyBlock",
 				ICounter.PARTLY_COVERED);

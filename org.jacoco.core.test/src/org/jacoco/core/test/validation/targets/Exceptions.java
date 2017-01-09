@@ -28,6 +28,12 @@ public class Exceptions {
 		ex(); // $line-case-1$
 	} // $line-case-1_1$
 
+	/**
+	 * Probe should be inserted even if method invocation is not last
+	 * instruction on a line (e.g. as in this case where {@code pop} follows
+	 * invocation), otherwise previous instructions up to previous probe won't
+	 * be marked as covered.
+	 */
 	private static void case2() {
 		int x = 0; // $line-case-2$
 		// IntelliJ marks next line as fully covered

@@ -15,6 +15,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.jacoco.core.internal.instr.InstrSupport;
+import org.objectweb.asm.Handle;
 import org.objectweb.asm.Label;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
@@ -77,8 +78,18 @@ public final class MethodProbesAdapter extends MethodVisitor {
 		probesVisitor.visitTryCatchBlock(start, end, handler, type);
 	}
 
+	/**
+	 * @see LabelFlowAnalyzer#instructions
+	 */
+	private int instructions;
+
+	private Label currentLabel;
+
 	@Override
 	public void visitLabel(final Label label) {
+		instructions = 0;
+		currentLabel = label;
+
 		if (LabelInfo.needsProbe(label)) {
 			if (tryCatchProbeLabels.containsKey(label)) {
 				probesVisitor.visitLabel(tryCatchProbeLabels.get(label));
@@ -104,6 +115,70 @@ public final class MethodProbesAdapter extends MethodVisitor {
 			probesVisitor.visitInsn(opcode);
 			break;
 		}
+		instructions++;
+	}
+
+	@Override
+	public void visitIntInsn(int opcode, int operand) {
+		super.visitIntInsn(opcode, operand);
+		instructions++;
+	}
+
+	@Override
+	public void visitVarInsn(int opcode, int var) {
+		super.visitVarInsn(opcode, var);
+		instructions++;
+	}
+
+	@Override
+	public void visitTypeInsn(int opcode, String type) {
+		super.visitTypeInsn(opcode, type);
+		instructions++;
+	}
+
+	@Override
+	public void visitFieldInsn(int opcode, String owner, String name,
+			String desc) {
+		super.visitFieldInsn(opcode, owner, name, desc);
+		instructions++;
+	}
+
+	@Override
+	public void visitMethodInsn(int opcode, String owner, String name,
+			String desc, boolean itf) {
+		instructions++;
+		if (/* TODO(Godin): why? */currentLabel != null
+				&& instructions == LabelInfo.getLastInvocationInstruction(currentLabel)) {
+			probesVisitor.visitMethodInsnWithProbe(opcode, owner, name, desc,
+					itf, idGenerator.nextId());
+		} else {
+			probesVisitor.visitMethodInsn(opcode, owner, name, desc, itf);
+		}
+	}
+
+	@Override
+	public void visitInvokeDynamicInsn(String name, String desc, Handle bsm,
+			Object... bsmArgs) {
+		super.visitInvokeDynamicInsn(name, desc, bsm, bsmArgs);
+		instructions++;
+	}
+
+	@Override
+	public void visitLdcInsn(Object cst) {
+		super.visitLdcInsn(cst);
+		instructions++;
+	}
+
+	@Override
+	public void visitIincInsn(int var, int increment) {
+		super.visitIincInsn(var, increment);
+		instructions++;
+	}
+
+	@Override
+	public void visitMultiANewArrayInsn(String desc, int dims) {
+		super.visitMultiANewArrayInsn(desc, dims);
+		instructions++;
 	}
 
 	@Override
@@ -114,6 +189,7 @@ public final class MethodProbesAdapter extends MethodVisitor {
 		} else {
 			probesVisitor.visitJumpInsn(opcode, label);
 		}
+		instructions++;
 	}
 
 	private int jumpPopCount(final int opcode) {

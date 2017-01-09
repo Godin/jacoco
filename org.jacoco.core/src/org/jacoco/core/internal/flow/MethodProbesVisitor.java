@@ -93,6 +93,10 @@ public abstract class MethodProbesVisitor extends MethodVisitor {
 	public void visitInsnWithProbe(final int opcode, final int probeId) {
 	}
 
+	public void visitMethodInsnWithProbe(int opcode, String owner, String
+			name, String desc, boolean itf, int probeId) {
+	}
+
 	/**
 	 * Visits a TABLESWITCH instruction with optional probes for each target
 	 * label. Implementations can be optimized based on the fact that the same

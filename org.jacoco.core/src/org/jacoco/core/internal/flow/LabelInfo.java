@@ -139,8 +139,7 @@ public final class LabelInfo {
 	 */
 	public static boolean needsProbe(final Label label) {
 		final LabelInfo info = get(label);
-		return info != null && info.successor
-				&& (info.multiTarget || info.methodInvocationLine);
+		return info != null && info.successor && (info.multiTarget);
 	}
 
 	/**
@@ -282,4 +281,15 @@ public final class LabelInfo {
 		return info;
 	}
 
+	private int lastInvocationInstruction;
+
+	static void setLastInvocationInstruction(final Label label,
+			final int instruction) {
+		create(label).lastInvocationInstruction = instruction;
+	}
+
+	static int getLastInvocationInstruction(final Label label) {
+		LabelInfo info = get(label);
+		return info == null ? 0 : info.lastInvocationInstruction;
+	}
 }

@@ -225,6 +225,13 @@ public class MethodAnalyzer extends MethodProbesVisitor {
 	}
 
 	@Override
+	public void visitMethodInsnWithProbe(int opcode, String owner, String
+			name, String desc, boolean itf, int probeId) {
+		visitInsn();
+		addProbeWithoutBranch(probeId);
+	}
+
+	@Override
 	public void visitTableSwitchInsnWithProbes(final int min, final int max,
 			final Label dflt, final Label[] labels, final IFrame frame) {
 		visitSwitchInsnWithProbes(dflt, labels);
@@ -281,6 +288,12 @@ public class MethodAnalyzer extends MethodProbesVisitor {
 			coverage.increment(instrCounter, branchCounter, i.getLine());
 		}
 		coverage.incrementMethodCounter();
+	}
+
+	private void addProbeWithoutBranch(final int probeId) {
+		if (probes != null && probes[probeId]) {
+			coveredProbes.add(lastInsn);
+		}
 	}
 
 	private void addProbe(final int probeId) {

@@ -58,6 +58,15 @@ public final class LabelFlowAnalyzer extends MethodVisitor {
 	 */
 	Label lineStart = null;
 
+	private Label currentLabel = null;
+
+	/**
+	 * @see MethodProbesAdapter#instructions
+	 */
+	private int instructions = 0;
+
+	private int lastInvocationInstruction;
+
 	/**
 	 * Create new instance.
 	 */
@@ -86,10 +95,17 @@ public final class LabelFlowAnalyzer extends MethodVisitor {
 		}
 		successor = opcode != Opcodes.GOTO;
 		first = false;
+		instructions++;
 	}
 
 	@Override
 	public void visitLabel(final Label label) {
+		if (currentLabel != null) {
+			LabelInfo.setLastInvocationInstruction(currentLabel, lastInvocationInstruction);
+		}
+		instructions = 0;
+		currentLabel = label;
+
 		if (first) {
 			LabelInfo.setTarget(label);
 		}
@@ -152,24 +168,28 @@ public final class LabelFlowAnalyzer extends MethodVisitor {
 			break;
 		}
 		first = false;
+		instructions++;
 	}
 
 	@Override
 	public void visitIntInsn(final int opcode, final int operand) {
 		successor = true;
 		first = false;
+		instructions++;
 	}
 
 	@Override
 	public void visitVarInsn(final int opcode, final int var) {
 		successor = true;
 		first = false;
+		instructions++;
 	}
 
 	@Override
 	public void visitTypeInsn(final int opcode, final String type) {
 		successor = true;
 		first = false;
+		instructions++;
 	}
 
 	@Override
@@ -177,6 +197,7 @@ public final class LabelFlowAnalyzer extends MethodVisitor {
 			final String name, final String desc) {
 		successor = true;
 		first = false;
+		instructions++;
 	}
 
 	@Override
@@ -185,14 +206,19 @@ public final class LabelFlowAnalyzer extends MethodVisitor {
 		successor = true;
 		first = false;
 		markMethodInvocationLine();
+		instructions++;
+		lastInvocationInstruction = instructions;
 	}
 
+	// TODO(Godin): add validation test which seems to be missing
 	@Override
 	public void visitInvokeDynamicInsn(final String name, final String desc,
 			final Handle bsm, final Object... bsmArgs) {
 		successor = true;
 		first = false;
 		markMethodInvocationLine();
+		instructions++;
+		lastInvocationInstruction = instructions;
 	}
 
 	private void markMethodInvocationLine() {
@@ -205,18 +231,21 @@ public final class LabelFlowAnalyzer extends MethodVisitor {
 	public void visitLdcInsn(final Object cst) {
 		successor = true;
 		first = false;
+		instructions++;
 	}
 
 	@Override
 	public void visitIincInsn(final int var, final int increment) {
 		successor = true;
 		first = false;
+		instructions++;
 	}
 
 	@Override
 	public void visitMultiANewArrayInsn(final String desc, final int dims) {
 		successor = true;
 		first = false;
+		instructions++;
 	}
 
 }
