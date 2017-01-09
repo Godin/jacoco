@@ -16,7 +16,6 @@ public class WIP {
     private final Object o;
 
     private WIP() {
-        // FIXME(Godin): ArrayIndexOutOfBoundsException
         o = new Object();
     }
 

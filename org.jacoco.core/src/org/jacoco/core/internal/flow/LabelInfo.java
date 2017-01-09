@@ -290,6 +290,6 @@ public final class LabelInfo {
 
 	static int getLastInvocationInstruction(final Label label) {
 		LabelInfo info = get(label);
-		return info == null ? 0 : info.lastInvocationInstruction;
+		return info == null ? -1 : info.lastInvocationInstruction;
 	}
 }

@@ -87,8 +87,11 @@ public final class MethodProbesAdapter extends MethodVisitor {
 
 	@Override
 	public void visitLabel(final Label label) {
-		instructions = 0;
-		currentLabel = label;
+		// TODO(Godin): add explanation for next condition
+		if (LabelInfo.getLastInvocationInstruction(label) != -1) {
+			instructions = 0;
+			currentLabel = label;
+		}
 
 		if (LabelInfo.needsProbe(label)) {
 			if (tryCatchProbeLabels.containsKey(label)) {
