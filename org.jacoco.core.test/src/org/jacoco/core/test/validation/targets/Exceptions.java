@@ -56,7 +56,8 @@ import static org.jacoco.core.test.validation.targets.Stubs.nop;
  * </pre>
  *
  * <!-- TODO seems that we lack probe at the beginning of method, but addition
- * will not harm at least getters as they don't contain method invocations -->
+ * will harm only methods that have method invocations on first line, i.e. not
+ * getters and setters -->
  *
  * <!-- TODO how this affects counter "covered lines"? -->
  */
