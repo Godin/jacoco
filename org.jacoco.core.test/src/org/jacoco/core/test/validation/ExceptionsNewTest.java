@@ -36,10 +36,8 @@ public class ExceptionsNewTest extends ValidationTestBase {
 
     @Test
     public void run() {
-        assertLine("constructor", ICounter.PARTLY_COVERED);
-
         assertLine("case-1", ICounter.EMPTY);
-        assertLine("case-1_0", ICounter.FULLY_COVERED);
+        assertLine("case-1_0", ICounter.NOT_COVERED);
         assertLine("case-1_1", ICounter.NOT_COVERED);
 
         assertLine("case-1_2", ICounter.FULLY_COVERED);
@@ -48,7 +46,7 @@ public class ExceptionsNewTest extends ValidationTestBase {
         assertLine("case-1_4", ICounter.FULLY_COVERED);
 
         assertLine("case-1_1_0", ICounter.EMPTY);
-        assertLine("case-1_1_1", ICounter.FULLY_COVERED);
+        assertLine("case-1_1_1", ICounter.NOT_COVERED);
         assertLine("case-1_1_2", ICounter.NOT_COVERED);
 
         assertLine("case-2", ICounter.FULLY_COVERED);
@@ -68,9 +66,9 @@ public class ExceptionsNewTest extends ValidationTestBase {
         // TODO(Godin): affected by changes in javac
         assertLine("case-4_2", ICounter.EMPTY);
 
-        assertLine("case-5", ICounter.FULLY_COVERED);
+        assertLine("case-5", ICounter.NOT_COVERED);
 
-        assertLine("case-6_1", ICounter.FULLY_COVERED);
+        assertLine("case-6_1", ICounter.NOT_COVERED);
         // TODO(Godin): affected by changes in javac
         assertLine("case-6_2", ICounter.EMPTY);
     }

@@ -105,16 +105,8 @@ public class MethodAnalyzer extends MethodProbesVisitor {
 		}
 	}
 
-	private boolean instructionAfterCoveredProbe;
-
 	private void visitInsn() {
 		final Instruction insn = new Instruction(currentLine);
-
-		if (LabelInfo.IMPL == LabelInfo.I.NEW2 && instructionAfterCoveredProbe) {
-			insn.setCovered();
-			instructionAfterCoveredProbe = false;
-		}
-
 		instructions.add(insn);
 		if (lastInsn != null) {
 			insn.setPredecessor(lastInsn);
@@ -308,7 +300,6 @@ public class MethodAnalyzer extends MethodProbesVisitor {
 		lastInsn.addBranch();
 		if (probes != null && probes[probeId]) {
 			coveredProbes.add(lastInsn);
-			instructionAfterCoveredProbe = true;
 		}
 	}
 
