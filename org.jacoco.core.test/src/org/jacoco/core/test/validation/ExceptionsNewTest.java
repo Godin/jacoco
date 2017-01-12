@@ -12,13 +12,26 @@
 package org.jacoco.core.test.validation;
 
 import org.jacoco.core.analysis.ICounter;
+import org.jacoco.core.internal.flow.LabelInfo;
 import org.jacoco.core.test.validation.targets.Exceptions;
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 public class ExceptionsNewTest extends ValidationTestBase {
 
     public ExceptionsNewTest() {
         super(Exceptions.class);
+    }
+
+    @BeforeClass
+    public static void init() {
+        LabelInfo.OLD_IMPLEMENTATION = false;
+    }
+
+    @AfterClass
+    public static void done() {
+        LabelInfo.OLD_IMPLEMENTATION = false;
     }
 
     @Test

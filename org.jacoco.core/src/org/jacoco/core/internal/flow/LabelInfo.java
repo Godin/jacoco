@@ -20,6 +20,8 @@ import org.objectweb.asm.Label;
  */
 public final class LabelInfo {
 
+	public static boolean OLD_IMPLEMENTATION = false;
+
 	/**
 	 * Reserved ID for "no probe".
 	 */
@@ -139,7 +141,8 @@ public final class LabelInfo {
 	 */
 	public static boolean needsProbe(final Label label) {
 		final LabelInfo info = get(label);
-		return info != null && info.successor && (info.multiTarget);
+		return info != null && info.successor && (info.multiTarget
+				|| (OLD_IMPLEMENTATION && info.methodInvocationLine));
 	}
 
 	/**

@@ -93,6 +93,9 @@ public abstract class MethodProbesVisitor extends MethodVisitor {
 	public void visitInsnWithProbe(final int opcode, final int probeId) {
 	}
 
+	/**
+	 * Invoked only if {@link LabelInfo#OLD_IMPLEMENTATION} is false.
+	 */
 	public void visitMethodInsnWithProbe(int opcode, String owner, String
 			name, String desc, boolean itf, int probeId) {
 	}
