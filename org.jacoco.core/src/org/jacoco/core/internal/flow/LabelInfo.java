@@ -20,7 +20,13 @@ import org.objectweb.asm.Label;
  */
 public final class LabelInfo {
 
-	public static boolean OLD_IMPLEMENTATION = false;
+	public enum I {
+		OLD,
+		NEW1,
+		NEW2
+	}
+
+	public static I IMPL = I.NEW1;
 
 	/**
 	 * Reserved ID for "no probe".
@@ -141,8 +147,16 @@ public final class LabelInfo {
 	 */
 	public static boolean needsProbe(final Label label) {
 		final LabelInfo info = get(label);
-		return info != null && info.successor && (info.multiTarget
-				|| (OLD_IMPLEMENTATION && info.methodInvocationLine));
+		switch (LabelInfo.IMPL) {
+			case NEW2:
+			case OLD:
+				return info != null && info.successor && (info.multiTarget
+						&& info.methodInvocationLine);
+			case NEW1:
+				return info != null && info.successor && info.multiTarget;
+			default:
+				throw new AssertionError();
+		}
 	}
 
 	/**

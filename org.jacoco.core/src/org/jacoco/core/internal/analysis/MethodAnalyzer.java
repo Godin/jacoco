@@ -11,9 +11,6 @@
  *******************************************************************************/
 package org.jacoco.core.internal.analysis;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.jacoco.core.analysis.ICounter;
 import org.jacoco.core.analysis.IMethodCoverage;
 import org.jacoco.core.analysis.ISourceNode;
@@ -23,6 +20,9 @@ import org.jacoco.core.internal.flow.LabelInfo;
 import org.jacoco.core.internal.flow.MethodProbesVisitor;
 import org.objectweb.asm.Handle;
 import org.objectweb.asm.Label;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A {@link MethodProbesVisitor} that analyzes which statements and branches of
@@ -105,8 +105,16 @@ public class MethodAnalyzer extends MethodProbesVisitor {
 		}
 	}
 
+	private boolean instructionAfterCoveredProbe;
+
 	private void visitInsn() {
 		final Instruction insn = new Instruction(currentLine);
+
+		if (LabelInfo.IMPL == LabelInfo.I.NEW2 && instructionAfterCoveredProbe) {
+			insn.setCovered();
+			instructionAfterCoveredProbe = false;
+		}
+
 		instructions.add(insn);
 		if (lastInsn != null) {
 			insn.setPredecessor(lastInsn);
@@ -300,6 +308,7 @@ public class MethodAnalyzer extends MethodProbesVisitor {
 		lastInsn.addBranch();
 		if (probes != null && probes[probeId]) {
 			coveredProbes.add(lastInsn);
+			instructionAfterCoveredProbe = true;
 		}
 	}
 

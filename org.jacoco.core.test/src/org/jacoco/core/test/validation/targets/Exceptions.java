@@ -62,6 +62,13 @@ import static org.jacoco.core.test.validation.targets.Stubs.nop;
  */
 public class Exceptions {
 
+	public Exceptions() {
+	}
+
+	public Exceptions(boolean p) {
+		exReturn(); // $line-constructor$
+	}
+
 	/**
 	 * Declares that has return value, but always throws a
 	 * {@link RuntimeException}.
@@ -200,6 +207,11 @@ public class Exceptions {
 		}
 		try {
 			case6();
+		} catch (Exception e) {
+		}
+
+		try {
+			new Exceptions(false);
 		} catch (Exception e) {
 		}
 	}

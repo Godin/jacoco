@@ -150,7 +150,7 @@ public final class MethodProbesAdapter extends MethodVisitor {
 	public void visitMethodInsn(int opcode, String owner, String name,
 			String desc, boolean itf) {
 		instructions++;
-		if (!LabelInfo.OLD_IMPLEMENTATION
+		if (LabelInfo.IMPL == LabelInfo.I.NEW1
 				&& /* TODO(Godin): why? */currentLabel != null
 				&& instructions == LabelInfo.getLastInvocationInstruction(currentLabel)) {
 			probesVisitor.visitMethodInsnWithProbe(opcode, owner, name, desc,

@@ -26,16 +26,18 @@ public class ExceptionsNewTest extends ValidationTestBase {
 
     @BeforeClass
     public static void init() {
-        LabelInfo.OLD_IMPLEMENTATION = false;
+        LabelInfo.IMPL = LabelInfo.I.NEW2;
     }
 
     @AfterClass
     public static void done() {
-        LabelInfo.OLD_IMPLEMENTATION = false;
+        LabelInfo.IMPL = LabelInfo.I.NEW1;
     }
 
     @Test
     public void run() {
+        assertLine("constructor", ICounter.PARTLY_COVERED);
+
         assertLine("case-1", ICounter.EMPTY);
         assertLine("case-1_0", ICounter.FULLY_COVERED);
         assertLine("case-1_1", ICounter.NOT_COVERED);
