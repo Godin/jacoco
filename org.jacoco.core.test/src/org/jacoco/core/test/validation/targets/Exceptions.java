@@ -37,7 +37,8 @@ import static org.jacoco.core.test.validation.targets.Stubs.nop;
  * <h1>Current implementation</h1>
  *
  * <pre>
- * Probe at the beginning of a line marking previous instructions as executed.
+ * Probe at the beginning of a line that contains method invocation(s).
+ * Previous instructions marked as executed.
  * </pre>
  *
  * <h1>Current idea</h1>
@@ -49,9 +50,13 @@ import static org.jacoco.core.test.validation.targets.Stubs.nop;
  * <h1>Another idea</h1>
  *
  * <pre>
- * Probe at the beginning of a line marking next instruction as executed.
+ * Use probe at the beginning of a line that contains method invocation(s)
+ * to mark next instruction.
  * This supposed to mark line as partly covered.
  * </pre>
+ *
+ * <!-- TODO seems that we lack probe at the beginning of method, but addition
+ * will not harm at least getters as they don't contain method invocations -->
  *
  * <!-- TODO how this affects counter "covered lines"? -->
  */
