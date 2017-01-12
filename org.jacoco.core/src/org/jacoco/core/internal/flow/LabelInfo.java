@@ -151,7 +151,7 @@ public final class LabelInfo {
 			case NEW2:
 			case OLD:
 				return info != null && info.successor && (info.multiTarget
-						&& info.methodInvocationLine);
+						|| info.methodInvocationLine);
 			case NEW1:
 				return info != null && info.successor && info.multiTarget;
 			default:
