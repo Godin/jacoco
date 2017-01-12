@@ -147,13 +147,15 @@ public final class LabelInfo {
 	 */
 	public static boolean needsProbe(final Label label) {
 		final LabelInfo info = get(label);
+		if (info == null) {
+			return false;
+		}
 		switch (LabelInfo.IMPL) {
 			case NEW2:
 			case OLD:
-				return info != null && info.successor && (info.multiTarget
-						|| info.methodInvocationLine);
+				return info.successor && (info.multiTarget || info.methodInvocationLine);
 			case NEW1:
-				return info != null && info.successor && info.multiTarget;
+				return info.successor && info.multiTarget;
 			default:
 				throw new AssertionError();
 		}
