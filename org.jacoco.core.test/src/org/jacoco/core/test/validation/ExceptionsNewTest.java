@@ -23,7 +23,8 @@ public class ExceptionsNewTest extends ValidationTestBase {
 
     @Test
     public void run() {
-        assertLine("case-1", ICounter.FULLY_COVERED);
+        assertLine("case-1", ICounter.EMPTY);
+        assertLine("case-1_0", ICounter.FULLY_COVERED);
         assertLine("case-1_1", ICounter.NOT_COVERED);
 
         assertLine("case-1_2", ICounter.FULLY_COVERED);
@@ -31,12 +32,23 @@ public class ExceptionsNewTest extends ValidationTestBase {
         assertLine("case-1_3", ICounter.NOT_COVERED);
         assertLine("case-1_4", ICounter.FULLY_COVERED);
 
+        assertLine("case-1_1_0", ICounter.EMPTY);
+        assertLine("case-1_1_1", ICounter.FULLY_COVERED);
+        assertLine("case-1_1_2", ICounter.NOT_COVERED);
+
         assertLine("case-2", ICounter.FULLY_COVERED);
         assertLine("case-2_1", ICounter.PARTLY_COVERED);
         assertLine("case-2_2", ICounter.NOT_COVERED);
 
-        assertLine("case-3", ICounter.NOT_COVERED);
+        assertLine("case-3", ICounter.EMPTY);
+        assertLine("case-3_0", ICounter.NOT_COVERED);
+        assertLine("case-3_1", ICounter.NOT_COVERED);
 
+        assertLine("case-3_common", ICounter.EMPTY);
+        assertLine("case-3_common_0", ICounter.NOT_COVERED);
+        assertLine("case-3_common_1", ICounter.NOT_COVERED);
+
+        assertLine("case-3_workaround", ICounter.EMPTY);
         assertLine("case-4_1", ICounter.NOT_COVERED);
         // TODO(Godin): affected by changes in javac
         assertLine("case-4_2", ICounter.EMPTY);
