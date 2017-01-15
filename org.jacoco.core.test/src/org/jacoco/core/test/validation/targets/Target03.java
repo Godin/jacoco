@@ -13,6 +13,7 @@ package org.jacoco.core.test.validation.targets;
 
 import static org.jacoco.core.test.validation.targets.Stubs.ex;
 import static org.jacoco.core.test.validation.targets.Stubs.f;
+import static org.jacoco.core.test.validation.targets.Stubs.i2;
 import static org.jacoco.core.test.validation.targets.Stubs.nop;
 
 import org.jacoco.core.test.validation.targets.Stubs.StubException;
@@ -47,6 +48,10 @@ public class Target03 {
 		}
 		try {
 			implicitExceptionFinally();
+		} catch (StubException e) {
+		}
+		try {
+			wip();
 		} catch (StubException e) {
 		}
 	}
@@ -138,5 +143,16 @@ public class Target03 {
 			nop(); // $line-explicitExceptionFinally.finallyBlock$
 		} // $line-explicitExceptionFinally.finallyBlockEnd$
 	} // $line-explicitExceptionFinally.afterBlock$
+
+	/**
+	 * @see org.jacoco.core.internal.analysis.MethodAnalyzerTest#createTableSwitchMerge()
+	 */
+	private static void wip() {
+		switch (i2()) { // $line-wip.switch$
+		case 1:
+			nop();
+		}
+		ex(); // $line-wip.exception$
+	}
 
 }

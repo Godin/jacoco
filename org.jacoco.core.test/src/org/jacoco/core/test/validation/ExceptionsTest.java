@@ -27,6 +27,9 @@ public class ExceptionsTest extends ValidationTestBase {
 	@Test
 	public void testCoverageResult() {
 
+		assertLine("wip.switch", ICounter.FULLY_COVERED, 1, 1);
+		assertLine("wip.exception", ICounter.FULLY_COVERED);
+
 		// 0. Implicit NullPointerException
 		// Currently no coverage at all, as we don't see when a block aborts
 		// somewhere in the middle.
@@ -37,7 +40,7 @@ public class ExceptionsTest extends ValidationTestBase {
 
 		// 1. Implicit Exception
 		assertLine("implicitException.before", ICounter.FULLY_COVERED);
-		assertLine("implicitException.exception", ICounter.NOT_COVERED);
+		assertLine("implicitException.exception", ICounter.FULLY_COVERED);
 		assertLine("implicitException.after", ICounter.NOT_COVERED);
 
 		// 2. Explicit Exception
@@ -63,7 +66,7 @@ public class ExceptionsTest extends ValidationTestBase {
 		assertLine("implicitExceptionTryCatch.beforeBlock",
 				ICounter.FULLY_COVERED);
 		assertLine("implicitExceptionTryCatch.before", ICounter.FULLY_COVERED);
-		assertLine("implicitExceptionTryCatch.exception", ICounter.NOT_COVERED);
+		assertLine("implicitExceptionTryCatch.exception", ICounter.FULLY_COVERED);
 		assertLine("implicitExceptionTryCatch.after", ICounter.NOT_COVERED);
 		if (isJDKCompiler()) {
 			assertLine("implicitExceptionTryCatch.catch",
@@ -84,7 +87,7 @@ public class ExceptionsTest extends ValidationTestBase {
 		assertLine("implicitExceptionTryCatchAfterCondition.condition",
 				ICounter.FULLY_COVERED, 1, 1);
 		assertLine("implicitExceptionTryCatchAfterCondition.exception",
-				ICounter.NOT_COVERED);
+				ICounter.FULLY_COVERED);
 		assertLine("implicitExceptionTryCatchAfterCondition.catchBlock",
 				ICounter.FULLY_COVERED);
 
@@ -120,7 +123,7 @@ public class ExceptionsTest extends ValidationTestBase {
 		assertLine("implicitExceptionFinally.beforeBlock",
 				ICounter.FULLY_COVERED);
 		assertLine("implicitExceptionFinally.before", ICounter.FULLY_COVERED);
-		assertLine("implicitExceptionFinally.exception", ICounter.NOT_COVERED);
+		assertLine("implicitExceptionFinally.exception", ICounter.FULLY_COVERED);
 		assertLine("implicitExceptionFinally.after", ICounter.NOT_COVERED);
 		if (isJDKCompiler()) {
 			assertLine("implicitExceptionFinally.finally",

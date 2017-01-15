@@ -56,6 +56,15 @@ public class MethodAnalyzer extends MethodProbesVisitor {
 	private Instruction lastInsn;
 
 	/**
+	 * Targets of jumps immediately after probes that were executed. Since jump
+	 * instruction cannot throw exception, first instruction at the destination
+	 * should be marked as implicitly covered.
+	 */
+	private final List<Label> coveredJumpTargets = new ArrayList<Label>();
+
+	private boolean successorOfExecutedProbe = false;
+
+	/**
 	 * New Method analyzer for the given probe data.
 	 * 
 	 * @param name
@@ -119,6 +128,11 @@ public class MethodAnalyzer extends MethodProbesVisitor {
 			currentLabel.clear();
 		}
 		lastInsn = insn;
+
+		if (successorOfExecutedProbe) {
+			coveredProbes.add(insn);
+		}
+		successorOfExecutedProbe = false;
 	}
 
 	@Override
@@ -209,6 +223,13 @@ public class MethodAnalyzer extends MethodProbesVisitor {
 	public void visitProbe(final int probeId) {
 		addProbe(probeId);
 		lastInsn = null;
+		successorOfExecutedProbe = probes != null && probes[probeId];
+	}
+
+	private void addJumpTarget(final Label target, final int probeId) {
+		if (probes != null && probes[probeId]) {
+			coveredJumpTargets.add(target);
+		}
 	}
 
 	@Override
@@ -216,24 +237,41 @@ public class MethodAnalyzer extends MethodProbesVisitor {
 			final int probeId, final IFrame frame) {
 		visitInsn();
 		addProbe(probeId);
+		addJumpTarget(label, probeId);
+		if (successorOfExecutedProbe) {
+			// next instruction not successor, already set to false by visitInst
+			throw new AssertionError();
+		}
 	}
 
 	@Override
 	public void visitInsnWithProbe(final int opcode, final int probeId) {
 		visitInsn();
 		addProbe(probeId);
+		if (successorOfExecutedProbe) {
+			// next instruction not successor, already set to false by visitInst
+			throw new AssertionError();
+		}
 	}
 
 	@Override
 	public void visitTableSwitchInsnWithProbes(final int min, final int max,
 			final Label dflt, final Label[] labels, final IFrame frame) {
 		visitSwitchInsnWithProbes(dflt, labels);
+		if (successorOfExecutedProbe) {
+			// next instruction not successor, already set to false by visitInst
+			throw new AssertionError();
+		}
 	}
 
 	@Override
 	public void visitLookupSwitchInsnWithProbes(final Label dflt,
 			final int[] keys, final Label[] labels, final IFrame frame) {
 		visitSwitchInsnWithProbes(dflt, labels);
+		if (successorOfExecutedProbe) {
+			// next instruction not successor, already set to false by visitInst
+			throw new AssertionError();
+		}
 	}
 
 	private void visitSwitchInsnWithProbes(final Label dflt,
@@ -254,6 +292,7 @@ public class MethodAnalyzer extends MethodProbesVisitor {
 				jumps.add(new Jump(lastInsn, label));
 			} else {
 				addProbe(id);
+				addJumpTarget(label, id);
 			}
 			LabelInfo.setDone(label);
 		}
@@ -268,6 +307,9 @@ public class MethodAnalyzer extends MethodProbesVisitor {
 		// Propagate probe values:
 		for (final Instruction p : coveredProbes) {
 			p.setCovered();
+		}
+		for (final Label coveredJumpTarget : coveredJumpTargets) {
+			LabelInfo.getInstruction(coveredJumpTarget).setCovered();
 		}
 		// Report result:
 		coverage.ensureCapacity(firstLine, lastLine);

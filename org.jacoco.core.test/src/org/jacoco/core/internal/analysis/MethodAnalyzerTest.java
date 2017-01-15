@@ -170,13 +170,16 @@ public class MethodAnalyzerTest implements IProbeIdGenerator {
 		method.visitLineNumber(1001, l0);
 		method.visitVarInsn(Opcodes.ILOAD, 1);
 		Label l1 = new Label();
+		// visitJumpInsnWithProbe
 		method.visitJumpInsn(Opcodes.IFEQ, l1);
 		final Label l2 = new Label();
 		method.visitLabel(l2);
 		method.visitLineNumber(1002, l2);
 		method.visitInsn(Opcodes.NOP);
+		// visitProbe
 		method.visitLabel(l1);
 		method.visitLineNumber(1003, l1);
+		// visitInsnWithProbe
 		method.visitInsn(Opcodes.RETURN);
 	}
 
@@ -199,7 +202,7 @@ public class MethodAnalyzerTest implements IProbeIdGenerator {
 
 		assertLine(1001, 0, 2, 1, 1);
 		assertLine(1002, 1, 0, 0, 0);
-		assertLine(1003, 1, 0, 0, 0);
+		assertLine(1003, 0, 1, 0, 0);
 	}
 
 	@Test
@@ -210,7 +213,7 @@ public class MethodAnalyzerTest implements IProbeIdGenerator {
 
 		assertLine(1001, 0, 2, 1, 1);
 		assertLine(1002, 0, 1, 0, 0);
-		assertLine(1003, 1, 0, 0, 0);
+		assertLine(1003, 0, 1, 0, 0);
 	}
 
 	@Test
