@@ -18,6 +18,7 @@ import org.objectweb.asm.tree.LookupSwitchInsnNode;
 import org.objectweb.asm.tree.MethodInsnNode;
 import org.objectweb.asm.tree.MethodNode;
 import org.objectweb.asm.tree.TableSwitchInsnNode;
+import org.objectweb.asm.tree.TryCatchBlockNode;
 
 final class Filters {
 
@@ -32,12 +33,67 @@ final class Filters {
 	}
 
 	static void filter(final MethodNode methodNode, final IOutput output) {
+		// TODO is check of null only for tests?
+		if (methodNode.tryCatchBlocks != null) {
+			for (TryCatchBlockNode tryCatch : methodNode.tryCatchBlocks) {
+				filterSync(tryCatch, output);
+			}
+		}
+
 		AbstractInsnNode i = methodNode.instructions.getFirst();
 		while (i != null) {
 			if (isStringSwitchStart(i)) {
 				filterStringSwitch(i, output);
 			}
 			i = i.getNext();
+		}
+	}
+
+	private static void filterSync(final TryCatchBlockNode tryCatch,
+			final IOutput output) {
+		if (tryCatch.type != null) {
+			return;
+		}
+		if (tryCatch.start == tryCatch.handler) {
+			return;
+		}
+
+		// TODO ECJ
+
+		Seq exceptionPath = match(nextInstructionSkipFrames(tryCatch.handler),
+				new int[] { Opcodes.ASTORE, Opcodes.ALOAD, Opcodes.MONITOREXIT,
+						Opcodes.ALOAD, Opcodes.ATHROW });
+		if (exceptionPath == null) {
+			return;
+		}
+
+		for (AbstractInsnNode i = exceptionPath.first; i != exceptionPath.last; i = i
+				.getNext()) {
+			output.ignore(i);
+		}
+	}
+
+	private static Seq match(AbstractInsnNode start, int[] opcodes) {
+		AbstractInsnNode current = start;
+		for (int opcode : opcodes) {
+			if (current.getOpcode() != opcode) {
+				return null;
+			}
+			do {
+				current = current.getNext();
+			} while (current.getType() == AbstractInsnNode.LABEL
+					|| current.getType() == AbstractInsnNode.FRAME);
+		}
+		return new Seq(start, current.getPrevious());
+	}
+
+	static class Seq {
+		private final AbstractInsnNode first;
+		private final AbstractInsnNode last;
+
+		Seq(AbstractInsnNode first, AbstractInsnNode last) {
+			this.first = first;
+			this.last = last;
 		}
 	}
 

@@ -24,7 +24,7 @@ public class SynchronizedTest extends ValidationTestBase {
 	@Test
 	public void testCoverageResult() {
 		assertLine("monitorenter", ICounter.FULLY_COVERED);
-		assertLine("monitorexit", ICounter.PARTLY_COVERED);
+		assertLine("monitorexit", ICounter.FULLY_COVERED);
 
 		assertLine("explicitException.monitorenter", ICounter.FULLY_COVERED);
 		assertLine("explicitException.exception", ICounter.FULLY_COVERED);
@@ -33,7 +33,7 @@ public class SynchronizedTest extends ValidationTestBase {
 
 		assertLine("implicitException.monitorenter", ICounter.FULLY_COVERED);
 		assertLine("implicitException.exception", ICounter.NOT_COVERED);
-		assertLine("implicitException.monitorexit", ICounter.PARTLY_COVERED);
+		assertLine("implicitException.monitorexit", ICounter.NOT_COVERED);
 		assertLine("implicitException.after", ICounter.NOT_COVERED);
 	}
 
