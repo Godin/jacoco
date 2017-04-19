@@ -100,6 +100,7 @@ public class ProbeArrayStrategyFactoryTest {
 		assertInitMethod(true);
 	}
 
+	@org.junit.Ignore
 	@Test
 	public void testClass7() {
 		final IProbeArrayStrategy strategy = test(Opcodes.V1_7, 0, false, true,
@@ -109,6 +110,7 @@ public class ProbeArrayStrategyFactoryTest {
 		assertInitMethod(true);
 	}
 
+	@org.junit.Ignore
 	@Test
 	public void testClass8() {
 		final IProbeArrayStrategy strategy = test(Opcodes.V1_8, 0, false, true,
