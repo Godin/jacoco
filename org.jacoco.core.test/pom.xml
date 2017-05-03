@@ -36,6 +36,12 @@
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
     </dependency>
+
+    <dependency>
+      <groupId>org.sonarsource.java</groupId>
+      <artifactId>java-frontend</artifactId>
+      <version>4.7.1.9272</version>
+    </dependency>
   </dependencies>
 
   <profiles>
