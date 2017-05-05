@@ -11,17 +11,87 @@
  *******************************************************************************/
 package org.jacoco.core.internal.analysis.filter;
 
+import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.Opcodes;
+import org.objectweb.asm.commons.JSRInlinerAdapter;
 import org.objectweb.asm.tree.AbstractInsnNode;
+import org.objectweb.asm.tree.ClassNode;
 import org.objectweb.asm.tree.JumpInsnNode;
 import org.objectweb.asm.tree.MethodNode;
 import org.objectweb.asm.tree.TryCatchBlockNode;
 import org.objectweb.asm.tree.VarInsnNode;
+import org.objectweb.asm.util.Printer;
+import org.objectweb.asm.util.Textifier;
+import org.objectweb.asm.util.TraceMethodVisitor;
+
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 
 /**
  * Filters duplicates of finally blocks that compiler generates.
  */
 public final class FinallyFilter implements IFilter {
+
+	public static void main(String[] args) throws IOException {
+		// new Analyzer(null, null).analyzeAll(new
+		// File("/tmp/jacoco/colt-1.0.3/edu/oswego/cs/dl/util/concurrent/Rendezvous.class"));
+
+		String filename = "/tmp/jacoco/colt-1.0.3/edu/oswego/cs/dl/util/concurrent/Rendezvous.class";
+//		String filename = "/tmp/jacoco/Fun.class";
+		ClassReader classReader = new ClassReader(
+				new FileInputStream(filename));
+
+		final ClassNode classNode = new ClassNode();
+		classReader.accept(classNode, 0);
+
+		for (MethodNode node : classNode.methods) {
+			MethodNode nodeWithoutJsr = new MethodNode(Opcodes.ASM5,
+					node.access, node.name, node.desc, node.signature,
+					node.exceptions.toArray(new String[0]));
+			JSRInlinerAdapter adapter = new JSRInlinerAdapter(nodeWithoutJsr,
+					node.access, node.name, node.desc, node.signature,
+					node.exceptions.toArray(new String[0]));
+			node.accept(adapter);
+
+			System.out.println(InsnPrinter.prettyprint(nodeWithoutJsr));
+
+			new FinallyFilter().filter("", "", nodeWithoutJsr,
+					new IFilterOutput() {
+						public void ignore(AbstractInsnNode fromInclusive,
+								AbstractInsnNode toInclusive) {
+
+						}
+
+						public void merge(AbstractInsnNode i1,
+								AbstractInsnNode i2) {
+
+						}
+					});
+		}
+	}
+
+	public static class InsnPrinter {
+		private static final Printer printer = new Textifier();
+		private static final TraceMethodVisitor methodPrinter = new TraceMethodVisitor(printer);
+
+		public static String prettyprint(MethodNode m) {
+			StringWriter sw = new StringWriter();
+			sw.append(m.name + "\n");
+			for (TryCatchBlockNode t : m.tryCatchBlocks) {
+				t.accept(methodPrinter);
+				printer.print(new PrintWriter(sw));
+				printer.getText().clear();
+			}
+			for (AbstractInsnNode i = m.instructions.getFirst(); i != null; i = i.getNext()) {
+				i.accept(methodPrinter);
+				printer.print(new PrintWriter(sw));
+				printer.getText().clear();
+			}
+			return sw.toString();
+		}
+	}
 
 	public void filter(final String className, final String superClassName,
 			final MethodNode methodNode, final IFilterOutput output) {
