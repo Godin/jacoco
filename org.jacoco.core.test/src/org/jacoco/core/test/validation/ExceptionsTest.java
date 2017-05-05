@@ -48,11 +48,9 @@ public class ExceptionsTest extends ValidationTestBase {
 		// 3. Try/Catch Block Without Exception Thrown
 		assertLine("noExceptionTryCatch.beforeBlock", ICounter.FULLY_COVERED);
 		assertLine("noExceptionTryCatch.tryBlock", ICounter.FULLY_COVERED);
-		assertLine("noExceptionTryCatch.catch",
-				isJDKCompiler ? ICounter.NOT_COVERED : ICounter.PARTLY_COVERED);
+		assertLine("noExceptionTryCatch.catch", ICounter.NOT_COVERED);
 		assertLine("noExceptionTryCatch.catchBlock", ICounter.NOT_COVERED);
-		assertLine("noExceptionTryCatch.catchBlockEnd",
-				isJDKCompiler ? ICounter.FULLY_COVERED : ICounter.EMPTY);
+		assertLine("noExceptionTryCatch.catchBlockEnd", ICounter.EMPTY);
 		assertLine("noExceptionTryCatch.afterBlock", ICounter.FULLY_COVERED);
 
 		// 4. Try/Catch Block With Exception Thrown Implicitly
@@ -61,12 +59,10 @@ public class ExceptionsTest extends ValidationTestBase {
 		assertLine("implicitExceptionTryCatch.before", ICounter.FULLY_COVERED);
 		assertLine("implicitExceptionTryCatch.exception", ICounter.NOT_COVERED);
 		assertLine("implicitExceptionTryCatch.after", ICounter.NOT_COVERED);
-		assertLine("implicitExceptionTryCatch.catch", isJDKCompiler
-				? ICounter.FULLY_COVERED : ICounter.PARTLY_COVERED);
+		assertLine("implicitExceptionTryCatch.catch", ICounter.FULLY_COVERED);
 		assertLine("implicitExceptionTryCatch.catchBlock",
 				ICounter.FULLY_COVERED);
-		assertLine("implicitExceptionTryCatch.catchBlockEnd",
-				isJDKCompiler ? ICounter.NOT_COVERED : ICounter.EMPTY);
+		assertLine("implicitExceptionTryCatch.catchBlockEnd", ICounter.EMPTY);
 		assertLine("implicitExceptionTryCatch.afterBlock",
 				ICounter.FULLY_COVERED);
 
@@ -97,10 +93,10 @@ public class ExceptionsTest extends ValidationTestBase {
 		assertLine("noExceptionFinally.beforeBlock", ICounter.FULLY_COVERED);
 		assertLine("noExceptionFinally.tryBlock", ICounter.FULLY_COVERED);
 		assertLine("noExceptionFinally.finally",
-				isJDKCompiler ? ICounter.EMPTY : ICounter.PARTLY_COVERED);
+				isJDKCompiler ? ICounter.EMPTY : ICounter.NOT_COVERED);
 		assertLine("noExceptionFinally.finallyBlock", ICounter.PARTLY_COVERED);
 		assertLine("noExceptionFinally.finallyBlockEnd",
-				isJDKCompiler ? ICounter.FULLY_COVERED : ICounter.NOT_COVERED);
+				isJDKCompiler ? ICounter.EMPTY : ICounter.NOT_COVERED);
 		assertLine("noExceptionFinally.afterBlock", ICounter.FULLY_COVERED);
 
 		// 8. Finally Block With Implicit Exception
@@ -111,11 +107,11 @@ public class ExceptionsTest extends ValidationTestBase {
 		assertLine("implicitExceptionFinally.exception", ICounter.NOT_COVERED);
 		assertLine("implicitExceptionFinally.after", ICounter.NOT_COVERED);
 		assertLine("implicitExceptionFinally.finally",
-				isJDKCompiler ? ICounter.EMPTY : ICounter.PARTLY_COVERED);
+				isJDKCompiler ? ICounter.EMPTY : ICounter.FULLY_COVERED);
 		assertLine("implicitExceptionFinally.finallyBlock",
 				ICounter.PARTLY_COVERED);
 		assertLine("implicitExceptionFinally.finallyBlockEnd",
-				isJDKCompiler ? ICounter.NOT_COVERED : ICounter.FULLY_COVERED);
+				isJDKCompiler ? ICounter.EMPTY : ICounter.FULLY_COVERED);
 		assertLine("implicitExceptionFinally.afterBlock", ICounter.NOT_COVERED);
 
 		// 9. Finally Block With Exception Thrown Explicitly

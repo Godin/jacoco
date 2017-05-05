@@ -29,6 +29,35 @@ public class Goto {
 			nop(); // $line-missedWhile$
 		}
 
+		breakStatement();
+		continueStatement();
+	}
+
+	private static void breakStatement() {
+		while (true) {
+			if (t()) {
+				nop();
+				break; // $line-executedbreak$
+			}
+			nop(); // $line-missedafterbreak$
+		}
+	}
+
+	private static void continueStatement() {
+
+		for (int j = 0; j < 1; j++) {
+			if (t()) {
+				nop();
+				continue; // $line-executedcontinue$
+			}
+			nop(); // $line-missedaftercontinue$
+		}
+
+	}
+
+	private void infiniteLoop() {
+		for (;;) { // $line-infiniteLoop$
+		}
 	}
 
 }

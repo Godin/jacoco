@@ -26,12 +26,14 @@ public class GotoTest extends ValidationTestBase {
 	public void testCoverageResult() {
 		assertLine("ifTrue", ICounter.FULLY_COVERED, 1, 1);
 		assertLine("executedIf", ICounter.FULLY_COVERED);
-		assertLine("else",
-				isJDKCompiler ? ICounter.EMPTY : ICounter.FULLY_COVERED);
+		assertLine("else", ICounter.EMPTY);
 		assertLine("missedElse", ICounter.NOT_COVERED);
-		assertLine("while", isJDKCompiler ? ICounter.FULLY_COVERED
-				: ICounter.PARTLY_COVERED, 1, 1);
+		assertLine("while", ICounter.FULLY_COVERED, 1, 1);
 		assertLine("missedWhile", ICounter.NOT_COVERED);
+
+		assertLine("executedbreak", ICounter.EMPTY);
+		assertLine("executedcontinue", ICounter.EMPTY);
+		assertLine("infiniteLoop", ICounter.EMPTY);
 	}
 
 }
