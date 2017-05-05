@@ -290,4 +290,18 @@ public class Target01 {
 
 	} // $line-afterexplicitreturn$
 
+	void breakStatementInsideTryFinally() {
+		while (t()) {
+			try {
+				if (t()) {
+					break; // $line-breakInsideTryFinally$
+				}
+			} catch (Exception e) {
+				nop();
+			} finally {
+				nop();
+			}
+		}
+	}
+
 }

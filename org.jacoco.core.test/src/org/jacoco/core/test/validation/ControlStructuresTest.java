@@ -117,6 +117,8 @@ public class ControlStructuresTest extends ValidationTestBase {
 		assertLine("executedbreak", ICounter.FULLY_COVERED);
 		assertLine("missedafterbreak", ICounter.NOT_COVERED);
 
+		assertLine("breakInsideTryFinally", ICounter.EMPTY);
+
 		// 19. Continue statement
 		assertLine("executedcontinue", ICounter.FULLY_COVERED);
 		assertLine("missedaftercontinue", ICounter.NOT_COVERED);
