@@ -85,6 +85,7 @@ public class MockSocketConnection {
 								return -1;
 							}
 							final Byte b = buffer.poll();
+							buffer.notifyAll();
 							if (b != null) {
 								return 0xff & b.intValue();
 							}
@@ -98,7 +99,9 @@ public class MockSocketConnection {
 
 			@Override
 			public int available() throws IOException {
-				return buffer.size();
+				synchronized (buffer) {
+					return buffer.size();
+				}
 			}
 
 		};
@@ -125,7 +128,7 @@ public class MockSocketConnection {
 
 		@Override
 		public OutputStream getOutputStream() throws IOException {
-			if (closed) {
+			if (isClosed()) {
 				throw new SocketException("Socket is closed");
 			}
 			return out;
@@ -133,7 +136,7 @@ public class MockSocketConnection {
 
 		@Override
 		public InputStream getInputStream() throws IOException {
-			if (closed) {
+			if (isClosed()) {
 				throw new SocketException("Socket is closed");
 			}
 			return in;
@@ -141,8 +144,8 @@ public class MockSocketConnection {
 
 		@Override
 		public void close() throws IOException {
-			closed = true;
 			synchronized (buffer) {
+				closed = true;
 				buffer.notifyAll();
 			}
 			synchronized (other.buffer) {
@@ -152,7 +155,9 @@ public class MockSocketConnection {
 
 		@Override
 		public boolean isClosed() {
-			return closed;
+			synchronized (buffer) {
+				return closed;
+			}
 		}
 
 		// unsupported socket methods:
