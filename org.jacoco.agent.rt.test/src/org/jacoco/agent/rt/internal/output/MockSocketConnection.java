@@ -41,15 +41,15 @@ public class MockSocketConnection {
 		socketA.connect(socketB);
 	}
 
-	public Socket getSocketA() {
+	public MockSocket getSocketA() {
 		return socketA;
 	}
 
-	public Socket getSocketB() {
+	public MockSocket getSocketB() {
 		return socketB;
 	}
 
-	private class MockSocket extends Socket {
+	class MockSocket extends Socket {
 
 		private MockSocket other;
 
@@ -103,14 +103,22 @@ public class MockSocketConnection {
 
 		};
 
-		public MockSocket() throws SocketException {
+		private MockSocket() throws SocketException {
 			super((SocketImpl) null);
 			closed = false;
 		}
 
-		void connect(MockSocket other) {
+		private void connect(MockSocket other) {
 			this.other = other;
 			other.other = this;
+		}
+
+		public void waitUntilInputBufferIsEmpty() throws InterruptedException {
+			synchronized (buffer) {
+				while (!closed && !buffer.isEmpty()) {
+					buffer.wait();
+				}
+			}
 		}
 
 		// socket methods with mocking behavior:
