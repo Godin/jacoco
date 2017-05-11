@@ -16,6 +16,10 @@ import static org.junit.Assert.assertNull;
 
 import org.jacoco.agent.rt.internal.IExceptionLogger;
 
+import java.io.PrintStream;
+import java.io.PrintWriter;
+import java.io.StringWriter;
+
 /**
  * {@link IExceptionLogger} implementation for testing purposes.
  */
@@ -24,12 +28,17 @@ public class ExceptionRecorder implements IExceptionLogger {
 	private Class<?> exceptionType;
 	private String message;
 	private Class<?> causeType;
+	private String stackTrace;
 
 	public void logExeption(Exception ex) {
 		assertNull("multiple exeptions", exceptionType);
 		exceptionType = ex.getClass();
 		message = ex.getMessage();
 		causeType = ex.getCause() == null ? null : ex.getCause().getClass();
+
+		StringWriter sw = new StringWriter();
+		ex.printStackTrace(new PrintWriter(sw));
+		stackTrace = sw.toString();
 	}
 
 	public void clear() {
@@ -39,7 +48,7 @@ public class ExceptionRecorder implements IExceptionLogger {
 	}
 
 	public void assertNoException() {
-		assertNull(exceptionType);
+		assertNull(stackTrace, exceptionType);
 	}
 
 	public void assertException(final Class<? extends Throwable> exceptionType,

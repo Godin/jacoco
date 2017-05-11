@@ -66,14 +66,14 @@ export MAVEN_SKIP_RC=true
 # TODO(Godin): see https://github.com/jacoco/jacoco/issues/300 about "bytecode.version"
 case "$JDK" in
 5)
-  if [[ ${TRAVIS_PULL_REQUEST} == 'false' && ${TRAVIS_BRANCH} == 'master' ]]
-  then
-    # goal "deploy:deploy" used directly instead of "deploy" phase to avoid pollution of Maven repository by "install" phase
-    mvn -V -B -e -f org.jacoco.build verify sonar:sonar deploy:deploy -DdeployAtEnd -Djdk.version=1.5 --toolchains=./.travis/toolchains.xml --settings=./.travis/settings.xml -Dsonar.host.url=${SONARQUBE_URL} -Dsonar.login=${SONARQUBE_TOKEN}
-    python ./.travis/trigger-site-deployment.py
-  else
+#  if [[ ${TRAVIS_PULL_REQUEST} == 'false' && ${TRAVIS_BRANCH} == 'master' ]]
+#  then
+#    # goal "deploy:deploy" used directly instead of "deploy" phase to avoid pollution of Maven repository by "install" phase
+#    mvn -V -B -e -f org.jacoco.build verify sonar:sonar deploy:deploy -DdeployAtEnd -Djdk.version=1.5 --toolchains=./.travis/toolchains.xml --settings=./.travis/settings.xml -Dsonar.host.url=${SONARQUBE_URL} -Dsonar.login=${SONARQUBE_TOKEN}
+#    python ./.travis/trigger-site-deployment.py
+#  else
     mvn -V -B -e verify -Djdk.version=1.5 --toolchains=./.travis/toolchains.xml
-  fi
+#  fi
   ;;
 6)
   mvn -V -B -e verify -Dbytecode.version=1.6

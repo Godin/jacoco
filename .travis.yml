@@ -28,3 +28,6 @@ matrix:
     - env: JDK=9-ea
 
 script: ./.travis.sh
+
+after_failure:
+  - find . -path '*/surefire-reports/*.txt' -exec cat {} \;
