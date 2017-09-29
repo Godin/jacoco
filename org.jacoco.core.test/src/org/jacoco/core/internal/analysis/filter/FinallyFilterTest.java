@@ -259,10 +259,10 @@ public class FinallyFilterTest implements IFilterOutput {
 		assertEquals(expectedIgnored, actualIgnored);
 	}
 
-	private final Set<AbstractInsnNode> expectedMerged = new HashSet<>();
-	private final Set<AbstractInsnNode> expectedIgnored = new HashSet<>();
-	private final Set<AbstractInsnNode> actualMerged = new HashSet<>();
-	private final Set<AbstractInsnNode> actualIgnored = new HashSet<>();
+	private final Set<AbstractInsnNode> expectedMerged = new HashSet<AbstractInsnNode>();
+	private final Set<AbstractInsnNode> expectedIgnored = new HashSet<AbstractInsnNode>();
+	private final Set<AbstractInsnNode> actualMerged = new HashSet<AbstractInsnNode>();
+	private final Set<AbstractInsnNode> actualIgnored = new HashSet<AbstractInsnNode>();
 
 	public void ignore(final AbstractInsnNode fromInclusive,
 			final AbstractInsnNode toInclusive) {
