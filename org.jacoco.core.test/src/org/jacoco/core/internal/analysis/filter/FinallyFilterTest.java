@@ -99,6 +99,7 @@ public class FinallyFilterTest implements IFilterOutput {
 		m.visitInsn(Opcodes.NOP); // catch body
 		m.visitLabel(catchEnd);
 		m.visitInsn(Opcodes.NOP); // finally body
+		expectedIgnored.add(m.instructions.getLast());
 		expectedMerged.add(m.instructions.getLast());
 		m.visitJumpInsn(Opcodes.GOTO, after);
 
