@@ -1,0 +1,5 @@
+description = 'JaCoCo Report'
+
+dependencies {
+  compile project(':org.jacoco.core')
+}

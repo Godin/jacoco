@@ -1,0 +1,21 @@
+description = 'JaCoCo Command Line Interface'
+
+apply plugin: 'com.github.johnrengelman.shadow'
+
+dependencies {
+  compile project(':org.jacoco.report')
+  compile 'args4j:args4j:2.0.28'
+}
+
+shadowJar {
+  classifier 'nodeps'
+  manifest {
+    attributes(
+      'Main-Class': 'org.jacoco.cli.internal.Main',
+      'Automatic-Module-Name': project.name,
+      'Implementation-Title': project.description,
+      'Implementation-Version': project.version,
+      'Implementation-Vendor': 'Mountainminds GmbH & Co. KG',
+    )
+  }
+}

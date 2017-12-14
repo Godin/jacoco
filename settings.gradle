@@ -1,0 +1,13 @@
+rootProject.name = 'jacoco'
+
+include 'org.jacoco.core'
+include 'org.jacoco.agent.rt'
+include 'org.jacoco.core.test'
+include 'org.jacoco.report'
+include 'org.jacoco.report.test'
+include 'org.jacoco.cli'
+include 'org.jacoco.cli.test'
+include 'org.jacoco.agent'
+include 'org.jacoco.agent.test'
+include 'org.jacoco.ant'
+include 'org.jacoco.ant.test'

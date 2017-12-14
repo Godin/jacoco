@@ -1,0 +1,20 @@
+description = 'JaCoCo Ant'
+
+apply plugin: 'com.github.johnrengelman.shadow'
+
+dependencies {
+  compile project(':org.jacoco.report')
+  compile project(':org.jacoco.agent')
+  compileOnly 'org.apache.ant:ant:1.7.1'
+}
+
+shadowJar {
+  classifier 'nodeps'
+  manifest {
+    attributes(
+      'Implementation-Title': project.description,
+      'Implementation-Version': project.version,
+      'Implementation-Vendor': 'Mountainminds GmbH & Co. KG',
+    )
+  }
+}

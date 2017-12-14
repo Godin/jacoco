@@ -1,0 +1,5 @@
+dependencies {
+  testCompile project(':org.jacoco.ant')
+  testCompile 'org.apache.ant:ant-antunit:1.2'
+  testCompile 'org.apache.ant:ant-junit:1.7.1'
+}

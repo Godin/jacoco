@@ -1,0 +1,107 @@
+buildscript {
+  repositories {
+    jcenter()
+  }
+  dependencies {
+    classpath 'com.github.jengelman.gradle.plugins:shadow:2.0.2'
+  }
+}
+
+allprojects {
+  group = 'org.jacoco'
+  version = '0.8.0'
+}
+
+subprojects {
+  apply plugin: 'java'
+
+  repositories {
+    mavenCentral()
+  }
+
+  // FIXME should be '1.5', but currently '1.6' to be able to test build with Java 9
+  sourceCompatibility = targetCompatibility = '1.6'
+
+  if (!project.name.endsWith('.test')) {
+    sourceSets.main {
+      java.srcDirs = ['src']
+      resources.srcDirs = ['src']
+    }
+    sourceSets.test {
+      java.srcDirs = []
+      resources.srcDirs = []
+    }
+    if ('org.jacoco.agent.rt' != project.name) {
+      apply plugin: 'osgi'
+
+      jar {
+        from 'about.html'
+
+        manifest {
+          instruction 'Automatic-Module-Name', project.name
+          instruction 'Bundle-RequiredExecutionEnvironment', 'J2SE-1.5'
+          // TODO
+          instruction 'Eclipse-SourceReferences', 'scm:git:git://github.com/jacoco/jacoco.git;path="xxx";commitId="xxx"'
+          instruction 'Export-Package',
+            '!about.html',
+            '*.internal*;x-internal:=true;version="${version;===;${Bundle-Version}}"'
+            '*;version="${version;===;${Bundle-Version}}"'
+          // FIXME 0.5.2 ???
+          instruction 'Import-Package',
+            'org.jacoco.*;version="${range;[===,==+);${Bundle-Version}}"',
+            'org.objectweb.asm.*;version="${range;[===,=+);0.5.2}"'
+          instruction 'Implementation-Version', project.version
+          instruction 'Implementation-Vendor', 'Mountainminds GmbH & Co. KG'
+        }
+      }
+
+      task sourcesJar(type: Jar, dependsOn: classes) {
+        classifier = 'sources'
+        from sourceSets.main.allSource
+      }
+
+      task javadocJar(type: Jar, dependsOn: javadoc) {
+        classifier = 'javadoc'
+        from javadoc.destinationDir
+      }
+
+      artifacts {
+        archives sourcesJar
+        archives javadocJar
+      }
+    }
+  } else {
+    sourceSets.main {
+      java.srcDirs = []
+      resources.srcDirs = []
+    }
+    sourceSets.test {
+      java.srcDirs = ['src']
+      resources.srcDirs = ['src']
+    }
+    configurations.create('agent')
+    dependencies {
+      testRuntime project(path: ':org.jacoco.agent.rt', configuration: 'shadow')
+      agent project(path: ':org.jacoco.agent.rt', configuration: 'shadow')
+      testCompile 'junit:junit:4.12'
+    }
+    test {
+      doFirst {
+        // TODO should be possible to disable, e.g. to test JDK 10
+        jvmArgs "-javaagent:" + configurations.agent.singleFile + "=destfile=build/jacoco.exec"
+      }
+    }
+  }
+}
+
+task alljavadoc(type: Javadoc) {
+  source subprojects.collect { it.sourceSets.main.allJava }
+  classpath = files(subprojects.collect { it.sourceSets.main.compileClasspath })
+  destinationDir = file("${buildDir}/docs/javadoc")
+  exclude '**/internal/**', 'org/jacoco/ant'
+  options
+    .group('Bundle org.jacoco.core', ['org.jacoco.core*'])
+    .group('Bundle org.jacoco.report', ['org.jacoco.report*'])
+    .group('Bundle org.jacoco.agent', ['org.jacoco.agent*'])
+    .group('JaCoCo Runtime', ['org.jacoco.agent.rt', 'com.vladium.emma.rt'])
+}

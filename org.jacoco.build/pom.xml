@@ -95,12 +95,16 @@
     <module>../org.jacoco.agent</module>
     <module>../org.jacoco.ant</module>
     <module>../org.jacoco.cli</module>
+    <!--
     <module>../org.jacoco.examples</module>
     <module>../jacoco-maven-plugin</module>
+    -->
 
     <module>../org.jacoco.tests</module>
 
+    <!--
     <module>../org.jacoco.doc</module>
+    -->
     <module>../jacoco</module>
   </modules>
 
@@ -555,7 +559,7 @@
             </goals>
             <configuration>
               <target>
-                <fileset dir="${basedir}" includes="**/*.java,**/*.xml,**/*.bsh" excludes="target/**,.idea/**,nb-configuration.xml" id="missinglicense.fileset">
+                <fileset dir="${basedir}" includes="**/*.java,**/*.xml,**/*.bsh" excludes="build/**,target/**,.idea/**,nb-configuration.xml" id="missinglicense.fileset">
                   <not>
                     <and>
                       <contains text="Copyright (c) 2009, 2017 Mountainminds GmbH &amp; Co. KG and Contributors"/>
