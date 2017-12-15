@@ -157,4 +157,28 @@
 		<au:assertLogContains text="java/sql/Timestamp"/>
 	</target>
 
+	<target name="testExclClassLoaderDefault">
+		<jacoco:coverage destfile="${exec.file}" inclnolocationclasses="true">
+			<java classname="org.jacoco.ant.ReflectionTarget" fork="true" failonerror="true">
+				<classpath path="${org.jacoco.ant.coverageTaskTest.classes.dir}"/>
+			</java>
+		</jacoco:coverage>
+
+		<au:assertLogContains text="Target executed"/>
+		<au:assertLogDoesntContain text="java.lang.NoClassDefFoundError"/>
+	</target>
+
+	<target name="testExclClassLoaderEmpty">
+		<au:expectfailure>
+			<jacoco:coverage destfile="${exec.file}" exclclassloader="" inclnolocationclasses="true">
+				<java classname="org.jacoco.ant.ReflectionTarget" fork="true" failonerror="true">
+					<classpath path="${org.jacoco.ant.coverageTaskTest.classes.dir}"/>
+				</java>
+			</jacoco:coverage>
+		</au:expectfailure>
+
+		<au:assertLogDoesntContain text="Target executed"/>
+		<au:assertLogContains text="java.lang.NoClassDefFoundError"/>
+	</target>
+
 </project>

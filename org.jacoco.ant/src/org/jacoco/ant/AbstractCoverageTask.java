@@ -105,7 +105,7 @@ public class AbstractCoverageTask extends Task {
 	/**
 	 * List of wildcard patterns for classloaders that JaCoCo will not
 	 * instrument classes from. Default is
-	 * <code>sun.reflect.DelegatingClassLoader</code>
+	 * <code>sun.reflect.DelegatingClassLoader:jdk.internal.reflect.DelegatingClassLoader</code>
 	 * 
 	 * @param exclClassLoader
 	 *            Wildcard pattern of class loaders to exclude

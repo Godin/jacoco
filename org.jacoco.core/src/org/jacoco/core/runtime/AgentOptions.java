@@ -71,7 +71,7 @@ public final class AgentOptions {
 	 * excluded from code coverage. This means all classes loaded by a class
 	 * loader which full qualified name matches this expression will be ignored
 	 * for code coverage regardless of all other filtering settings. Default is
-	 * <code>sun.reflect.DelegatingClassLoader</code>.
+	 * <code>sun.reflect.DelegatingClassLoader:jdk.internal.reflect.DelegatingClassLoader</code>.
 	 * 
 	 * @see WildcardMatcher
 	 */
@@ -345,7 +345,7 @@ public final class AgentOptions {
 	 * @see WildcardMatcher
 	 */
 	public String getExclClassloader() {
-		return getOption(EXCLCLASSLOADER, "sun.reflect.DelegatingClassLoader");
+		return getOption(EXCLCLASSLOADER, "sun.reflect.DelegatingClassLoader:jdk.internal.reflect.DelegatingClassLoader");
 	}
 
 	/**

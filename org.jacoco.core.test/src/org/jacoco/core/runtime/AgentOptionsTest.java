@@ -41,7 +41,8 @@ public class AgentOptionsTest {
 		assertTrue(options.getAppend());
 		assertEquals("*", options.getIncludes());
 		assertEquals("", options.getExcludes());
-		assertEquals("sun.reflect.DelegatingClassLoader",
+		assertEquals(
+				"sun.reflect.DelegatingClassLoader:jdk.internal.reflect.DelegatingClassLoader",
 				options.getExclClassloader());
 		assertFalse(options.getInclBootstrapClasses());
 		assertFalse(options.getInclNoLocationClasses());
