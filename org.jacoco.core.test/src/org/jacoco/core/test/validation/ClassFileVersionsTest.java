@@ -84,6 +84,7 @@ public class ClassFileVersionsTest {
 		testVersion(V1_8, true);
 	}
 
+	@org.junit.Ignore
 	@Test
 	public void test_1_9() throws IOException {
 		testVersion(V9, true);

@@ -58,6 +58,11 @@ public final class ProbeArrayStrategyFactory {
 						counter.getCount(), accessorGenerator);
 			}
 		} else {
+
+			if (version >= Opcodes.V9) {
+				return new IndyStrategy(className, classId, accessorGenerator);
+			}
+
 			return new ClassFieldProbeArrayStrategy(className, classId,
 					withFrames, accessorGenerator);
 		}
