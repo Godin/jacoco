@@ -1,0 +1,43 @@
+plugins {
+  id "java"
+  id "jacoco"
+  id "org.sonarqube" version "2.6"
+//  id "de.set.ecj" version "1.0.0"
+}
+
+repositories {
+  mavenCentral()
+
+//  mavenLocal()
+
+  maven {
+    url "https://oss.sonatype.org/content/repositories/snapshots"
+  }
+}
+
+task run(type:JavaExec) {
+  classpath = sourceSets.main.runtimeClasspath
+  main = 'Main'
+}
+
+jacoco {
+  toolVersion = '0.8.0'
+//  toolVersion = '0.7.9'
+  applyTo run
+}
+
+task report(type: JacocoReport, dependsOn: 'run') {
+  executionData run
+  sourceSets sourceSets.main
+}
+
+/*
+sonarqube {
+  properties {
+    property "sonar.sourceEncoding", "UTF-8"
+  }
+}
+*/
+
+// gradle clean report
+// open build/reports/jacoco/report/html/index.html
