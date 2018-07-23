@@ -17,6 +17,7 @@ import org.junit.BeforeClass;
 /**
  * Unit tests for {@link URLStreamHandlerRuntime}.
  */
+@org.junit.Ignore
 public class URLStreamHandlerRuntimeTest extends RuntimeTestBase {
 
 	@Override

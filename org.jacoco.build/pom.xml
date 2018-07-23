@@ -683,6 +683,7 @@
       <properties>
         <!-- http://openjdk.java.net/jeps/182 -->
         <bytecode.version>6</bytecode.version>
+        <jvm.args>--illegal-access=deny</jvm.args>
       </properties>
     </profile>
 
@@ -860,6 +861,7 @@
       </activation>
       <properties>
         <bytecode.version>6</bytecode.version>
+        <jvm.args>--illegal-access=deny</jvm.args>
       </properties>
     </profile>
 
@@ -873,6 +875,7 @@
       </activation>
       <properties>
         <bytecode.version>6</bytecode.version>
+        <jvm.args>--illegal-access=deny</jvm.args>
       </properties>
     </profile>
 
@@ -886,6 +889,7 @@
       </activation>
       <properties>
         <bytecode.version>6</bytecode.version>
+        <jvm.args>--illegal-access=deny</jvm.args>
       </properties>
     </profile>
 
@@ -899,6 +903,7 @@
       </activation>
       <properties>
         <bytecode.version>6</bytecode.version>
+        <jvm.args>--illegal-access=deny</jvm.args>
       </properties>
     </profile>
 
