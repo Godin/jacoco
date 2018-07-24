@@ -134,7 +134,7 @@
     <maven.compiler.source>${bytecode.version}</maven.compiler.source>
     <maven.compiler.target>${bytecode.version}</maven.compiler.target>
 
-    <jvm.args></jvm.args>
+    <jvm.args>-XX:-FailOverToOldVerifier -Xverify:all</jvm.args>
     <argLine>${jvm.args}</argLine>
 
     <!-- Dependencies versions -->
@@ -812,6 +812,19 @@
     -->
 
     <profile>
+      <id>jdk5</id>
+      <activation>
+        <property>
+          <name>jdk.version</name>
+          <value>5</value>
+        </property>
+      </activation>
+      <properties>
+        <jvm.args></jvm.args>
+      </properties>
+    </profile>
+
+    <profile>
       <id>jdk6</id>
       <activation>
         <property>
@@ -820,7 +833,6 @@
         </property>
       </activation>
       <properties>
-        <jvm.args>-XX:-FailOverToOldVerifier -Xverify:all</jvm.args>
       </properties>
     </profile>
 
@@ -833,7 +845,6 @@
         </property>
       </activation>
       <properties>
-        <jvm.args>-XX:-FailOverToOldVerifier -Xverify:all</jvm.args>
       </properties>
     </profile>
 
@@ -846,7 +857,6 @@
         </property>
       </activation>
       <properties>
-        <jvm.args>-XX:-FailOverToOldVerifier -Xverify:all</jvm.args>
       </properties>
     </profile>
 
