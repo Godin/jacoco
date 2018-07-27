@@ -49,6 +49,7 @@ public class RuntimeDataTest {
 		assertEquals("test-id", data.getSessionId());
 	}
 
+	@SuppressWarnings("unlikely-arg-type")
 	@Test
 	public void testGetProbes() {
 		Object[] args = new Object[] { Long.valueOf(123), "Foo",

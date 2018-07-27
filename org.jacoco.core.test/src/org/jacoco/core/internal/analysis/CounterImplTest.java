@@ -176,6 +176,7 @@ public class CounterImplTest {
 		assertFalse(c1.equals(c2));
 	}
 
+	@SuppressWarnings("unlikely-arg-type")
 	@Test
 	public void testEquals4() {
 		ICounter c = CounterImpl.getInstance(300, 123);
