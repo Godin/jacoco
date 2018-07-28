@@ -678,11 +678,22 @@
     <profile>
       <id>maven-jdk9</id>
       <activation>
-        <jdk>[9,)</jdk>
+        <jdk>[9,11]</jdk>
       </activation>
       <properties>
         <!-- http://openjdk.java.net/jeps/182 -->
         <bytecode.version>6</bytecode.version>
+      </properties>
+    </profile>
+
+    <profile>
+      <id>maven-jdk12</id>
+      <activation>
+        <jdk>[12,)</jdk>
+      </activation>
+      <properties>
+        <!-- http://openjdk.java.net/jeps/182 -->
+        <bytecode.version>7</bytecode.version>
       </properties>
     </profile>
 

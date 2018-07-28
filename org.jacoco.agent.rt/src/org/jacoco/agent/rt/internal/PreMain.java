@@ -15,6 +15,7 @@ import java.lang.instrument.Instrumentation;
 
 import org.jacoco.core.runtime.AgentOptions;
 import org.jacoco.core.runtime.IRuntime;
+import org.jacoco.core.runtime.InjectedSystemClassRuntime;
 import org.jacoco.core.runtime.ModifiedSystemClassRuntime;
 
 /**
@@ -52,7 +53,8 @@ public final class PreMain {
 
 	private static IRuntime createRuntime(final Instrumentation inst)
 			throws Exception {
-		return ModifiedSystemClassRuntime.createFor(inst, "java/lang/UnknownError");
+		return InjectedSystemClassRuntime.create();
+//		return ModifiedSystemClassRuntime.createFor(inst, "java/lang/UnknownError");
 	}
 
 }
