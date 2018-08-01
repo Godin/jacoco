@@ -53,7 +53,13 @@ public class ClassInfo extends Command {
 			out.println("[WARN] No class files provided.");
 		} else {
 			final Analyzer analyzer = new Analyzer(new ExecutionDataStore(),
-					new Printer(out));
+					new Printer(out)) {
+				@Override
+				public void analyzeClass(byte[] buffer, String location) throws IOException {
+					out.println("Analyzing " + location);
+					super.analyzeClass(buffer, location);
+				}
+			};
 			for (final File file : classfiles) {
 				analyzer.analyzeAll(file);
 			}
@@ -71,8 +77,9 @@ public class ClassInfo extends Command {
 		}
 
 		public void visitCoverage(final IClassCoverage coverage) {
-			final String desc = String.format("class 0x%016x %s",
-					Long.valueOf(coverage.getId()), coverage.getName());
+			final String desc = String.format("class 0x%016x %s %s",
+					Long.valueOf(coverage.getId()), coverage.getName(),
+					coverage.getSourceFileName());
 			printDetails(desc, coverage);
 			if (verbose) {
 				for (final Iterator<IMethodCoverage> i = coverage.getMethods()
