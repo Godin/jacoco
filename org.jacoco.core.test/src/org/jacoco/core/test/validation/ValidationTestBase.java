@@ -16,11 +16,15 @@ import static org.junit.Assert.assertEquals;
 import java.io.IOException;
 import java.lang.reflect.Method;
 import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
 
 import org.jacoco.core.analysis.Analyzer;
 import org.jacoco.core.analysis.CoverageBuilder;
+import org.jacoco.core.analysis.IClassCoverage;
 import org.jacoco.core.analysis.ICounter;
 import org.jacoco.core.analysis.ILine;
+import org.jacoco.core.analysis.IMethodCoverage;
 import org.jacoco.core.data.ExecutionData;
 import org.jacoco.core.data.ExecutionDataStore;
 import org.jacoco.core.internal.analysis.CounterImpl;
@@ -55,6 +59,8 @@ public abstract class ValidationTestBase {
 
 	private Source source;
 
+	protected Set<String> methods;
+
 	private InstrumentingLoader loader;
 
 	protected ValidationTestBase(final Class<?> target) {
@@ -84,6 +90,16 @@ public abstract class ValidationTestBase {
 		for (ExecutionData data : store.getContents()) {
 			analyze(analyzer, data);
 		}
+
+		methods = new HashSet<String>();
+		for (IClassCoverage c : builder.getClasses()) {
+			for (IMethodCoverage m : c.getMethods()) {
+				String simpleClassName = c.getName().substring(c.getName().lastIndexOf('/') + 1);
+				this.methods
+						.add(simpleClassName + "." + m.getName() + m.getDesc());
+			}
+		}
+
 		source = Source.load(target, builder.getBundle("Test"));
 	}
 
@@ -173,6 +189,7 @@ public abstract class ValidationTestBase {
 		assertEquals("Log events", Arrays.asList(events), getter.invoke(null));
 	}
 
+	@Deprecated
 	protected void assertMethodCount(final int expectedTotal) {
 		assertEquals(expectedTotal,
 				source.getCoverage().getMethodCounter().getTotalCount());
