@@ -157,4 +157,38 @@
 		<au:assertLogContains text="java/sql/Timestamp"/>
 	</target>
 
+	<!-- Reflection -->
+
+	<target name="testReflection1">
+		<au:expectfailure>
+			<jacoco:coverage destfile="${exec.file}" inclnolocationclasses="true" exclclassloader="">
+				<java classname="ReflectionTarget" fork="true" failonerror="true">
+					<classpath path="${org.jacoco.ant.coverageTaskTest.classes.dir}"/>
+				</java>
+			</jacoco:coverage>
+		</au:expectfailure>
+
+		<au:assertLogContains text="java.lang.NoClassDefFoundError"/>
+	</target>
+
+	<target name="testReflection2">
+		<jacoco:coverage destfile="${exec.file}" inclnolocationclasses="false" exclclassloader="">
+			<java classname="ReflectionTarget" fork="true" failonerror="true">
+				<classpath path="${org.jacoco.ant.coverageTaskTest.classes.dir}"/>
+			</java>
+		</jacoco:coverage>
+
+		<au:assertLogContains text="Target executed"/>
+	</target>
+
+	<target name="testReflection3">
+		<jacoco:coverage destfile="${exec.file}" inclnolocationclasses="true" exclclassloader="sun.reflect.DelegatingClassLoader:jdk.internal.reflect.DelegatingClassLoader">
+			<java classname="ReflectionTarget" fork="true" failonerror="true">
+				<classpath path="${org.jacoco.ant.coverageTaskTest.classes.dir}"/>
+			</java>
+		</jacoco:coverage>
+
+		<au:assertLogContains text="Target executed"/>
+	</target>
+
 </project>
