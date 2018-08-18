@@ -85,6 +85,9 @@ mvn() {
   return $?
 }
 
+mvn help:effective-settings
+mvn help:active-profiles
+
 # Build:
 case "$JDK" in
 5)
