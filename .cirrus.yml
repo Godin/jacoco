@@ -1,0 +1,15 @@
+task:
+  script: mvn -V -B -e verify -Dbytecode.version=$JDK
+  matrix:
+    - env:
+        JDK: 8
+      container:
+        image: maven:3-jdk-8
+    - env:
+        JDK: 10
+      container:
+        image: maven:3-jdk-10
+    - env:
+        JDK: 11
+      container:
+        image: maven:3-jdk-11
