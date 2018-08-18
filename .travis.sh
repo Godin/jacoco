@@ -73,20 +73,20 @@ esac
 # and "-XMaxPermSize" not supported by JDK 9
 export MAVEN_SKIP_RC=true
 
-mvn() {
-  # Creation of new shell is required in order to not leave terminal in broken state after termination by Ctrl-C
-  (
-    command mvn "${@}" 2>&1 | gawk -e 'match($0, /^.*$/) { printf "%s %s\n", strftime("%H:%M:%S"), $0; }' ;
-    # See comp.unix.shell FAQ "How do I get the exit code of cmd1 in cmd1|cmd2": http://cfajohnson.com/shell/cus-faq-2.html
-    # Handle both Bash and Zsh:
-    exit ${PIPESTATUS[0]} ${pipestatus[1]}
-  )
-
-  return $?
-}
-
-mvn help:effective-settings
-mvn help:active-profiles
+#mvn() {
+#  # Creation of new shell is required in order to not leave terminal in broken state after termination by Ctrl-C
+#  (
+#    command mvn "${@}" 2>&1 | gawk -e 'match($0, /^.*$/) { printf "%s %s\n", strftime("%H:%M:%S"), $0; }' ;
+#    # See comp.unix.shell FAQ "How do I get the exit code of cmd1 in cmd1|cmd2": http://cfajohnson.com/shell/cus-faq-2.html
+#    # Handle both Bash and Zsh:
+#    exit ${PIPESTATUS[0]} ${pipestatus[1]}
+#  )
+#
+#  return $?
+#}
+#
+#mvn help:effective-settings
+#mvn help:active-profiles
 
 # Build:
 case "$JDK" in
@@ -104,7 +104,7 @@ case "$JDK" in
   fi
   ;;
 6 | 7 | 8 | 9)
-  mvn -V -B -e verify -Djdk.version=${JDK} -Dbytecode.version=${JDK} -Decj=${ECJ:-} --toolchains=./.travis/travis-toolchains.xml
+  mvn -V -B -e verify -Djdk.version=${JDK} -Dbytecode.version=${JDK} -Decj=${ECJ:-} --toolchains=./.travis/travis-toolchains.xml --settings ./.travis/settings.xml
   ;;
 10)
   mvn -V -B -e verify -Dbytecode.version=10
