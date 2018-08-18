@@ -136,6 +136,22 @@ public class FinallyTarget {
 		} // assertEmpty()
 	}
 
+	/**
+	 * TODO JDK < 10 bug
+	 *
+	 * https://github.com/jacoco/jacoco/pull/521/files/607da44254c9b0dfe17ba8ebbee6d2624f5734ef#r210761419
+	 */
+	private static void insideWhile() {
+		while (t()) { // assertFullyCovered(1, 1) tag("insideWhile.ecj.0")
+			try {
+				ex();
+			} finally { // tag("insideWhile.ecj.1")
+				nop(); // assertFullyCovered()
+				nop(); // assertInsideWhile() tag("insideWhile.javac.0")
+			} // tag("insideWhile.javac.1")
+		}
+	}
+
 	public static void main(String[] args) {
 		example(false);
 		try {
@@ -156,6 +172,11 @@ public class FinallyTarget {
 		emptyTry();
 
 		alwaysCompletesAbruptly();
+
+		try {
+			insideWhile();
+		} catch (Exception ignore) {
+		}
 	}
 
 }

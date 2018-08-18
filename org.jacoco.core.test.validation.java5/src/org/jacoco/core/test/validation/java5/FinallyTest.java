@@ -124,6 +124,15 @@ public class FinallyTest extends ValidationTestBase {
 		}
 	}
 
+	public void assertInsideWhile(final Line line) {
+		if (isJDKCompiler && JAVA_VERSION.isBefore("10")) {
+			// compiler bug fixed in javac >= 10
+			assertPartlyCovered(line);
+		} else {
+			assertFullyCovered(line);
+		}
+	}
+
 	@Test
 	@Override
 	public void execute_assertions_in_comments() throws IOException {
@@ -185,6 +194,14 @@ public class FinallyTest extends ValidationTestBase {
 
 		if (!isJDKCompiler) {
 			expected.add("alwaysCompletesAbruptly.0");
+		}
+
+		if (isJDKCompiler) {
+			expected.add("insideWhile.javac.0");
+			expected.add("insideWhile.javac.1");
+		} else {
+			expected.add("insideWhile.ecj.0");
+			expected.add("insideWhile.ecj.1");
 		}
 
 		assertEquals(expected, getTagsWithGotos());
