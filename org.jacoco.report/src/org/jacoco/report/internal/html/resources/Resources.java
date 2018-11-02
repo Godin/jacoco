@@ -100,20 +100,20 @@ public class Resources {
 	 */
 	public void copyResources() throws IOException {
 		copyResource(STYLESHEET);
-		copyResource("report.gif");
-		copyResource("group.gif");
-		copyResource("bundle.gif");
-		copyResource("package.gif");
-		copyResource("source.gif");
-		copyResource("class.gif");
-		copyResource("method.gif");
-		copyResource("session.gif");
+		copyResource("report.svg");
+		copyResource("group.svg");
+		copyResource("bundle.svg");
+		copyResource("package.svg");
+		copyResource("source.svg");
+		copyResource("class.svg");
+		copyResource("method.svg");
+		copyResource("session.svg");
 		copyResource("sort.gif");
 		copyResource("up.gif");
 		copyResource("down.gif");
-		copyResource("branchfc.gif");
-		copyResource("branchnc.gif");
-		copyResource("branchpc.gif");
+		copyResource("branchfc.svg");
+		copyResource("branchnc.svg");
+		copyResource("branchpc.svg");
 		copyResource(REDBAR);
 		copyResource(GREENBAR);
 		copyResource(PRETTIFY_STYLESHEET);

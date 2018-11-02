@@ -50,24 +50,24 @@ public class ResourcesTest {
 	@Test
 	public void testCopyResources() throws IOException {
 		resources.copyResources();
-		output.assertFile("jacoco-resources/branchfc.gif");
-		output.assertFile("jacoco-resources/branchnc.gif");
-		output.assertFile("jacoco-resources/branchpc.gif");
-		output.assertFile("jacoco-resources/bundle.gif");
-		output.assertFile("jacoco-resources/class.gif");
+		output.assertFile("jacoco-resources/branchfc.svg");
+		output.assertFile("jacoco-resources/branchnc.svg");
+		output.assertFile("jacoco-resources/branchpc.svg");
+		output.assertFile("jacoco-resources/bundle.svg");
+		output.assertFile("jacoco-resources/class.svg");
 		output.assertFile("jacoco-resources/down.gif");
 		output.assertFile("jacoco-resources/greenbar.gif");
-		output.assertFile("jacoco-resources/group.gif");
-		output.assertFile("jacoco-resources/method.gif");
-		output.assertFile("jacoco-resources/package.gif");
+		output.assertFile("jacoco-resources/group.svg");
+		output.assertFile("jacoco-resources/method.svg");
+		output.assertFile("jacoco-resources/package.svg");
 		output.assertFile("jacoco-resources/prettify.css");
 		output.assertFile("jacoco-resources/prettify.js");
 		output.assertFile("jacoco-resources/redbar.gif");
 		output.assertFile("jacoco-resources/report.css");
-		output.assertFile("jacoco-resources/report.gif");
-		output.assertFile("jacoco-resources/class.gif");
+		output.assertFile("jacoco-resources/report.svg");
+		output.assertFile("jacoco-resources/class.svg");
 		output.assertFile("jacoco-resources/sort.js");
-		output.assertFile("jacoco-resources/source.gif");
+		output.assertFile("jacoco-resources/source.svg");
 		output.assertFile("jacoco-resources/up.gif");
 	}
 
