@@ -44,6 +44,7 @@ import org.objectweb.asm.util.TraceClassVisitor;
 /**
  * Tests whether stackmap frames are correctly adjusted.
  */
+@org.junit.Ignore
 public class FramesTest {
 
 	/**

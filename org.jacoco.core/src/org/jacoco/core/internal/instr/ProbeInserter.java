@@ -67,6 +67,14 @@ class ProbeInserter extends MethodVisitor implements IProbeInserter {
 
 	public void insertProbe(final int id) {
 
+		if (arrayStrategy instanceof NewStrategy) {
+			InstrSupport.push(mv, id);
+			mv.visitMethodInsn(Opcodes.INVOKESTATIC,
+					((NewStrategy) arrayStrategy).className, "$jacocoHit",
+					"(I)V", /* TODO */ false);
+			return;
+		}
+
 		// For a probe we set the corresponding position in the boolean[] array
 		// to true.
 

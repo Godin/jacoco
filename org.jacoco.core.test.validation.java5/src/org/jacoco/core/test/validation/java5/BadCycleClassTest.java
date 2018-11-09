@@ -18,6 +18,7 @@ import org.junit.Test;
 /**
  * Test of "bad cycles" with classes.
  */
+@org.junit.Ignore
 public class BadCycleClassTest extends ValidationTestBase {
 
 	public BadCycleClassTest() throws Exception {
