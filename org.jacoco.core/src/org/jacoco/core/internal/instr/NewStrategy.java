@@ -31,7 +31,7 @@ public class NewStrategy implements IProbeArrayStrategy {
 
 	private boolean seenClinit = false;
 
-	NewStrategy(final boolean isInterface, final String className,
+	public NewStrategy(final boolean isInterface, final String className,
 			final long classId, final int probeCount, final boolean needsFrames,
 			final IExecutionDataAccessorGenerator accessorGenerator) {
 		this.isInterface = isInterface;
@@ -102,17 +102,19 @@ public class NewStrategy implements IProbeArrayStrategy {
 		mv.visitCode();
 
 		mv.visitFieldInsn(Opcodes.GETSTATIC, className,
-				InstrSupport.DATAFIELD_NAME, InstrSupport.DATAFIELD_DESC);
+				InstrSupport.DATAFIELD_NAME, InstrSupport.DATAFIELD_DESC); // +3
+
+		// ALOAD_0 // +1
 
 		// if ($jacocoData == null) return
-		mv.visitInsn(Opcodes.DUP);
+		mv.visitInsn(Opcodes.DUP); // +1
 		final Label label1 = new Label();
-		mv.visitJumpInsn(Opcodes.IFNONNULL, label1);
-		mv.visitInsn(Opcodes.RETURN);
-		mv.visitLabel(label1);
+		mv.visitJumpInsn(Opcodes.IFNONNULL, label1); // +3
 		if (needsFrames) {
 			mv.visitFrame(Opcodes.F_SAME1, 0, null, 1, FRAME_STACK_ARRZ);
 		}
+		mv.visitInsn(Opcodes.RETURN); // +1
+		mv.visitLabel(label1);
 
 		// if ($jacocoData[id]) return
 		mv.visitInsn(Opcodes.DUP);
@@ -120,17 +122,17 @@ public class NewStrategy implements IProbeArrayStrategy {
 		mv.visitInsn(Opcodes.BALOAD);
 		final Label label2 = new Label();
 		mv.visitJumpInsn(Opcodes.IFEQ, label2);
-		mv.visitInsn(Opcodes.RETURN);
-		mv.visitLabel(label2);
 		if (needsFrames) {
 			mv.visitFrame(Opcodes.F_SAME1, 0, null, 1, FRAME_STACK_ARRZ);
 		}
+		mv.visitInsn(Opcodes.RETURN);
+		mv.visitLabel(label2);
 
 		// $jacocoData[id] = true
-		mv.visitVarInsn(Opcodes.ILOAD, 0);
-		mv.visitInsn(Opcodes.ICONST_1);
-		mv.visitInsn(Opcodes.BASTORE);
-		mv.visitInsn(Opcodes.RETURN);
+		mv.visitVarInsn(Opcodes.ILOAD, 0); // +1
+		mv.visitInsn(Opcodes.ICONST_1); // +1
+		mv.visitInsn(Opcodes.BASTORE); // +1
+		mv.visitInsn(Opcodes.RETURN); // +1
 
 		mv.visitMaxs(3, 1);
 		mv.visitEnd();

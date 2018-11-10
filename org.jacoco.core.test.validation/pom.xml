@@ -131,6 +131,7 @@
         <groovy.targetBytecode>1.8</groovy.targetBytecode>
       </properties>
       <modules>
+        <module>../org.jacoco.core.benchmark</module>
         <module>../org.jacoco.core.test.validation.kotlin</module>
         <module>../org.jacoco.core.test.validation.java7</module>
         <module>../org.jacoco.core.test.validation.java8</module>

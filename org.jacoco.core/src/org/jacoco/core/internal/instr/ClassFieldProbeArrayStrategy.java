@@ -22,7 +22,7 @@ import org.objectweb.asm.Opcodes;
  * and a static initialization method requesting the probe array from the
  * runtime.
  */
-class ClassFieldProbeArrayStrategy implements IProbeArrayStrategy {
+public class ClassFieldProbeArrayStrategy implements IProbeArrayStrategy {
 
 	/**
 	 * Frame stack with a single boolean array.
@@ -39,7 +39,7 @@ class ClassFieldProbeArrayStrategy implements IProbeArrayStrategy {
 	private final boolean withFrames;
 	private final IExecutionDataAccessorGenerator accessorGenerator;
 
-	ClassFieldProbeArrayStrategy(final String className, final long classId,
+	public ClassFieldProbeArrayStrategy(final String className, final long classId,
 			final boolean withFrames,
 			final IExecutionDataAccessorGenerator accessorGenerator) {
 		this.className = className;

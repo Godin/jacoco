@@ -46,7 +46,7 @@ public final class ProbeArrayStrategyFactory {
 		final int version = InstrSupport.getVersionMajor(reader.b);
 
 		// TODO works for Java >= 8 interfaces
-		if (!isInterfaceOrModule(reader)) {
+		if (false && !isInterfaceOrModule(reader)) {
 			final ProbeCounter counter = getProbeCounter(reader);
 			return new NewStrategy(isInterfaceOrModule(reader), className,
 					classId, counter.getCount(),
