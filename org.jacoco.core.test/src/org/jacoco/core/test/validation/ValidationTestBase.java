@@ -14,6 +14,7 @@ package org.jacoco.core.test.validation;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.lang.reflect.Method;
 import java.util.Arrays;
@@ -24,6 +25,7 @@ import org.jacoco.core.analysis.ICounter;
 import org.jacoco.core.analysis.ILine;
 import org.jacoco.core.data.ExecutionData;
 import org.jacoco.core.data.ExecutionDataStore;
+import org.jacoco.core.data.ExecutionDataWriter;
 import org.jacoco.core.internal.analysis.CounterImpl;
 import org.jacoco.core.test.InstrumentingLoader;
 import org.jacoco.core.test.TargetLoader;
@@ -79,12 +81,26 @@ public abstract class ValidationTestBase {
 				(Object) new String[0]);
 	}
 
+	/**
+	 * <pre>
+	 * java -jar org.jacoco.cli/target/org.jacoco.cli-*-SNAPSHOT-nodeps.jar report /tmp/jacoco.exec \
+	 * --classfiles org.jacoco.core.test.validation.groovy/target/classes/org/jacoco/core/test/validation/groovy/targets \
+	 * --sourcefiles org.jacoco.core.test.validation.groovy/src \
+	 * --html /tmp/report
+	 * </pre>
+	 */
 	private void analyze(final ExecutionDataStore store) throws IOException {
 		final CoverageBuilder builder = new CoverageBuilder();
 		final Analyzer analyzer = new Analyzer(store, builder);
+
+		FileOutputStream out = new FileOutputStream("/tmp/jacoco.exec", true);
+		ExecutionDataWriter writer = new ExecutionDataWriter(out);
 		for (ExecutionData data : store.getContents()) {
 			analyze(analyzer, data);
+			writer.visitClassExecution(data);
 		}
+		out.close();
+
 		source = Source.load(target, builder.getBundle("Test"));
 	}
 
