@@ -13,6 +13,7 @@ package org.jacoco.agent.rt.internal;
 
 import java.lang.instrument.Instrumentation;
 
+import org.jacoco.agent.rt.RT;
 import org.jacoco.core.runtime.AgentOptions;
 import org.jacoco.core.runtime.IRuntime;
 import org.jacoco.core.runtime.ModifiedSystemClassRuntime;
@@ -39,6 +40,13 @@ public final class PreMain {
 	 */
 	public static void premain(final String options, final Instrumentation inst)
 			throws Exception {
+
+		try {
+			RT.getAgent();
+			throw new RuntimeException();
+		} catch (IllegalStateException e) {
+			// expected - agent not started
+		}
 
 		final AgentOptions agentOptions = new AgentOptions(options);
 
