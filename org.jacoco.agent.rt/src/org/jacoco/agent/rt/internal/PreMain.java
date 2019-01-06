@@ -13,9 +13,9 @@ package org.jacoco.agent.rt.internal;
 
 import java.lang.instrument.Instrumentation;
 
+import org.jacoco.core.internal.runtime.InjectedClassRuntime;
 import org.jacoco.core.runtime.AgentOptions;
 import org.jacoco.core.runtime.IRuntime;
-import org.jacoco.core.runtime.ModifiedSystemClassRuntime;
 
 /**
  * The agent which is referred as the <code>Premain-Class</code>. The agent
@@ -52,7 +52,7 @@ public final class PreMain {
 
 	private static IRuntime createRuntime(final Instrumentation inst)
 			throws Exception {
-		return ModifiedSystemClassRuntime.createFor(inst, "java/lang/UnknownError");
+		return new InjectedClassRuntime();
 	}
 
 }

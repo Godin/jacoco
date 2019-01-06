@@ -16,9 +16,9 @@ import java.io.IOException;
 import org.jacoco.core.data.ExecutionDataStore;
 import org.jacoco.core.data.SessionInfoStore;
 import org.jacoco.core.instr.Instrumenter;
+import org.jacoco.core.internal.runtime.InjectedClassRuntime;
 import org.jacoco.core.runtime.IRuntime;
 import org.jacoco.core.runtime.RuntimeData;
-import org.jacoco.core.runtime.SystemPropertiesRuntime;
 
 /**
  * Class loader which loads classes from another class loader and instruments
@@ -44,7 +44,7 @@ public final class InstrumentingLoader extends ClassLoader {
 	}
 
 	public InstrumentingLoader(Class<?> target) throws Exception {
-		this(new SystemPropertiesRuntime(), target.getPackage().getName(),
+		this(new InjectedClassRuntime(), target.getPackage().getName(),
 				target.getClassLoader());
 	}
 
