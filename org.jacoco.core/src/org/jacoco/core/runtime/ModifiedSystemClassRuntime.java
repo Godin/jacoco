@@ -100,6 +100,16 @@ public class ModifiedSystemClassRuntime extends AbstractRuntime {
 		return createFor(inst, className, "$jacocoAccess");
 	}
 
+	private static byte[] hexStringToByteArray(final String s) {
+		final int len = s.length();
+		final byte[] data = new byte[len / 3];
+		for (int i = 0; i < len; i += 3) {
+			data[i / 3] = (byte) ((Character.digit(s.charAt(i + 1), 16) << 4)
+					+ Character.digit(s.charAt(i + 2), 16));
+		}
+		return data;
+	}
+
 	/**
 	 * Creates a new {@link ModifiedSystemClassRuntime} using the given class as
 	 * the data container. The given class must not have been loaded before by
@@ -120,11 +130,60 @@ public class ModifiedSystemClassRuntime extends AbstractRuntime {
 			final String className, final String accessFieldName)
 			throws ClassNotFoundException {
 		final ClassFileTransformer transformer = new ClassFileTransformer() {
-			public byte[] transform(final ClassLoader loader,
-					final String name, final Class<?> classBeingRedefined,
-					final ProtectionDomain protectionDomain, final byte[] source)
-					throws IllegalClassFormatException {
+			public byte[] transform(final ClassLoader loader, final String name,
+					final Class<?> classBeingRedefined,
+					final ProtectionDomain protectionDomain,
+					final byte[] source) throws IllegalClassFormatException {
+
 				if (name.equals(className)) {
+					if (name.equals("java/lang/UnknownError")) {
+						// Dump of class from JDK 12, so that ASM can read it
+						// jmod extract --dir 12 java.base.jmod
+						// xxd -g 1 12/classes/java/lang/UnknownError.class
+						byte[] bytes = hexStringToByteArray("" //
+								+ " ca fe ba be 00 00 00 38 00 1a 0a 00 04 00 16 0a" //
+								+ " 00 04 00 17 07 00 18 07 00 19 01 00 10 73 65 72" //
+								+ " 69 61 6c 56 65 72 73 69 6f 6e 55 49 44 01 00 01" //
+								+ " 4a 01 00 0d 43 6f 6e 73 74 61 6e 74 56 61 6c 75" //
+								+ " 65 05 23 09 d6 74 32 ec 50 09 01 00 06 3c 69 6e" //
+								+ " 69 74 3e 01 00 03 28 29 56 01 00 04 43 6f 64 65" //
+								+ " 01 00 0f 4c 69 6e 65 4e 75 6d 62 65 72 54 61 62" //
+								+ " 6c 65 01 00 12 4c 6f 63 61 6c 56 61 72 69 61 62" //
+								+ " 6c 65 54 61 62 6c 65 01 00 04 74 68 69 73 01 00" //
+								+ " 18 4c 6a 61 76 61 2f 6c 61 6e 67 2f 55 6e 6b 6e" //
+								+ " 6f 77 6e 45 72 72 6f 72 3b 01 00 15 28 4c 6a 61" //
+								+ " 76 61 2f 6c 61 6e 67 2f 53 74 72 69 6e 67 3b 29" //
+								+ " 56 01 00 01 73 01 00 12 4c 6a 61 76 61 2f 6c 61" //
+								+ " 6e 67 2f 53 74 72 69 6e 67 3b 01 00 0a 53 6f 75" //
+								+ " 72 63 65 46 69 6c 65 01 00 11 55 6e 6b 6e 6f 77" //
+								+ " 6e 45 72 72 6f 72 2e 6a 61 76 61 0c 00 0a 00 0b" //
+								+ " 0c 00 0a 00 11 01 00 16 6a 61 76 61 2f 6c 61 6e" //
+								+ " 67 2f 55 6e 6b 6e 6f 77 6e 45 72 72 6f 72 01 00" //
+								+ " 1d 6a 61 76 61 2f 6c 61 6e 67 2f 56 69 72 74 75" //
+								+ " 61 6c 4d 61 63 68 69 6e 65 45 72 72 6f 72 00 21" //
+								+ " 00 03 00 04 00 00 00 01 00 1a 00 05 00 06 00 01" //
+								+ " 00 07 00 00 00 02 00 08 00 02 00 01 00 0a 00 0b" //
+								+ " 00 01 00 0c 00 00 00 33 00 01 00 01 00 00 00 05" //
+								+ " 2a b7 00 01 b1 00 00 00 02 00 0d 00 00 00 0a 00" //
+								+ " 02 00 00 00 2b 00 04 00 2c 00 0e 00 00 00 0c 00" //
+								+ " 01 00 00 00 05 00 0f 00 10 00 00 00 01 00 0a 00" //
+								+ " 11 00 01 00 0c 00 00 00 3e 00 02 00 02 00 00 00" //
+								+ " 06 2a 2b b7 00 02 b1 00 00 00 02 00 0d 00 00 00" //
+								+ " 0a 00 02 00 00 00 35 00 05 00 36 00 0e 00 00 00" //
+								+ " 16 00 02 00 00 00 06 00 0f 00 10 00 00 00 00 00" //
+								+ " 06 00 12 00 13 00 01 00 01 00 14 00 00 00 02 00" //
+								+ " 15" //
+						);
+						try {
+							System.out.println("INSTRUMENTING...");
+							bytes = instrument(bytes, accessFieldName);
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
+						System.out.println("INSTRUMENTED!!!");
+						return bytes;
+					}
+
 					return instrument(source, accessFieldName);
 				}
 				return null;
@@ -136,8 +195,9 @@ public class ModifiedSystemClassRuntime extends AbstractRuntime {
 		try {
 			clazz.getField(accessFieldName);
 		} catch (final NoSuchFieldException e) {
-			throw new RuntimeException(format(
-					"Class %s could not be instrumented.", className), e);
+			throw new RuntimeException(
+					format("Class %s could not be instrumented.", className),
+					e);
 		}
 		return new ModifiedSystemClassRuntime(clazz, accessFieldName);
 	}
@@ -169,9 +229,10 @@ public class ModifiedSystemClassRuntime extends AbstractRuntime {
 
 	private static void createDataField(final ClassVisitor visitor,
 			final String dataField) {
-		visitor.visitField(Opcodes.ACC_PUBLIC | Opcodes.ACC_STATIC
-				| Opcodes.ACC_SYNTHETIC | Opcodes.ACC_TRANSIENT, dataField,
-				ACCESS_FIELD_TYPE, null, null);
+		visitor.visitField(
+				Opcodes.ACC_PUBLIC | Opcodes.ACC_STATIC | Opcodes.ACC_SYNTHETIC
+						| Opcodes.ACC_TRANSIENT,
+				dataField, ACCESS_FIELD_TYPE, null, null);
 	}
 
 }
