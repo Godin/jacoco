@@ -15,7 +15,9 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
+import org.jacoco.core.TestSubject;
 import org.junit.Before;
+import org.junit.ClassRule;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -28,6 +30,9 @@ import org.objectweb.asm.util.TraceMethodVisitor;
  * Unit tests for {@link InstrSupport}.
  */
 public class InstrSupportTest {
+
+	@ClassRule
+	public static final TestSubject TEST_SUBJECT = TestSubject.is(InstrSupport.class);
 
 	private Printer printer;
 	private TraceMethodVisitor trace;

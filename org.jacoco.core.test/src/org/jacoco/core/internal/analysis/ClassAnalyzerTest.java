@@ -13,9 +13,11 @@ package org.jacoco.core.internal.analysis;
 
 import static org.junit.Assert.assertEquals;
 
+import org.jacoco.core.TestSubject;
 import org.jacoco.core.internal.flow.MethodProbesVisitor;
 import org.jacoco.core.internal.instr.InstrSupport;
 import org.junit.Before;
+import org.junit.ClassRule;
 import org.junit.Test;
 import org.objectweb.asm.Opcodes;
 
@@ -23,6 +25,9 @@ import org.objectweb.asm.Opcodes;
  * Unit tests for {@link ClassAnalyzer}.
  */
 public class ClassAnalyzerTest {
+
+	@ClassRule
+	public static final TestSubject TEST_SUBJECT = TestSubject.is(ClassAnalyzer.class);
 
 	private ClassAnalyzer analyzer;
 	private ClassCoverageImpl coverage;

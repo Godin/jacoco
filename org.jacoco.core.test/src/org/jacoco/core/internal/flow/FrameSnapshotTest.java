@@ -13,9 +13,11 @@ package org.jacoco.core.internal.flow;
 
 import static org.junit.Assert.assertEquals;
 
+import org.jacoco.core.TestSubject;
 import org.jacoco.core.instr.MethodRecorder;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.ClassRule;
 import org.junit.Test;
 import org.objectweb.asm.Label;
 import org.objectweb.asm.MethodVisitor;
@@ -26,6 +28,9 @@ import org.objectweb.asm.commons.AnalyzerAdapter;
  * Unit tests for {@link FrameSnapshot}.
  */
 public class FrameSnapshotTest {
+
+	@ClassRule
+	public static final TestSubject TEST_SUBJECT = TestSubject.is(FrameSnapshot.class);
 
 	private AnalyzerAdapter analyzer;
 	private IFrame frame;

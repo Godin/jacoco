@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.jacoco.core.TestSubject;
 import org.jacoco.core.analysis.ILine;
 import org.jacoco.core.analysis.IMethodCoverage;
 import org.jacoco.core.internal.analysis.filter.FilterContextMock;
@@ -28,6 +29,7 @@ import org.jacoco.core.internal.flow.IProbeIdGenerator;
 import org.jacoco.core.internal.flow.LabelFlowAnalyzer;
 import org.jacoco.core.internal.flow.MethodProbesAdapter;
 import org.junit.Before;
+import org.junit.ClassRule;
 import org.junit.Test;
 import org.objectweb.asm.Label;
 import org.objectweb.asm.Opcodes;
@@ -40,6 +42,9 @@ import org.objectweb.asm.util.CheckMethodAdapter;
  * Unit tests for {@link MethodAnalyzer}.
  */
 public class MethodAnalyzerTest implements IProbeIdGenerator {
+
+	@ClassRule
+	public static final TestSubject TEST_SUBJECT = TestSubject.is(MethodAnalyzer.class);
 
 	private int nextProbeId;
 

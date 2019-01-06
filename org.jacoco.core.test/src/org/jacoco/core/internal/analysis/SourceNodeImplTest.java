@@ -13,14 +13,19 @@ package org.jacoco.core.internal.analysis;
 
 import static org.junit.Assert.assertEquals;
 
+import org.jacoco.core.TestSubject;
 import org.jacoco.core.analysis.ICoverageNode.ElementType;
 import org.jacoco.core.analysis.ISourceNode;
+import org.junit.ClassRule;
 import org.junit.Test;
 
 /**
  * Unit tests for {@link SourceNodeImpl}.
  */
 public class SourceNodeImplTest {
+
+	@ClassRule
+	public static final TestSubject TEST_SUBJECT = TestSubject.is(SourceNodeImpl.class);
 
 	@Test
 	public void testInit() {

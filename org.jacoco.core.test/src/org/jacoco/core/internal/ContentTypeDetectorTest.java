@@ -24,13 +24,18 @@ import java.util.zip.GZIPOutputStream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
+import org.jacoco.core.TestSubject;
 import org.jacoco.core.test.TargetLoader;
+import org.junit.ClassRule;
 import org.junit.Test;
 
 /**
  * Unit tests for {@link ContentTypeDetector}.
  */
 public class ContentTypeDetectorTest {
+
+	@ClassRule
+	public static final TestSubject TEST_SUBJECT = TestSubject.is(ContentTypeDetector.class);
 
 	private byte[] data;
 

@@ -19,16 +19,21 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 
+import org.jacoco.core.TestSubject;
 import org.jacoco.core.analysis.IClassCoverage;
 import org.jacoco.core.analysis.ICoverageNode;
 import org.jacoco.core.analysis.IPackageCoverage;
 import org.jacoco.core.analysis.ISourceFileCoverage;
+import org.junit.ClassRule;
 import org.junit.Test;
 
 /**
  * Unit tests for {@link BundleCoverageImpl}.
  */
 public class BundleCoverageImplTest {
+
+	@ClassRule
+	public static final TestSubject TEST_SUBJECT = TestSubject.is(BundleCoverageImpl.class);
 
 	@Test
 	public void testProperties() {

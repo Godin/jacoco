@@ -29,13 +29,18 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
 
+import org.jacoco.core.TestSubject;
 import org.jacoco.core.test.TargetLoader;
+import org.junit.ClassRule;
 import org.junit.Test;
 
 /**
  * Unit tests for {@link Pack200Streams}.
  */
 public class Pack200StreamsTest {
+
+	@ClassRule
+	public static final TestSubject TEST_SUBJECT = TestSubject.is(Pack200Streams.class);
 
 	@Test
 	public void testPack() throws IOException {

@@ -15,9 +15,11 @@ import static org.junit.Assert.assertEquals;
 
 import java.util.Arrays;
 
+import org.jacoco.core.TestSubject;
 import org.jacoco.core.instr.MethodRecorder;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.ClassRule;
 import org.junit.Test;
 import org.objectweb.asm.Label;
 import org.objectweb.asm.MethodVisitor;
@@ -29,6 +31,9 @@ import org.objectweb.asm.util.Printer;
  * Unit tests for {@link MethodProbesAdapter}.
  */
 public class MethodProbesAdapterTest implements IProbeIdGenerator {
+
+	@ClassRule
+	public static final TestSubject TEST_SUBJECT = TestSubject.is(MethodProbesAdapter.class);
 
 	private Label label;
 

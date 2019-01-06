@@ -14,12 +14,17 @@ package org.jacoco.core.internal.analysis;
 import static org.jacoco.core.analysis.ICoverageNode.ElementType.SOURCEFILE;
 import static org.junit.Assert.assertEquals;
 
+import org.jacoco.core.TestSubject;
+import org.junit.ClassRule;
 import org.junit.Test;
 
 /**
  * Unit test for {@link SourceFileCoverageImpl}.
  */
 public class SourceFileCoverageImplTest {
+
+	@ClassRule
+	public static final TestSubject TEST_SUBJECT = TestSubject.is(SourceFileCoverageImpl.class);
 
 	@Test
 	public void testProperties() {

@@ -26,12 +26,14 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import org.jacoco.core.TestSubject;
 import org.jacoco.core.data.SessionInfo;
 import org.jacoco.core.runtime.IRemoteCommandVisitor;
 import org.jacoco.core.runtime.RemoteControlReader;
 import org.jacoco.core.runtime.RemoteControlWriter;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.ClassRule;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -40,6 +42,9 @@ import org.junit.rules.ExpectedException;
  * Unit tests for {@link ExecDumpClient}.
  */
 public class ExecDumpClientTest {
+
+	@ClassRule
+	public static final TestSubject TEST_SUBJECT = TestSubject.is(ExecDumpClient.class);
 
 	private ExecDumpClient client;
 	private List<String> callbacks;

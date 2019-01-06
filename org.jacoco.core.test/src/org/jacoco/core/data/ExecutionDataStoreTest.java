@@ -25,13 +25,18 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import org.jacoco.core.TestSubject;
 import org.junit.Before;
+import org.junit.ClassRule;
 import org.junit.Test;
 
 /**
  * Unit tests for {@link ExecutionDataStore}.
  */
 public class ExecutionDataStoreTest implements IExecutionDataVisitor {
+
+	@ClassRule
+	public static final TestSubject TEST_SUBJECT = TestSubject.is(ExecutionDataStore.class);
 
 	private ExecutionDataStore store;
 

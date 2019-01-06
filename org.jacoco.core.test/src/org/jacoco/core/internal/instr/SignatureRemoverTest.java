@@ -21,13 +21,18 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.jar.Manifest;
 
+import org.jacoco.core.TestSubject;
 import org.junit.Before;
+import org.junit.ClassRule;
 import org.junit.Test;
 
 /**
  * Unit tests for {@link SignatureRemover}.
  */
 public class SignatureRemoverTest {
+
+	@ClassRule
+	public static final TestSubject TEST_SUBJECT = TestSubject.is(SignatureRemover.class);
 
 	private SignatureRemover remover;
 

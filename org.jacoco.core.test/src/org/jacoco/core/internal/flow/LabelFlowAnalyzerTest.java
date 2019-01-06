@@ -17,7 +17,9 @@ import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 import static org.objectweb.asm.Opcodes.*;
 
+import org.jacoco.core.TestSubject;
 import org.junit.Before;
+import org.junit.ClassRule;
 import org.junit.Test;
 import org.objectweb.asm.Label;
 import org.objectweb.asm.Opcodes;
@@ -26,6 +28,9 @@ import org.objectweb.asm.Opcodes;
  * Unit tests for {@link LabelFlowAnalyzer}.
  */
 public class LabelFlowAnalyzerTest {
+
+	@ClassRule
+	public static final TestSubject TEST_SUBJECT = TestSubject.is(LabelFlowAnalyzer.class);
 
 	private LabelFlowAnalyzer analyzer;
 

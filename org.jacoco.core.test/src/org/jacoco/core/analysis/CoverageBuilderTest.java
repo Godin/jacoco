@@ -23,16 +23,21 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import org.jacoco.core.TestSubject;
 import org.jacoco.core.internal.analysis.ClassCoverageImpl;
 import org.jacoco.core.internal.analysis.CounterImpl;
 import org.jacoco.core.internal.analysis.MethodCoverageImpl;
 import org.junit.Before;
+import org.junit.ClassRule;
 import org.junit.Test;
 
 /**
  * Unit tests for {@link CoverageBuilder}.
  */
 public class CoverageBuilderTest {
+
+	@ClassRule
+	public static final TestSubject TEST_SUBJECT = TestSubject.is(CoverageBuilder.class);
 
 	private CoverageBuilder coverageBuilder;
 

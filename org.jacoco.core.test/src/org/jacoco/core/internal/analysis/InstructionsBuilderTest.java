@@ -15,9 +15,11 @@ import static org.junit.Assert.assertEquals;
 
 import java.util.Map;
 
+import org.jacoco.core.TestSubject;
 import org.jacoco.core.analysis.ISourceFileCoverage;
 import org.jacoco.core.internal.flow.LabelInfo;
 import org.junit.Before;
+import org.junit.ClassRule;
 import org.junit.Test;
 import org.objectweb.asm.Label;
 import org.objectweb.asm.Opcodes;
@@ -28,6 +30,9 @@ import org.objectweb.asm.tree.InsnNode;
  * Unit tests for {@link InstructionsBuilder}.
  */
 public class InstructionsBuilderTest {
+
+	@ClassRule
+	public static final TestSubject TEST_SUBJECT = TestSubject.is(InstructionsBuilder.class);
 
 	private InstructionsBuilder builder;
 

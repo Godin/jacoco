@@ -14,14 +14,19 @@ package org.jacoco.core.internal.analysis;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 
+import org.jacoco.core.TestSubject;
 import org.jacoco.core.analysis.ICounter;
 import org.junit.Before;
+import org.junit.ClassRule;
 import org.junit.Test;
 
 /**
  * Unit tests for {@link LineImplTest}.
  */
 public class LineImplTest {
+
+	@ClassRule
+	public static final TestSubject TEST_SUBJECT = TestSubject.is(LineImpl.class);
 
 	private LineImpl line;
 

@@ -13,9 +13,11 @@ package org.jacoco.core.internal.instr;
 
 import static org.junit.Assert.assertEquals;
 
+import org.jacoco.core.TestSubject;
 import org.jacoco.core.instr.MethodRecorder;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.ClassRule;
 import org.junit.Test;
 import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.MethodVisitor;
@@ -25,6 +27,9 @@ import org.objectweb.asm.Opcodes;
  * Unit tests for {@link ProbeInserter}.
  */
 public class ProbeInserterTest {
+
+	@ClassRule
+	public static final TestSubject TEST_SUBJECT = TestSubject.is(ProbeInserter.class);
 
 	private MethodRecorder actual, expected;
 

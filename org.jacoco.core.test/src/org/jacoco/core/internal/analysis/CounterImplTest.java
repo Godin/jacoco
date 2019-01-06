@@ -16,14 +16,19 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotSame;
 import static org.junit.Assert.assertSame;
 
+import org.jacoco.core.TestSubject;
 import org.jacoco.core.analysis.ICounter;
 import org.jacoco.core.analysis.ICounter.CounterValue;
+import org.junit.ClassRule;
 import org.junit.Test;
 
 /**
  * Unit tests for {@link CounterImpl}.
  */
 public class CounterImplTest {
+
+	@ClassRule
+	public static final TestSubject TEST_SUBJECT = TestSubject.is(CounterImpl.class);
 
 	@Test
 	public void testGetInstance1() {

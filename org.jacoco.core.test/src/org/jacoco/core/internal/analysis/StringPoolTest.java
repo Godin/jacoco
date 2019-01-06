@@ -15,13 +15,18 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertSame;
 
+import org.jacoco.core.TestSubject;
 import org.junit.Before;
+import org.junit.ClassRule;
 import org.junit.Test;
 
 /**
  * Unit tests for {@link StringPool}.
  */
 public class StringPoolTest {
+
+	@ClassRule
+	public static final TestSubject TEST_SUBJECT = TestSubject.is(StringPool.class);
 
 	private StringPool pool;
 

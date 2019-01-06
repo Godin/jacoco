@@ -15,6 +15,8 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
+import org.jacoco.core.TestSubject;
+import org.junit.ClassRule;
 import org.junit.Test;
 import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.Label;
@@ -25,6 +27,9 @@ import org.objectweb.asm.Opcodes;
  * Unit tests for {@link ClassProbesAdapter}.
  */
 public class ClassProbesAdapterTest {
+
+	@ClassRule
+	public static final TestSubject TEST_SUBJECT = TestSubject.is(ClassProbesAdapter.class);
 
 	private static class MockMethodVisitor extends MethodProbesVisitor {
 

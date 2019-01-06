@@ -18,8 +18,10 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 
+import org.jacoco.core.TestSubject;
 import org.jacoco.core.analysis.ISourceFileCoverage;
 import org.junit.Before;
+import org.junit.ClassRule;
 import org.junit.Test;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.tree.AbstractInsnNode;
@@ -30,6 +32,9 @@ import org.objectweb.asm.tree.InsnNode;
  * Unit tests for {@link MethodCoverageCalculator}.
  */
 public class MethodCoverageCalculatorTest {
+
+	@ClassRule
+	public static final TestSubject TEST_SUBJECT = TestSubject.is(MethodCoverageCalculator.class);
 
 	private Map<AbstractInsnNode, Instruction> instructions;
 

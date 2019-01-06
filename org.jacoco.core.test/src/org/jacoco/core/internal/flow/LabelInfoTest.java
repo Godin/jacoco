@@ -17,8 +17,10 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 
+import org.jacoco.core.TestSubject;
 import org.jacoco.core.internal.analysis.Instruction;
 import org.junit.Before;
+import org.junit.ClassRule;
 import org.junit.Test;
 import org.objectweb.asm.Label;
 
@@ -26,6 +28,9 @@ import org.objectweb.asm.Label;
  * Unit tests for {@link LabelInfoTest}.
  */
 public class LabelInfoTest {
+
+	@ClassRule
+	public static final TestSubject TEST_SUBJECT = TestSubject.is(LabelInfo.class);
 
 	private Label label;
 

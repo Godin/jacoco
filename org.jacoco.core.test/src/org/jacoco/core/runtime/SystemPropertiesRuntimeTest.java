@@ -11,10 +11,16 @@
  *******************************************************************************/
 package org.jacoco.core.runtime;
 
+import org.jacoco.core.TestSubject;
+import org.junit.ClassRule;
+
 /**
  * Unit tests for {@link SystemPropertiesRuntime}.
  */
 public class SystemPropertiesRuntimeTest extends RuntimeTestBase {
+
+	@ClassRule
+	public static final TestSubject TEST_SUBJECT = TestSubject.is(SystemPropertiesRuntime.class);
 
 	@Override
 	IRuntime createRuntime() {

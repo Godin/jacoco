@@ -11,13 +11,18 @@
  *******************************************************************************/
 package org.jacoco.core.runtime;
 
+import org.jacoco.core.TestSubject;
 import org.junit.Assume;
 import org.junit.BeforeClass;
+import org.junit.ClassRule;
 
 /**
  * Unit tests for {@link URLStreamHandlerRuntime}.
  */
 public class URLStreamHandlerRuntimeTest extends RuntimeTestBase {
+
+	@ClassRule
+	public static final TestSubject TEST_SUBJECT = TestSubject.is(URLStreamHandlerRuntime.class);
 
 	@Override
 	IRuntime createRuntime() {

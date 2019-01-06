@@ -25,12 +25,18 @@
 
   <properties>
     <jacoco.includes>org.jacoco.core.*</jacoco.includes>
+    <jacoco.output>none</jacoco.output>
   </properties>
 
   <dependencies>
     <dependency>
       <groupId>${project.groupId}</groupId>
       <artifactId>org.jacoco.core</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>org.jacoco.agent</artifactId>
+      <classifier>runtime</classifier>
     </dependency>
     <dependency>
       <groupId>org.ow2.asm</groupId>

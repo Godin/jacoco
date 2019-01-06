@@ -13,10 +13,12 @@ package org.jacoco.core.internal.instr;
 
 import static org.junit.Assert.assertEquals;
 
+import org.jacoco.core.TestSubject;
 import org.jacoco.core.instr.MethodRecorder;
 import org.jacoco.core.internal.flow.IFrame;
 import org.jacoco.core.internal.flow.LabelInfo;
 import org.junit.Before;
+import org.junit.ClassRule;
 import org.junit.Test;
 import org.objectweb.asm.Label;
 import org.objectweb.asm.MethodVisitor;
@@ -26,6 +28,9 @@ import org.objectweb.asm.Opcodes;
  * Unit tests for {@link MethodInstrumenter}.
  */
 public class MethodInstrumenterTest {
+
+	@ClassRule
+	public static final TestSubject TEST_SUBJECT = TestSubject.is(MethodInstrumenter.class);
 
 	private MethodInstrumenter instrumenter;
 

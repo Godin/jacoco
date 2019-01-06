@@ -13,13 +13,18 @@ package org.jacoco.core.internal.analysis;
 
 import static org.junit.Assert.assertEquals;
 
+import org.jacoco.core.TestSubject;
 import org.jacoco.core.analysis.ICoverageNode;
+import org.junit.ClassRule;
 import org.junit.Test;
 
 /**
  * Unit test for {@link MethodCoverageImpl}.
  */
 public class MethodCoverageImplTest {
+
+	@ClassRule
+	public static final TestSubject TEST_SUBJECT = TestSubject.is(MethodCoverageImpl.class);
 
 	@Test
 	public void testProperties() {

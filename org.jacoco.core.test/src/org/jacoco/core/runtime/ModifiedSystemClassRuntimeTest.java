@@ -25,13 +25,18 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.lang.reflect.Proxy;
 
+import org.jacoco.core.TestSubject;
 import org.jacoco.core.test.TargetLoader;
+import org.junit.ClassRule;
 import org.junit.Test;
 
 /**
  * Unit tests for {@link ModifiedSystemClassRuntime}.
  */
 public class ModifiedSystemClassRuntimeTest extends RuntimeTestBase {
+
+	@ClassRule
+	public static final TestSubject TEST_SUBJECT = TestSubject.is(ModifiedSystemClassRuntime.class);
 
 	@Override
 	IRuntime createRuntime() {

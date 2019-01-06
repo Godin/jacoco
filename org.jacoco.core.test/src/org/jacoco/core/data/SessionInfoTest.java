@@ -13,12 +13,17 @@ package org.jacoco.core.data;
 
 import static org.junit.Assert.assertEquals;
 
+import org.jacoco.core.TestSubject;
+import org.junit.ClassRule;
 import org.junit.Test;
 
 /**
  * Unit tests for {@link SessionInfo}.
  */
 public class SessionInfoTest {
+
+	@ClassRule
+	public static final TestSubject TEST_SUBJECT = TestSubject.is(SessionInfo.class);
 
 	@Test(expected = IllegalArgumentException.class)
 	public void testNullId() {

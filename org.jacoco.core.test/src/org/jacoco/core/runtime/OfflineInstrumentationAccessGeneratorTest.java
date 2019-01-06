@@ -15,11 +15,13 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertSame;
 
 import org.jacoco.core.JaCoCo;
+import org.jacoco.core.TestSubject;
 import org.jacoco.core.instr.MethodRecorder;
 import org.jacoco.core.internal.instr.InstrSupport;
 import org.jacoco.core.test.TargetLoader;
 import org.junit.Before;
 import org.junit.BeforeClass;
+import org.junit.ClassRule;
 import org.junit.Test;
 import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.Opcodes;
@@ -31,6 +33,9 @@ import org.objectweb.asm.commons.Method;
  * Unit tests for {@link OfflineInstrumentationAccessGenerator}.
  */
 public class OfflineInstrumentationAccessGeneratorTest {
+
+	@ClassRule
+	public static final TestSubject TEST_SUBJECT = TestSubject.is(OfflineInstrumentationAccessGenerator.class);
 
 	private IExecutionDataAccessorGenerator generator;
 

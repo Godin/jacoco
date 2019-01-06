@@ -16,12 +16,17 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 
+import org.jacoco.core.TestSubject;
+import org.junit.ClassRule;
 import org.junit.Test;
 
 /**
  * Unit tests for {@link ExecutionData}.
  */
 public class ExecutionDataTest {
+
+	@ClassRule
+	public static final TestSubject TEST_SUBJECT = TestSubject.is(ExecutionData.class);
 
 	@Test
 	public void testCreateEmpty() {

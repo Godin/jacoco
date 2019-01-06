@@ -15,12 +15,17 @@ import static org.junit.Assert.assertEquals;
 
 import java.util.Arrays;
 
+import org.jacoco.core.TestSubject;
+import org.junit.ClassRule;
 import org.junit.Test;
 
 /**
  * Unit tests for {@link CommandLineSupport}.
  */
 public class CommandLineSupportTest {
+
+	@ClassRule
+	public static final TestSubject TEST_SUBJECT = TestSubject.is(CommandLineSupport.class);
 
 	@Test
 	public void testQuote1() {

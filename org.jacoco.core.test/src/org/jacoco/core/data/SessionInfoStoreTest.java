@@ -20,13 +20,18 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+import org.jacoco.core.TestSubject;
 import org.junit.Before;
+import org.junit.ClassRule;
 import org.junit.Test;
 
 /**
  * Unit tests for {@link SessionInfoStore}.
  */
 public class SessionInfoStoreTest {
+
+	@ClassRule
+	public static final TestSubject TEST_SUBJECT = TestSubject.is(SessionInfoStore.class);
 
 	private SessionInfoStore store;
 

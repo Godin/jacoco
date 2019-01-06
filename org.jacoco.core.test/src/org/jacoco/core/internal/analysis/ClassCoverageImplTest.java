@@ -18,15 +18,20 @@ import static org.junit.Assert.assertTrue;
 
 import java.util.Collections;
 
+import org.jacoco.core.TestSubject;
 import org.jacoco.core.analysis.ICoverageNode;
 import org.jacoco.core.analysis.ISourceNode;
 import org.junit.Before;
+import org.junit.ClassRule;
 import org.junit.Test;
 
 /**
  * Unit test for {@link ClassCoverageImpl}.
  */
 public class ClassCoverageImplTest {
+
+	@ClassRule
+	public static final TestSubject TEST_SUBJECT = TestSubject.is(ClassCoverageImpl.class);
 
 	private ClassCoverageImpl node;
 

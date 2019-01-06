@@ -13,9 +13,11 @@ package org.jacoco.core.internal.instr;
 
 import static org.junit.Assert.assertEquals;
 
+import org.jacoco.core.TestSubject;
 import org.jacoco.core.instr.MethodRecorder;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.ClassRule;
 import org.junit.Test;
 import org.objectweb.asm.Handle;
 import org.objectweb.asm.MethodVisitor;
@@ -40,6 +42,9 @@ import org.objectweb.asm.tree.VarInsnNode;
  * Unit tests for {@link DuplicateFrameEliminator}.
  */
 public class DuplicateFrameEliminatorTest {
+
+	@ClassRule
+	public static final TestSubject TEST_SUBJECT = TestSubject.is(DuplicateFrameEliminator.class);
 
 	private MethodRecorder actual;
 	private MethodRecorder expected;

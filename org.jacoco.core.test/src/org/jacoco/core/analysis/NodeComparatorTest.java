@@ -18,14 +18,19 @@ import static org.junit.Assert.assertTrue;
 import java.util.Arrays;
 import java.util.List;
 
+import org.jacoco.core.TestSubject;
 import org.jacoco.core.analysis.ICoverageNode.CounterEntity;
 import org.jacoco.core.internal.analysis.CounterImpl;
+import org.junit.ClassRule;
 import org.junit.Test;
 
 /**
  * Unit test for {@link NodeComparator}.
  */
 public class NodeComparatorTest {
+
+	@ClassRule
+	public static final TestSubject TEST_SUBJECT = TestSubject.is(NodeComparator.class);
 
 	@Test
 	public void testSort() {

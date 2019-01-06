@@ -17,14 +17,19 @@ import static org.junit.Assert.assertTrue;
 
 import java.util.Comparator;
 
+import org.jacoco.core.TestSubject;
 import org.jacoco.core.analysis.ICoverageNode.CounterEntity;
 import org.jacoco.core.internal.analysis.CounterImpl;
+import org.junit.ClassRule;
 import org.junit.Test;
 
 /**
  * Unit tests for {@link CounterComparator}.
  */
 public class CounterComparatorTest {
+
+	@ClassRule
+	public static final TestSubject TEST_SUBJECT = TestSubject.is(CounterComparator.class);
 
 	@Test
 	public void testTotalItemsComparator() {

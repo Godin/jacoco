@@ -19,9 +19,11 @@ import static org.junit.Assert.fail;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.jacoco.core.TestSubject;
 import org.jacoco.core.runtime.IExecutionDataAccessorGenerator;
 import org.jacoco.core.runtime.OfflineInstrumentationAccessGenerator;
 import org.junit.Before;
+import org.junit.ClassRule;
 import org.junit.Test;
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.ClassVisitor;
@@ -36,6 +38,9 @@ import org.objectweb.asm.Opcodes;
  * the returned {@link IProbeArrayStrategy} instances for different classes.
  */
 public class ProbeArrayStrategyFactoryTest {
+
+	@ClassRule
+	public static final TestSubject TEST_SUBJECT = TestSubject.is(ProbeArrayStrategyFactory.class);
 
 	private IExecutionDataAccessorGenerator generator;
 	private ClassVisitorMock cv;

@@ -13,7 +13,9 @@ package org.jacoco.core.internal.instr;
 
 import static org.junit.Assert.assertNull;
 
+import org.jacoco.core.TestSubject;
 import org.junit.Before;
+import org.junit.ClassRule;
 import org.junit.Test;
 import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.MethodVisitor;
@@ -22,6 +24,9 @@ import org.objectweb.asm.MethodVisitor;
  * Unit tests for {@link ClassInstrumenter}.
  */
 public class ClassInstrumenterTest implements IProbeArrayStrategy {
+
+	@ClassRule
+	public static final TestSubject TEST_SUBJECT = TestSubject.is(ClassInstrumenter.class);
 
 	private ClassInstrumenter instrumenter;
 

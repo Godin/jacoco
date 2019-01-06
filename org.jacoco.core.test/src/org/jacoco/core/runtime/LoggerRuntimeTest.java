@@ -11,10 +11,16 @@
  *******************************************************************************/
 package org.jacoco.core.runtime;
 
+import org.jacoco.core.TestSubject;
+import org.junit.ClassRule;
+
 /**
  * Unit tests for {@link LoggerRuntime}.
  */
 public class LoggerRuntimeTest extends RuntimeTestBase {
+
+	@ClassRule
+	public static final TestSubject TEST_SUBJECT = TestSubject.is(LoggerRuntime.class);
 
 	@Override
 	IRuntime createRuntime() {

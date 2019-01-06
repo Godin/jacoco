@@ -19,13 +19,18 @@ import static org.junit.Assert.assertTrue;
 import java.io.File;
 import java.util.Properties;
 
+import org.jacoco.core.TestSubject;
 import org.junit.BeforeClass;
+import org.junit.ClassRule;
 import org.junit.Test;
 
 /**
  * Unit tests for {@link AgentOptions}.
  */
 public class AgentOptionsTest {
+
+	@ClassRule
+	public static final TestSubject TEST_SUBJECT = TestSubject.is(AgentOptions.class);
 
 	private static File defaultAgentJarFile;
 

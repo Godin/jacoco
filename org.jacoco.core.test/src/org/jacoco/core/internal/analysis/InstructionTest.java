@@ -15,13 +15,18 @@ import static org.junit.Assert.assertEquals;
 
 import java.util.Arrays;
 
+import org.jacoco.core.TestSubject;
 import org.junit.Before;
+import org.junit.ClassRule;
 import org.junit.Test;
 
 /**
  * Unit tests for {@link Instruction}.
  */
 public class InstructionTest {
+
+	@ClassRule
+	public static final TestSubject TEST_SUBJECT = TestSubject.is(Instruction.class);
 
 	private Instruction instruction;
 

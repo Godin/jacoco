@@ -15,7 +15,9 @@ import static org.junit.Assert.assertEquals;
 
 import java.io.UnsupportedEncodingException;
 
+import org.jacoco.core.TestSubject;
 import org.jacoco.core.data.ExecutionDataWriter;
+import org.junit.ClassRule;
 import org.junit.Test;
 import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.Opcodes;
@@ -24,6 +26,9 @@ import org.objectweb.asm.Opcodes;
  * Unit tests for {@link CRC64}.
  */
 public class CRC64Test {
+
+	@ClassRule
+	public static final TestSubject TEST_SUBJECT = TestSubject.is(CRC64.class);
 
 	@Test
 	public void except_java_9_checksums_should_be_different_for_different_bytecode_versions() {

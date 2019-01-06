@@ -14,9 +14,14 @@ package org.jacoco.core.runtime;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
+import org.jacoco.core.TestSubject;
+import org.junit.ClassRule;
 import org.junit.Test;
 
 public class WildcardMatcherTest {
+
+	@ClassRule
+	public static final TestSubject TEST_SUBJECT = TestSubject.is(WildcardMatcher.class);
 
 	@Test
 	public void empty_expression_should_match_any_string() {

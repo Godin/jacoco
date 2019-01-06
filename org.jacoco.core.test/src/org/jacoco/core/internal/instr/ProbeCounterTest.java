@@ -16,7 +16,9 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
+import org.jacoco.core.TestSubject;
 import org.junit.Before;
+import org.junit.ClassRule;
 import org.junit.Test;
 import org.objectweb.asm.Opcodes;
 
@@ -24,6 +26,9 @@ import org.objectweb.asm.Opcodes;
  * Unit tests for {@link ProbeCounter}.
  */
 public class ProbeCounterTest {
+
+	@ClassRule
+	public static final TestSubject TEST_SUBJECT = TestSubject.is(ProbeCounter.class);
 
 	private ProbeCounter counter;
 

@@ -21,14 +21,19 @@ import static org.junit.Assert.assertEquals;
 
 import java.util.Arrays;
 
+import org.jacoco.core.TestSubject;
 import org.jacoco.core.analysis.ICoverageNode.ElementType;
 import org.jacoco.core.internal.analysis.CounterImpl;
+import org.junit.ClassRule;
 import org.junit.Test;
 
 /**
  * Unit tests for {@link CoverageNodeImpl}.
  */
 public class CoverageNodeImplTest {
+
+	@ClassRule
+	public static final TestSubject TEST_SUBJECT = TestSubject.is(CoverageNodeImpl.class);
 
 	@Test
 	public void testProperties() {

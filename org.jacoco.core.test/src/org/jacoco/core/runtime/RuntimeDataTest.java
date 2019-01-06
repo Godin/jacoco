@@ -19,8 +19,10 @@ import static org.junit.Assert.assertTrue;
 
 import java.util.concurrent.Callable;
 
+import org.jacoco.core.TestSubject;
 import org.jacoco.core.test.TargetLoader;
 import org.junit.Before;
+import org.junit.ClassRule;
 import org.junit.Test;
 import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.MethodVisitor;
@@ -32,6 +34,9 @@ import org.objectweb.asm.Type;
  * 
  */
 public class RuntimeDataTest {
+
+	@ClassRule
+	public static final TestSubject TEST_SUBJECT = TestSubject.is(RuntimeData.class);
 
 	private RuntimeData data;
 	private TestStorage storage;

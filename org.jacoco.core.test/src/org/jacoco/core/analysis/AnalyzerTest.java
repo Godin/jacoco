@@ -36,10 +36,12 @@ import java.util.zip.GZIPOutputStream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
+import org.jacoco.core.TestSubject;
 import org.jacoco.core.data.ExecutionDataStore;
 import org.jacoco.core.internal.data.CRC64;
 import org.jacoco.core.test.TargetLoader;
 import org.junit.Before;
+import org.junit.ClassRule;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
@@ -50,6 +52,9 @@ import org.objectweb.asm.Opcodes;
  * Unit tests for {@link Analyzer}.
  */
 public class AnalyzerTest {
+
+	@ClassRule
+	public static final TestSubject TEST_SUBJECT = TestSubject.is(Analyzer.class);
 
 	@Rule
 	public TemporaryFolder folder = new TemporaryFolder();

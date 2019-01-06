@@ -13,8 +13,10 @@ package org.jacoco.core.internal.flow;
 
 import static org.junit.Assert.assertEquals;
 
+import org.jacoco.core.TestSubject;
 import org.jacoco.core.instr.MethodRecorder;
 import org.junit.Before;
+import org.junit.ClassRule;
 import org.junit.Test;
 import org.objectweb.asm.Label;
 import org.objectweb.asm.MethodVisitor;
@@ -25,6 +27,9 @@ import org.objectweb.asm.tree.MethodNode;
  * Unit tests for {@link MethodSanitizer}.
  */
 public class MethodSanitizerTest {
+
+	@ClassRule
+	public static final TestSubject TEST_SUBJECT = TestSubject.is(MethodSanitizer.class);
 
 	private MethodNode actual;
 	private MethodNode expected;

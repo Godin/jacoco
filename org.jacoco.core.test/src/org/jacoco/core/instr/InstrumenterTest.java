@@ -34,12 +34,14 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
 
+import org.jacoco.core.TestSubject;
 import org.jacoco.core.analysis.AnalyzerTest;
 import org.jacoco.core.internal.data.CRC64;
 import org.jacoco.core.internal.instr.InstrSupport;
 import org.jacoco.core.runtime.IExecutionDataAccessorGenerator;
 import org.jacoco.core.test.TargetLoader;
 import org.junit.Before;
+import org.junit.ClassRule;
 import org.junit.Test;
 import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.MethodVisitor;
@@ -49,6 +51,9 @@ import org.objectweb.asm.Opcodes;
  * Unit tests for {@link Instrumenter}.
  */
 public class InstrumenterTest {
+
+	@ClassRule
+	public static final TestSubject TEST_SUBJECT = TestSubject.is(Instrumenter.class);
 
 	// no serialVersionUID to enforce calculation
 	@SuppressWarnings("serial")
