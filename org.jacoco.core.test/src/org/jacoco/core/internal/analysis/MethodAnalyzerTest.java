@@ -336,11 +336,12 @@ public class MethodAnalyzerTest implements IProbeIdGenerator {
 	public void if_branch_merge_should_show_partial_branch_coverage_when_probe_for_second_branch_is_executed() {
 		createIfBranchMerge();
 		probes[1] = true;
+		probes[2] = true;
 		runMethodAnalzer();
 
 		assertLine(1001, 0, 2, 1, 1);
 		assertLine(1002, 0, 1, 0, 0);
-		assertLine(1003, 1, 0, 0, 0);
+		assertLine(1003, 0, 1, 0, 0);
 	}
 
 	@Test
@@ -410,10 +411,12 @@ public class MethodAnalyzerTest implements IProbeIdGenerator {
 		method.visitVarInsn(Opcodes.ALOAD, 0);
 		method.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "Foo", "test", "()Z",
 				false);
+		// probe[0] true iff jump happened
 		method.visitJumpInsn(Opcodes.IFEQ, l1);
 		final Label l2 = new Label();
 		method.visitLabel(l2);
 		method.visitLineNumber(1002, l2);
+		// probes[1]
 		method.visitInsn(Opcodes.RETURN);
 	}
 

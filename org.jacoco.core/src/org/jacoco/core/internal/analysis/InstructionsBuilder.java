@@ -19,6 +19,7 @@ import java.util.Map;
 import org.jacoco.core.analysis.ISourceNode;
 import org.jacoco.core.internal.flow.LabelInfo;
 import org.objectweb.asm.Label;
+import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.tree.AbstractInsnNode;
 
 /**
@@ -35,8 +36,14 @@ class InstructionsBuilder {
 	/** The line which belong to subsequently added instructions. */
 	private int currentLine;
 
+	/** The last node which has been added. */
+	private AbstractInsnNode currentNode;
+
 	/** The last instruction which has been added. */
 	private Instruction currentInsn;
+
+	/** Indicates that probe was added. */
+	private Boolean afterExecutedProbe;
 
 	/**
 	 * All instructions of a method mapped from the ASM node to the
@@ -91,7 +98,7 @@ class InstructionsBuilder {
 	void addLabel(final Label label) {
 		currentLabel.add(label);
 		if (!LabelInfo.isSuccessor(label)) {
-			noSuccessor();
+			afterUnconditionalJump();
 		}
 	}
 
@@ -111,8 +118,15 @@ class InstructionsBuilder {
 		if (currentInsn != null) {
 			currentInsn.addBranch(insn, 0);
 		}
+		currentNode = node;
 		currentInsn = insn;
 		instructions.put(node, insn);
+
+		System.out.println("instruction: " + currentNode.getOpcode());
+
+		if (Boolean.TRUE.equals(afterExecutedProbe)) {
+			insn.afterExecutedProbe();
+		}
 	}
 
 	/**
@@ -122,6 +136,11 @@ class InstructionsBuilder {
 	 */
 	void noSuccessor() {
 		currentInsn = null;
+	}
+
+	private void afterUnconditionalJump() {
+		noSuccessor();
+		afterExecutedProbe = null;
 	}
 
 	/**
@@ -147,6 +166,19 @@ class InstructionsBuilder {
 	void addProbe(final int probeId, final int branch) {
 		final boolean executed = probes != null && probes[probeId];
 		currentInsn.addBranch(executed, branch);
+
+		System.out.println("probe " + probeId + " branch " + branch);
+
+		switch (currentNode.getType()) {
+			case AbstractInsnNode.JUMP_INSN:
+			case AbstractInsnNode.LOOKUPSWITCH_INSN:
+			case AbstractInsnNode.TABLESWITCH_INSN:
+				afterExecutedProbe = null;
+				break;
+			default:
+				afterExecutedProbe = executed;
+				break;
+		}
 	}
 
 	/**

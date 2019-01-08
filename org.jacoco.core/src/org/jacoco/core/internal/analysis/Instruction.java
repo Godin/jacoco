@@ -64,6 +64,8 @@ public class Instruction {
 
 	private int predecessorBranch;
 
+	private boolean afterExecutedProbe;
+
 	/**
 	 * New instruction at the given line.
 	 * 
@@ -74,6 +76,10 @@ public class Instruction {
 		this.line = line;
 		this.branches = 0;
 		this.coveredBranches = new BitSet();
+	}
+
+	void afterExecutedProbe() {
+		this.afterExecutedProbe = true;
 	}
 
 	/**
@@ -154,6 +160,7 @@ public class Instruction {
 		result.branches = this.branches;
 		result.coveredBranches.or(this.coveredBranches);
 		result.coveredBranches.or(other.coveredBranches);
+		result.afterExecutedProbe |= other.afterExecutedProbe;
 		return result;
 	}
 
@@ -186,6 +193,9 @@ public class Instruction {
 	 * @return the instruction coverage counter
 	 */
 	public ICounter getInstructionCounter() {
+		if (afterExecutedProbe) {
+			return CounterImpl.COUNTER_0_1;
+		}
 		return coveredBranches.isEmpty() ? CounterImpl.COUNTER_1_0
 				: CounterImpl.COUNTER_0_1;
 	}
