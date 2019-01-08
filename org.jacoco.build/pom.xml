@@ -785,6 +785,20 @@
       </properties>
     </profile>
 
+    <profile>
+      <id>java13-bytecode</id>
+      <activation>
+        <property>
+          <name>bytecode.version</name>
+          <value>13</value>
+        </property>
+      </activation>
+      <properties>
+        <maven.compiler.source>12</maven.compiler.source>
+        <maven.compiler.target>12</maven.compiler.target>
+      </properties>
+    </profile>
+
     <!-- This profile enables use of ECJ -->
     <profile>
       <id>ecj</id>

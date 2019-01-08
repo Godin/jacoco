@@ -200,6 +200,19 @@
         <module>../org.jacoco.core.test.validation.kotlin</module>
         <module>../org.jacoco.core.test.validation.java7</module>
         <module>../org.jacoco.core.test.validation.java8</module>
+      </modules>
+    </profile>
+
+    <profile>
+      <id>java12-bytecode-groovy</id>
+      <activation>
+        <property>
+          <name>bytecode.version</name>
+          <value>12</value>
+        </property>
+        <jdk>[8,13)</jdk>
+      </activation>
+      <modules>
         <module>../org.jacoco.core.test.validation.groovy</module>
       </modules>
     </profile>
