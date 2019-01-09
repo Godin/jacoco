@@ -136,6 +136,69 @@ public class MethodAnalyzerTest implements IProbeIdGenerator {
 		assertLine(1002, 0, 1, 0, 0);
 	}
 
+	// === Scenario: branch with implicit exceptions ===
+
+	private void createBranchWithImplicitExceptions() {
+		final Label l0 = new Label();
+		method.visitLabel(l0);
+		method.visitLineNumber(1001, l0);
+		method.visitVarInsn(Opcodes.ILOAD, 1);
+		final Label l1 = new Label();
+		method.visitJumpInsn(Opcodes.IFEQ, l1);
+
+		final Label l2 = new Label();
+		method.visitLabel(l2);
+		method.visitLineNumber(1002, l2);
+		method.visitLdcInsn("");
+		method.visitMethodInsn(Opcodes.INVOKESTATIC, "Example",
+				"methodThatThrowsException", "(Ljava/lang/String;)I", false);
+		method.visitInsn(Opcodes.POP);
+
+		method.visitLabel(l1);
+		method.visitLineNumber(1003, l1);
+		method.visitLdcInsn("");
+		method.visitMethodInsn(Opcodes.INVOKESTATIC, "Example",
+				"methodThatThrowsException", "(Ljava/lang/String;)I", false);
+		method.visitInsn(Opcodes.POP);
+
+		final Label l3 = new Label();
+		method.visitLabel(l3);
+		method.visitLineNumber(1004, l3);
+		method.visitInsn(Opcodes.RETURN);
+	}
+
+	@Test
+	public void branch_with_implicit_exceptions_should_create_4_probes() {
+		createBranchWithImplicitExceptions();
+		runMethodAnalzer();
+		assertEquals(4, nextProbeId);
+	}
+
+	@Test
+	public void instruction_at_branch_target_should_be_considered_as_covered() {
+		createBranchWithImplicitExceptions();
+		probes[0] = true; // jump to L1
+		runMethodAnalzer();
+
+		assertLine(1001, 0, 2, 1, 1);
+		assertLine(1002, 3, 0, 0, 0);
+		assertLine(1003, 2, 1, 0, 0);
+		assertLine(1004, 1, 0, 0, 0);
+	}
+
+	@Test
+	public void instruction_immediately_after_executed_probe_should_be_considered_as_executed() {
+		createBranchWithImplicitExceptions();
+		probes[0] = false; // no jump to L1
+		probes[1] = true;
+		runMethodAnalzer();
+
+		assertLine(1001, 0, 2, 1, 1);
+		assertLine(1002, 2, 1, 0, 0);
+		assertLine(1003, 3, 0, 0, 0);
+		assertLine(1004, 1, 0, 0, 0);
+	}
+
 	// === Scenario: simple if branch ===
 
 	private void createIfBranch() {

@@ -14,6 +14,7 @@ package org.jacoco.core.internal.analysis;
 import static org.junit.Assert.assertEquals;
 
 import java.util.Arrays;
+import java.util.Collections;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -140,6 +141,18 @@ public class InstructionTest {
 	}
 
 	@Test
+	public void markAsImplicitlyCovered_should_affect_instruction_counter_but_not_branch_counter() {
+		instruction.addBranch(false, 0);
+		instruction.addBranch(false, 1);
+		instruction.markAsImplicitlyCovered();
+
+		assertEquals(CounterImpl.getInstance(0, 1),
+				instruction.getInstructionCounter());
+		assertEquals(CounterImpl.getInstance(2, 0),
+				instruction.getBranchCounter());
+	}
+
+	@Test
 	public void merge_should_calculate_superset_of_covered_branches() {
 		final Instruction i1 = new Instruction(124);
 		i1.addBranch(false, 1);
@@ -159,6 +172,21 @@ public class InstructionTest {
 	}
 
 	@Test
+	public void merge_should_combine_implicit_coverage() {
+		final Instruction i1 = new Instruction(124);
+		final Instruction i2 = new Instruction(124);
+		i1.markAsImplicitlyCovered();
+
+		instruction = i1.merge(i2);
+		assertEquals(CounterImpl.getInstance(0, 1),
+				instruction.getInstructionCounter());
+
+		instruction = i2.merge(i1);
+		assertEquals(CounterImpl.getInstance(0, 1),
+				instruction.getInstructionCounter());
+	}
+
+	@Test
 	public void replaceBranches_should_calculate_coverage_on_new_branches() {
 		Instruction i1 = new Instruction(1);
 		Instruction i2 = new Instruction(2);
@@ -170,4 +198,13 @@ public class InstructionTest {
 		assertEquals(CounterImpl.getInstance(2, 1),
 				instruction.getBranchCounter());
 	}
+
+	@Test
+	public void replaceBranches_should_preserve_implicit_coverage() {
+		instruction.markAsImplicitlyCovered();
+		instruction.replaceBranches(Collections.<Instruction> emptySet());
+		assertEquals(CounterImpl.getInstance(0, 1),
+				instruction.getInstructionCounter());
+	}
+
 }

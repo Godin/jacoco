@@ -20,6 +20,7 @@ import org.jacoco.core.analysis.ISourceNode;
 import org.jacoco.core.internal.flow.LabelInfo;
 import org.objectweb.asm.Label;
 import org.objectweb.asm.tree.AbstractInsnNode;
+import org.objectweb.asm.tree.LabelNode;
 
 /**
  * Stateful builder for the {@link Instruction}s of a method. All instructions
@@ -37,6 +38,10 @@ class InstructionsBuilder {
 
 	/** The last instruction which has been added. */
 	private Instruction currentInsn;
+
+	private boolean nextInstructionIsAfterExecutedProbe;
+
+	private final List<LabelNode> jumpAfterExecutedProbe = new ArrayList<LabelNode>();
 
 	/**
 	 * All instructions of a method mapped from the ASM node to the
@@ -113,6 +118,11 @@ class InstructionsBuilder {
 		}
 		currentInsn = insn;
 		instructions.put(node, insn);
+
+		if (nextInstructionIsAfterExecutedProbe) {
+			insn.markAsImplicitlyCovered();
+			nextInstructionIsAfterExecutedProbe = false;
+		}
 	}
 
 	/**
@@ -143,10 +153,21 @@ class InstructionsBuilder {
 	 *            index in the probe array
 	 * @param branch
 	 *            unique branch number for the last instruction
+	 * @param target
+	 *            target of a jump or <code>null</code>
 	 */
-	void addProbe(final int probeId, final int branch) {
+	void addProbe(final int probeId, final int branch,
+			final AbstractInsnNode target) {
 		final boolean executed = probes != null && probes[probeId];
 		currentInsn.addBranch(executed, branch);
+
+		nextInstructionIsAfterExecutedProbe = executed;
+		if (target != null) {
+			nextInstructionIsAfterExecutedProbe = false;
+			if (target.getType() == AbstractInsnNode.LABEL && executed) {
+				jumpAfterExecutedProbe.add(((LabelNode) target));
+			}
+		}
 	}
 
 	/**
@@ -160,6 +181,10 @@ class InstructionsBuilder {
 		// Wire jumps:
 		for (final Jump j : jumps) {
 			j.wire();
+		}
+
+		for (final LabelNode j : jumpAfterExecutedProbe) {
+			LabelInfo.getInstruction(j.getLabel()).markAsImplicitlyCovered();
 		}
 
 		return instructions;

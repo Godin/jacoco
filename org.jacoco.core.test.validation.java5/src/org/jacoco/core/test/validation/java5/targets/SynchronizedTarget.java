@@ -40,7 +40,7 @@ public class SynchronizedTarget {
 
 	private static void implicitException() {
 		synchronized (lock) { // assertMonitorEnterImplicitException()
-			ex(); // assertNotCovered()
+			ex(); // assertFullyCovered()
 		} // assertMonitorExitImplicitException()
 	}
 

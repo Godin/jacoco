@@ -23,6 +23,8 @@ import org.objectweb.asm.Label;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.tree.AbstractInsnNode;
 import org.objectweb.asm.tree.InsnNode;
+import org.objectweb.asm.tree.JumpInsnNode;
+import org.objectweb.asm.tree.LabelNode;
 
 /**
  * Unit tests for {@link InstructionsBuilder}.
@@ -64,7 +66,7 @@ public class InstructionsBuilderTest {
 
 		InsnNode i1 = new InsnNode(Opcodes.NOP);
 		builder.addInstruction(i1);
-		builder.addProbe(5, 0);
+		builder.addProbe(5, 0, null);
 
 		Map<AbstractInsnNode, Instruction> map = builder.getInstructions();
 		assertEquals(CounterImpl.COUNTER_1_0,
@@ -75,7 +77,7 @@ public class InstructionsBuilderTest {
 	public void unexecuted_probe_should_not_mark_instruction_as_covered() {
 		InsnNode i1 = new InsnNode(Opcodes.NOP);
 		builder.addInstruction(i1);
-		builder.addProbe(0, 0);
+		builder.addProbe(0, 0, null);
 
 		Map<AbstractInsnNode, Instruction> map = builder.getInstructions();
 		assertEquals(CounterImpl.COUNTER_1_0,
@@ -86,11 +88,51 @@ public class InstructionsBuilderTest {
 	public void executed_probe_should_mark_instruction_as_covered() {
 		InsnNode i1 = new InsnNode(Opcodes.NOP);
 		builder.addInstruction(i1);
-		builder.addProbe(1, 0);
+		builder.addProbe(1, 0, null);
 
 		Map<AbstractInsnNode, Instruction> map = builder.getInstructions();
 		assertEquals(CounterImpl.COUNTER_0_1,
 				map.get(i1).getInstructionCounter());
+	}
+
+	@Test
+	public void executed_probe_should_mark_jump_target_as_implicitly_covered() {
+		LabelNode label = new LabelNode();
+		JumpInsnNode i1 = new JumpInsnNode(Opcodes.GOTO, label);
+		InsnNode i2 = new InsnNode(Opcodes.NOP);
+		InsnNode i3 = new InsnNode(Opcodes.NOP);
+
+		builder.addInstruction(i1);
+		builder.addProbe(1, 0, label);
+		builder.addInstruction(i2);
+		builder.addLabel(label.getLabel());
+		builder.addInstruction(i3);
+
+		Map<AbstractInsnNode, Instruction> map = builder.getInstructions();
+		assertEquals(CounterImpl.COUNTER_1_0,
+				map.get(i2).getInstructionCounter());
+		assertEquals(CounterImpl.COUNTER_0_1,
+				map.get(i3).getInstructionCounter());
+	}
+
+	@Test
+	public void unexecuted_probe_should_not_mark_jump_target_as_implicitly_covered() {
+		LabelNode label = new LabelNode();
+		JumpInsnNode i1 = new JumpInsnNode(Opcodes.GOTO, label);
+		InsnNode i2 = new InsnNode(Opcodes.NOP);
+		InsnNode i3 = new InsnNode(Opcodes.NOP);
+
+		builder.addInstruction(i1);
+		builder.addProbe(0, 0, label);
+		builder.addInstruction(i2);
+		builder.addLabel(label.getLabel());
+		builder.addInstruction(i3);
+
+		Map<AbstractInsnNode, Instruction> map = builder.getInstructions();
+		assertEquals(CounterImpl.COUNTER_1_0,
+				map.get(i2).getInstructionCounter());
+		assertEquals(CounterImpl.COUNTER_1_0,
+				map.get(i3).getInstructionCounter());
 	}
 
 	@Test
@@ -102,7 +144,7 @@ public class InstructionsBuilderTest {
 		builder.addInstruction(i2);
 
 		// mark i2 as covered
-		builder.addProbe(1, 0);
+		builder.addProbe(1, 0, null);
 
 		// coverage should be propagated to i1
 		Map<AbstractInsnNode, Instruction> map = builder.getInstructions();
@@ -120,7 +162,7 @@ public class InstructionsBuilderTest {
 		builder.addInstruction(i2);
 
 		// mark i2 as covered
-		builder.addProbe(1, 0);
+		builder.addProbe(1, 0, null);
 
 		// coverage should not be propagated to i1
 		Map<AbstractInsnNode, Instruction> map = builder.getInstructions();
@@ -140,7 +182,7 @@ public class InstructionsBuilderTest {
 		builder.addInstruction(i2);
 
 		// mark i2 as covered
-		builder.addProbe(1, 0);
+		builder.addProbe(1, 0, null);
 
 		// coverage should be propagated to i1
 		Map<AbstractInsnNode, Instruction> map = builder.getInstructions();
@@ -158,7 +200,7 @@ public class InstructionsBuilderTest {
 		builder.addInstruction(i2);
 
 		// mark i2 as covered
-		builder.addProbe(1, 0);
+		builder.addProbe(1, 0, null);
 
 		// coverage should not be propagated to i1
 		Map<AbstractInsnNode, Instruction> map = builder.getInstructions();
@@ -178,7 +220,7 @@ public class InstructionsBuilderTest {
 		builder.addInstruction(i2);
 
 		// mark i2 as covered
-		builder.addProbe(1, 0);
+		builder.addProbe(1, 0, null);
 
 		// coverage should be propagated to i1
 		Map<AbstractInsnNode, Instruction> map = builder.getInstructions();

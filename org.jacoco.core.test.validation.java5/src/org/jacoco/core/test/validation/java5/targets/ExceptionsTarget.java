@@ -67,7 +67,7 @@ public class ExceptionsTarget {
 	 */
 	private static void implicitException() {
 		nop(); // assertFullyCovered()
-		ex(); // assertNotCovered()
+		ex(); // assertFullyCovered()
 		nop(); // assertNotCovered()
 	}
 
@@ -89,7 +89,7 @@ public class ExceptionsTarget {
 		nop(); // assertFullyCovered()
 		try {
 			nop(); // assertFullyCovered()
-			ex(); // assertNotCovered()
+			ex(); // assertFullyCovered()
 			nop(); // assertNotCovered()
 		} catch (StubException e) { // assertCatchImplicitException()
 			nop(); // assertFullyCovered()
@@ -105,7 +105,7 @@ public class ExceptionsTarget {
 			return;
 		}
 		try {
-			ex(); // assertNotCovered()
+			ex(); // assertFullyCovered()
 		} catch (StubException e) {
 			nop(); // assertFullyCovered()
 		}
@@ -134,7 +134,7 @@ public class ExceptionsTarget {
 		nop(); // assertFullyCovered()
 		try {
 			nop(); // assertFullyCovered()
-			ex(); // assertNotCovered()
+			ex(); // assertFullyCovered()
 			nop(); // assertNotCovered()
 		} finally { // assertFinallyImplicitException()
 			nop(); // assertFullyCovered()

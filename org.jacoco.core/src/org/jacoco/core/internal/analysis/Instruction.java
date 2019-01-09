@@ -30,7 +30,8 @@ import org.jacoco.core.analysis.ICounter;
  * other with the <code>addBranch()</code> methods. The executions status is
  * either directly derived from a probe which has been inserted in the execution
  * flow ({@link #addBranch(boolean, int)}) or indirectly propagated along the
- * CFG edges ({@link #addBranch(Instruction, int)}).
+ * CFG edges ({@link #addBranch(Instruction, int)},
+ * {@link #markAsImplicitlyCovered()}).
  * 
  * <h3>Step 2: Querying the Coverage Status</h3>
  * 
@@ -59,6 +60,8 @@ public class Instruction {
 	private int branches;
 
 	private final BitSet coveredBranches;
+
+	private boolean implicitlyCovered;
 
 	private Instruction predecessor;
 
@@ -133,6 +136,13 @@ public class Instruction {
 	}
 
 	/**
+	 * Marks this instruction as implicitly covered.
+	 */
+	void markAsImplicitlyCovered() {
+		implicitlyCovered = true;
+	}
+
+	/**
 	 * Returns the source line this instruction belongs to.
 	 * 
 	 * @return corresponding source line
@@ -154,6 +164,8 @@ public class Instruction {
 		result.branches = this.branches;
 		result.coveredBranches.or(this.coveredBranches);
 		result.coveredBranches.or(other.coveredBranches);
+		result.implicitlyCovered = this.implicitlyCovered
+				|| other.implicitlyCovered;
 		return result;
 	}
 
@@ -169,6 +181,7 @@ public class Instruction {
 	public Instruction replaceBranches(
 			final Collection<Instruction> newBranches) {
 		final Instruction result = new Instruction(this.line);
+		result.implicitlyCovered = this.implicitlyCovered;
 		result.branches = newBranches.size();
 		int idx = 0;
 		for (final Instruction b : newBranches) {
@@ -186,8 +199,10 @@ public class Instruction {
 	 * @return the instruction coverage counter
 	 */
 	public ICounter getInstructionCounter() {
-		return coveredBranches.isEmpty() ? CounterImpl.COUNTER_1_0
-				: CounterImpl.COUNTER_0_1;
+		if (implicitlyCovered || !coveredBranches.isEmpty()) {
+			return CounterImpl.COUNTER_0_1;
+		}
+		return CounterImpl.COUNTER_1_0;
 	}
 
 	/**

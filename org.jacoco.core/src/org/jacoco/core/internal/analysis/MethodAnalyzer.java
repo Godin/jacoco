@@ -18,8 +18,14 @@ import org.objectweb.asm.Handle;
 import org.objectweb.asm.Label;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.tree.AbstractInsnNode;
+import org.objectweb.asm.tree.JumpInsnNode;
+import org.objectweb.asm.tree.LabelNode;
+import org.objectweb.asm.tree.LookupSwitchInsnNode;
 import org.objectweb.asm.tree.MethodNode;
+import org.objectweb.asm.tree.TableSwitchInsnNode;
 import org.objectweb.asm.tree.TryCatchBlockNode;
+
+import java.util.List;
 
 /**
  * A {@link MethodProbesVisitor} that builds the {@link Instruction}s of a
@@ -152,7 +158,7 @@ public class MethodAnalyzer extends MethodProbesVisitor {
 
 	@Override
 	public void visitProbe(final int probeId) {
-		builder.addProbe(probeId, 0);
+		builder.addProbe(probeId, 0, null);
 		builder.noSuccessor();
 	}
 
@@ -160,49 +166,53 @@ public class MethodAnalyzer extends MethodProbesVisitor {
 	public void visitJumpInsnWithProbe(final int opcode, final Label label,
 			final int probeId, final IFrame frame) {
 		builder.addInstruction(currentNode);
-		builder.addProbe(probeId, 1);
+		builder.addProbe(probeId, 1, ((JumpInsnNode) currentNode).label);
 	}
 
 	@Override
 	public void visitInsnWithProbe(final int opcode, final int probeId) {
 		builder.addInstruction(currentNode);
-		builder.addProbe(probeId, 0);
+		builder.addProbe(probeId, 0, currentNode);
 	}
 
 	@Override
 	public void visitTableSwitchInsnWithProbes(final int min, final int max,
 			final Label dflt, final Label[] labels, final IFrame frame) {
-		visitSwitchInsnWithProbes(dflt, labels);
+		final TableSwitchInsnNode node = (TableSwitchInsnNode) currentNode;
+		visitSwitchInsnWithProbes(node.dflt, node.labels);
 	}
 
 	@Override
 	public void visitLookupSwitchInsnWithProbes(final Label dflt,
 			final int[] keys, final Label[] labels, final IFrame frame) {
-		visitSwitchInsnWithProbes(dflt, labels);
+		final LookupSwitchInsnNode node = (LookupSwitchInsnNode) currentNode;
+		visitSwitchInsnWithProbes(node.dflt, node.labels);
 	}
 
-	private void visitSwitchInsnWithProbes(final Label dflt,
-			final Label[] labels) {
+	private void visitSwitchInsnWithProbes(final LabelNode dflt,
+			final List<LabelNode> labels) {
 		builder.addInstruction(currentNode);
-		LabelInfo.resetDone(dflt);
-		LabelInfo.resetDone(labels);
+		LabelInfo.resetDone(dflt.getLabel());
+		for (LabelNode l : labels) {
+			LabelInfo.resetDone(l.getLabel());
+		}
 		int branch = 0;
 		visitSwitchTarget(dflt, branch);
-		for (final Label l : labels) {
+		for (final LabelNode l : labels) {
 			branch++;
 			visitSwitchTarget(l, branch);
 		}
 	}
 
-	private void visitSwitchTarget(final Label label, final int branch) {
-		final int id = LabelInfo.getProbeId(label);
-		if (!LabelInfo.isDone(label)) {
+	private void visitSwitchTarget(final LabelNode label, final int branch) {
+		final int id = LabelInfo.getProbeId(label.getLabel());
+		if (!LabelInfo.isDone(label.getLabel())) {
 			if (id == LabelInfo.NO_PROBE) {
-				builder.addJump(label, branch);
+				builder.addJump(label.getLabel(), branch);
 			} else {
-				builder.addProbe(id, branch);
+				builder.addProbe(id, branch, label);
 			}
-			LabelInfo.setDone(label);
+			LabelInfo.setDone(label.getLabel());
 		}
 	}
 
