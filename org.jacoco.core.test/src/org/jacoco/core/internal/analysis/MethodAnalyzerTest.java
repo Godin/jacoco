@@ -136,6 +136,176 @@ public class MethodAnalyzerTest implements IProbeIdGenerator {
 		assertLine(1002, 0, 1, 0, 0);
 	}
 
+	// === Scenario: exceptions ===
+
+	private void create_Z() {
+		final Label l0 = new Label();
+		method.visitLabel(l0);
+		method.visitLineNumber(1001, l0);
+		method.visitMethodInsn(Opcodes.INVOKESTATIC, "S", "throwsException",
+				"()V", false);
+		method.visitInsn(Opcodes.RETURN); // probes[0]
+	}
+
+	@Test
+	public void Z_should_create_1_probe() {
+		create_Z();
+		runMethodAnalzer();
+		assertEquals(1, nextProbeId);
+	}
+
+	// === Scenario: exceptions
+	// (https://github.com/jacoco/jacoco/pull/321#issuecomment-171797311) ===
+
+	private void create_X() {
+		final Label l0 = new Label();
+		method.visitLabel(l0);
+		method.visitLineNumber(1001, l0);
+		method.visitVarInsn(Opcodes.ILOAD, 1);
+		Label l1 = new Label();
+		method.visitJumpInsn(Opcodes.IFEQ, l1);
+
+		final Label l2 = new Label();
+		method.visitLabel(l2);
+		method.visitLineNumber(1002, l2);
+		method.visitInsn(Opcodes.RETURN); // probes[0]
+
+		method.visitLabel(l1);
+		method.visitLineNumber(1003, l1);
+		method.visitMethodInsn(Opcodes.INVOKESTATIC, "S", "throwsException",
+				"()V", false);
+		method.visitInsn(Opcodes.RETURN); // probes[1]
+	}
+
+	// not enough probes
+	@Test
+	public void X_should_create_2_probes() {
+		create_X();
+		runMethodAnalzer();
+		assertEquals(2, nextProbeId);
+
+		assertLine(1001, 2, 0, 2, 0);
+		assertLine(1002, 1, 0, 0, 0);
+		assertLine(1003, 2, 0, 0, 0);
+	}
+
+	// === Scenario: exceptions ===
+
+	private void create_Y() {
+		final Label l0 = new Label();
+		method.visitLabel(l0);
+		method.visitLineNumber(1001, l0);
+		method.visitVarInsn(Opcodes.ILOAD, 1);
+		Label l1 = new Label();
+		method.visitJumpInsn(Opcodes.IFEQ, l1); // probes[0]
+
+		final Label l2 = new Label();
+		method.visitLabel(l2);
+		method.visitLineNumber(1002, l2);
+		// probes[1]
+		method.visitMethodInsn(Opcodes.INVOKESTATIC, "S", "throwsException",
+				"()V", false);
+
+		method.visitLabel(l1);
+		method.visitLineNumber(1003, l1);
+		// probes[2]
+		method.visitMethodInsn(Opcodes.INVOKESTATIC, "S", "throwsException",
+				"()V", false);
+		method.visitInsn(Opcodes.RETURN); // probes[3]
+	}
+
+	@Test
+	public void Y_should_create_4_probes() {
+		create_Y();
+		runMethodAnalzer();
+		assertEquals(4, nextProbeId);
+	}
+
+	@Test
+	public void Y_should_1() {
+		create_Y();
+		probes[0] = true; // jump to L1
+		runMethodAnalzer();
+
+		assertLine(1001, 0, 2, 1, 1);
+		assertLine(1002, 1, 0, 0, 0);
+		// for next line status of one instruction can be derived from probe:
+		assertLine(1003, 2, 0, 0, 0);
+	}
+
+	@Test
+	public void Y_should_2() {
+		create_Y();
+		probes[0] = false; // no jump to L1
+		probes[1] = true;
+		runMethodAnalzer();
+
+		assertLine(1001, 0, 2, 1, 1);
+		// for next line status of one instruction can be derived from probe:
+		assertLine(1002, 1, 0, 0, 0);
+		assertLine(1003, 2, 0, 0, 0);
+	}
+
+	// === Scenario: exceptions ====
+
+	/**
+	 * <pre>
+	 * if (mayThrow() || mayThrow()) {
+	 * 	return;
+	 * }
+	 * </pre>
+	 */
+	private void create_W() {
+		final Label l0 = new Label();
+		method.visitLabel(l0);
+		method.visitLineNumber(1001, l0);
+		method.visitInsn(Opcodes.NOP);
+
+		final Label l1 = new Label();
+		method.visitLabel(l1);
+		method.visitLineNumber(1002, l1);
+		// probes[0]
+		method.visitMethodInsn(Opcodes.INVOKESTATIC, "S", "mayThrow", "()Z",
+				false);
+
+		final Label l2 = new Label();
+		method.visitJumpInsn(Opcodes.IFNE, l2); // probes[1]
+		method.visitMethodInsn(Opcodes.INVOKESTATIC, "S", "mayThrow", "()Z",
+				false);
+
+		final Label l3 = new Label();
+		method.visitJumpInsn(Opcodes.IFEQ, l3); // probes[2]
+
+		method.visitLabel(l2);
+		method.visitLineNumber(1003, l1);
+		method.visitInsn(Opcodes.RETURN); // probes[3]
+
+		method.visitLabel(l3);
+		method.visitLineNumber(1004, l1);
+		method.visitInsn(Opcodes.RETURN); // probes[4]
+	}
+
+	@Test
+	public void W_should_create_5_probes() {
+		create_W();
+		runMethodAnalzer();
+		assertEquals(5, nextProbeId);
+	}
+
+	@Test
+	public void W_should_() {
+		create_W();
+		probes[0] = true;
+		runMethodAnalzer();
+
+		assertLine(1001, 0, 1, 0, 0);
+		// for next line status of one instruction (but not branches) can be
+		// derived from probe:
+		assertLine(1002, 4, 0, 4, 0);
+		assertLine(1003, 1, 0, 0, 0);
+		assertLine(1004, 1, 0, 0, 0);
+	}
+
 	// === Scenario: simple if branch ===
 
 	private void createIfBranch() {
