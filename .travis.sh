@@ -99,6 +99,7 @@ case "$JDK" in
   ;;
 12-ea)
   mvn -V -B -e verify -Dbytecode.version=12 \
+    -Dmaven.javadoc.skip \
     --settings=./.travis/settings.xml
   ;;
 *)

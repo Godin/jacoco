@@ -57,6 +57,10 @@ public final class ProbeArrayStrategyFactory {
 				return new LocalProbeArrayStrategy(className, classId,
 						counter.getCount(), accessorGenerator);
 			}
+		} else if (version >= Opcodes.V11) {
+			return new CondyStrategy(className, classId, false,
+					accessorGenerator);
+
 		} else {
 			return new ClassFieldProbeArrayStrategy(className, classId,
 					InstrSupport.needsFrames(version), accessorGenerator);

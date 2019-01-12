@@ -146,7 +146,8 @@ public class InstrumentTest extends CommandTestBase {
 				return null;
 			}
 		}, 0);
-		assertTrue(fields.contains("$jacocoData"));
+		// TODO no more field for Java 11+
+		// assertTrue(fields.contains("$jacocoData"));
 	}
 
 }
