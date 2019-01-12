@@ -13,8 +13,11 @@ package org.jacoco.report.html;
 
 import java.io.IOException;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
+import java.util.Set;
 
 import org.jacoco.core.analysis.IBundleCoverage;
 import org.jacoco.core.analysis.ICoverageNode.CounterEntity;
@@ -61,6 +64,8 @@ public class HTMLFormatter implements IHTMLReportContext {
 	private ElementIndex index;
 
 	private SessionsPage sessionsPage;
+
+	private Map<Long, ExecutionData> executionData;
 
 	private Table table;
 
@@ -175,6 +180,10 @@ public class HTMLFormatter implements IHTMLReportContext {
 		return locale;
 	}
 
+	public Set<Long> getClassIds() {
+		return executionData.keySet();
+	}
+
 	/**
 	 * Creates a new visitor to write a report to the given output.
 	 * 
@@ -193,7 +202,6 @@ public class HTMLFormatter implements IHTMLReportContext {
 		return new IReportVisitor() {
 
 			private List<SessionInfo> sessionInfos;
-			private Collection<ExecutionData> executionData;
 
 			private HTMLGroupVisitor groupHandler;
 
@@ -201,7 +209,10 @@ public class HTMLFormatter implements IHTMLReportContext {
 					final Collection<ExecutionData> executionData)
 					throws IOException {
 				this.sessionInfos = sessionInfos;
-				this.executionData = executionData;
+				HTMLFormatter.this.executionData = new HashMap<Long, ExecutionData>();
+				for (ExecutionData e : executionData) {
+					HTMLFormatter.this.executionData.put(e.getId(), e);
+				}
 			}
 
 			public void visitBundle(final IBundleCoverage bundle,
@@ -222,7 +233,7 @@ public class HTMLFormatter implements IHTMLReportContext {
 			}
 
 			private void createSessionsPage(final ReportPage rootpage) {
-				sessionsPage = new SessionsPage(sessionInfos, executionData,
+				sessionsPage = new SessionsPage(sessionInfos, executionData.values(),
 						index, rootpage, root, HTMLFormatter.this);
 			}
 

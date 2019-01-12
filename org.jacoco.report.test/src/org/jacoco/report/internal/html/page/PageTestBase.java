@@ -12,7 +12,9 @@
 package org.jacoco.report.internal.html.page;
 
 import java.io.IOException;
+import java.util.HashSet;
 import java.util.Locale;
+import java.util.Set;
 
 import org.jacoco.report.ILanguageNames;
 import org.jacoco.report.JavaNames;
@@ -50,6 +52,8 @@ public abstract class PageTestBase {
 		table.add("Element", null, new LabelColumn(), true);
 		context = new IHTMLReportContext() {
 
+			private final Set<Long> classIds = new HashSet<Long>();
+
 			public ILanguageNames getLanguageNames() {
 				return new JavaNames();
 			}
@@ -86,6 +90,9 @@ public abstract class PageTestBase {
 				return Locale.ENGLISH;
 			}
 
+			public Set<Long> getClassIds() {
+				return classIds;
+			}
 		};
 		support = new HTMLSupport();
 	}

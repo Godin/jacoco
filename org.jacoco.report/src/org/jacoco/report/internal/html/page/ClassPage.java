@@ -86,6 +86,9 @@ public class ClassPage extends TablePage<IClassCoverage> {
 		if (getNode().isNoMatch()) {
 			body.p().text(
 					"A different version of class was executed at runtime.");
+
+		} else if (!context.getClassIds().contains(getNode().getId())) {
+			body.p().text("No execution data for this class.");
 		}
 
 		if (getNode().getLineCounter().getTotalCount() == 0) {

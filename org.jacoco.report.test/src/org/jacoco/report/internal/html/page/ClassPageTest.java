@@ -44,6 +44,8 @@ public class ClassPageTest extends PageTestBase {
 		node.addMethod(m);
 		node.addMethod(new MethodCoverageImpl("b", "()V", null));
 		node.addMethod(new MethodCoverageImpl("c", "()V", null));
+
+		context.getClassIds().add(Long.valueOf(123L));
 	}
 
 	@Test
@@ -144,6 +146,19 @@ public class ClassPageTest extends PageTestBase {
 
 		final Document doc = support.parse(output.getFile("Foo.html"));
 		assertEquals("A different version of class was executed at runtime.",
+				support.findStr(doc, "/html/body/p[1]"));
+	}
+
+	@Test
+	public void should_generate_message_when_no_execution_data() throws Exception {
+		node.setSourceFileName("Foo.java");
+		context.getClassIds().clear();
+
+		page = new ClassPage(node, null, new SourceLink(), rootFolder, context);
+		page.render();
+
+		final Document doc = support.parse(output.getFile("Foo.html"));
+		assertEquals("No execution data for this class.",
 				support.findStr(doc, "/html/body/p[1]"));
 	}
 

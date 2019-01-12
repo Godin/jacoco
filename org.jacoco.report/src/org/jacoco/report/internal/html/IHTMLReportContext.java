@@ -12,6 +12,7 @@
 package org.jacoco.report.internal.html;
 
 import java.util.Locale;
+import java.util.Set;
 
 import org.jacoco.report.ILanguageNames;
 import org.jacoco.report.internal.html.index.IIndexUpdate;
@@ -78,5 +79,7 @@ public interface IHTMLReportContext {
 	 * @return locale for numbers and dates
 	 */
 	Locale getLocale();
+
+	Set<Long> getClassIds();
 
 }
