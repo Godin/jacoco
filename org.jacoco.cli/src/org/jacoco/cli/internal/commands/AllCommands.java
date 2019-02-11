@@ -28,8 +28,9 @@ public final class AllCommands {
 	 * @return list of new instances of all available commands
 	 */
 	public static List<Command> get() {
-		return Arrays.asList(new Dump(), new Instrument(), new Merge(),
-				new Report(), new ClassInfo(), new ExecInfo(), new Version());
+		return Arrays.asList(new DiffReport(), new Dump(), new Instrument(),
+				new Merge(), new Report(), new ClassInfo(), new ExecInfo(),
+				new Version());
 	}
 
 	/**

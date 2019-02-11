@@ -51,7 +51,7 @@ public class MainTest extends CommandTestBase {
 		assertNoOutput(err);
 		assertContains("Usage: java -jar jacococli.jar --help | <command>",
 				out);
-		assertContains("<command> : dump|instrument|merge|report", out);
+		assertContains("<command> : diffreport|dump|instrument|merge|report", out);
 	}
 
 	@Test

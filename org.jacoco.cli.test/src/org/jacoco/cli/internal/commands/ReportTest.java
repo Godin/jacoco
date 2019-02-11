@@ -56,7 +56,7 @@ public class ReportTest extends CommandTestBase {
 		execute("report", "--classfiles", getClassPath());
 
 		assertOk();
-		assertContains("[INFO] Analyzing 14 classes.", out);
+		assertContains("[INFO] Analyzing 15 classes.", out);
 	}
 
 	@Test
