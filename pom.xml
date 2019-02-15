@@ -8,6 +8,7 @@
 
   <modules>
     <module>org.jacoco.build</module>
+    <module>org.jacoco.core.benchmark</module>
   </modules>
 
 </project>
