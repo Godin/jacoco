@@ -117,9 +117,11 @@ public class Analyzer {
 		if ((reader.getAccess() & Opcodes.ACC_SYNTHETIC) != 0) {
 			return;
 		}
+
 		final ClassVisitor visitor = createAnalyzingVisitor(classId,
 				reader.getClassName());
-		reader.accept(visitor, 0);
+		reader.accept(visitor, ClassReader.SKIP_FRAMES);
+//		reader.accept(visitor, 0);
 	}
 
 	/**
