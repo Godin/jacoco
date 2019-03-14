@@ -25,12 +25,16 @@ import org.jacoco.core.analysis.ILine;
 import org.jacoco.core.data.ExecutionData;
 import org.jacoco.core.data.ExecutionDataStore;
 import org.jacoco.core.internal.analysis.CounterImpl;
+import org.jacoco.core.internal.analysis.filter.Reachable;
 import org.jacoco.core.test.InstrumentingLoader;
 import org.jacoco.core.test.TargetLoader;
 import org.jacoco.core.test.validation.Source.Line;
 import org.jacoco.core.test.validation.targets.Stubs;
 import org.junit.Before;
 import org.junit.Test;
+import org.objectweb.asm.ClassReader;
+import org.objectweb.asm.tree.ClassNode;
+import org.objectweb.asm.tree.MethodNode;
 
 /**
  * Base class for validation tests. It executes the given class under code
@@ -93,6 +97,11 @@ public abstract class ValidationTestBase {
 		final byte[] bytes = TargetLoader
 				.getClassDataAsBytes(target.getClassLoader(), data.getName());
 		analyzer.analyzeClass(bytes, data.getName());
+
+		ClassReader classReader = new ClassReader(bytes);
+		ClassNode classNode = new ClassNode();
+		classReader.accept(classNode, 0);
+		Reachable.check(classNode);
 	}
 
 	/**
