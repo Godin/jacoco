@@ -22,6 +22,7 @@ import org.jacoco.core.data.ExecutionDataWriter;
 import org.jacoco.core.data.IExecutionDataVisitor;
 import org.jacoco.core.data.ISessionInfoVisitor;
 import org.jacoco.core.data.SessionInfo;
+import org.jacoco.core.runtime.IRemoteCommandVisitor;
 import org.jacoco.core.runtime.RemoteControlReader;
 import org.jacoco.core.runtime.RemoteControlWriter;
 
@@ -75,6 +76,11 @@ public final class ExecutionDataServer {
 			reader = new RemoteControlReader(socket.getInputStream());
 			reader.setSessionInfoVisitor(this);
 			reader.setExecutionDataVisitor(this);
+			reader.setRemoteCommandVisitor(new IRemoteCommandVisitor() {
+				public void visitDumpCommand(boolean dump, boolean reset) {
+					throw new UnsupportedOperationException();
+				}
+			});
 		}
 
 		public void run() {
@@ -87,6 +93,12 @@ public final class ExecutionDataServer {
 				}
 			} catch (final IOException e) {
 				e.printStackTrace();
+			} finally {
+				try {
+					socket.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
 			}
 		}
 
