@@ -40,6 +40,7 @@ public class FileOutput implements IAgentOutput {
 			throws IOException {
 		this.data = data;
 		this.destFile = new File(options.getDestfile()).getAbsoluteFile();
+		System.err.println("JaCoCo: file " + destFile + " exists? " + destFile.exists());
 		this.append = options.getAppend();
 		final File folder = destFile.getParentFile();
 		if (folder != null) {
@@ -50,12 +51,15 @@ public class FileOutput implements IAgentOutput {
 	}
 
 	public void writeExecutionData(final boolean reset) throws IOException {
+		System.err.println("JaCoCo: start writing to " + destFile);
 		final OutputStream output = openFile();
 		try {
 			final ExecutionDataWriter writer = new ExecutionDataWriter(output);
 			data.collect(writer, writer, reset);
+			System.err.println("JaCoCo: done writing to " + destFile);
 		} finally {
 			output.close();
+			System.err.println("JaCoCo: done closing " + destFile);
 		}
 	}
 
