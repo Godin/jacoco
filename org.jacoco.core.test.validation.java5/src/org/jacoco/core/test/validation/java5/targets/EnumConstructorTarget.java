@@ -22,7 +22,7 @@ public class EnumConstructorTarget {
 	 * Implicit constructor should be filtered. without filter next line is
 	 * partly covered:
 	 */
-	private enum ImplicitConstructor { // assertFullyCovered()
+	private enum ImplicitConstructor { // assertEmpty()
 	}
 
 	/* Explicit non empty constructor should not be filtered: */
