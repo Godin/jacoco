@@ -136,6 +136,11 @@ object KotlinControlStructuresTarget {
     private fun implicitReturn() {
     } // assertFullyCovered()
 
+    init { // assertEmpty()
+        nop() // assertFullyCovered()
+        /* TODO KT-12787 */
+    } // assertEmpty()
+
     private fun explicitReturn() {
 
         return // assertFullyCovered()
