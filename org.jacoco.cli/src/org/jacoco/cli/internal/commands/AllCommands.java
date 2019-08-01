@@ -29,7 +29,8 @@ public final class AllCommands {
 	 */
 	public static List<Command> get() {
 		return Arrays.asList(new Dump(), new Instrument(), new Merge(),
-				new Report(), new ClassInfo(), new ExecInfo(), new Version());
+				new Report(), new ClassInfo(), new ExecInfo(), new Version(),
+				new Diff());
 	}
 
 	/**
