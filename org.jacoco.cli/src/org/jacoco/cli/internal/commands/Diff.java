@@ -19,6 +19,7 @@ import org.jacoco.core.analysis.IClassCoverage;
 import org.jacoco.core.analysis.ICounter;
 import org.jacoco.core.analysis.ICoverageNode;
 import org.jacoco.core.analysis.IMethodCoverage;
+import org.jacoco.core.analysis.IPackageCoverage;
 import org.jacoco.core.analysis.ISourceFileCoverage;
 import org.jacoco.core.analysis.NodeComparator;
 import org.jacoco.core.data.ExecutionData;
@@ -107,48 +108,58 @@ public class Diff extends Command {
 		final ReportHandler currentHandler = new ReportHandler();
 		parser.parse(current, currentHandler);
 
-		return diff(baseHandler.data, currentHandler.data);
+		return diff(baseHandler.bundleCoverage, currentHandler.bundleCoverage);
 	}
 
-	private static BundleCoverageImpl diff(final Data base,
-			final Data current) {
-		final NodeComparator comparator = CounterComparator.TOTALITEMS
-				.on(ICoverageNode.CounterEntity.METHOD)
-				.second(CounterComparator.MISSEDITEMS
-						.on(ICoverageNode.CounterEntity.METHOD))
-				.second(CounterComparator.TOTALITEMS
-						.on(ICoverageNode.CounterEntity.INSTRUCTION))
-				.second(CounterComparator.MISSEDITEMS
-						.on(ICoverageNode.CounterEntity.INSTRUCTION))
-				.second(CounterComparator.TOTALITEMS
-						.on(ICoverageNode.CounterEntity.BRANCH))
-				.second(CounterComparator.MISSEDITEMS
-						.on(ICoverageNode.CounterEntity.BRANCH))
-				.second(CounterComparator.TOTALITEMS
-						.on(ICoverageNode.CounterEntity.LINE))
-				.second(CounterComparator.MISSEDITEMS
-						.on(ICoverageNode.CounterEntity.LINE));
+	private static final NodeComparator COMPARATOR = CounterComparator.TOTALITEMS
+		.on(ICoverageNode.CounterEntity.METHOD)
+		.second(CounterComparator.MISSEDITEMS
+			.on(ICoverageNode.CounterEntity.METHOD))
+		.second(CounterComparator.TOTALITEMS
+			.on(ICoverageNode.CounterEntity.INSTRUCTION))
+		.second(CounterComparator.MISSEDITEMS
+			.on(ICoverageNode.CounterEntity.INSTRUCTION))
+		.second(CounterComparator.TOTALITEMS
+			.on(ICoverageNode.CounterEntity.BRANCH))
+		.second(CounterComparator.MISSEDITEMS
+			.on(ICoverageNode.CounterEntity.BRANCH))
+		.second(CounterComparator.TOTALITEMS
+			.on(ICoverageNode.CounterEntity.LINE))
+		.second(CounterComparator.MISSEDITEMS
+			.on(ICoverageNode.CounterEntity.LINE));
+
+	/**
+	 * TODO document
+	 */
+	private static IBundleCoverage diff(final IBundleCoverage base,
+			final IBundleCoverage current) {
+		final Map<String, IClassCoverage> baseClasses = new HashMap<String, IClassCoverage>();
+		final Map<String, ISourceFileCoverage> baseSources = new HashMap<String, ISourceFileCoverage>();
+		extractFromBundle(base, baseClasses, baseSources);
+		final Map<String, IClassCoverage> currentClasses = new HashMap<String, IClassCoverage>();
+		final Map<String, ISourceFileCoverage> currentSources = new HashMap<String, ISourceFileCoverage>();
+		extractFromBundle(current, currentClasses, currentSources);
 
 		final Set<IClassCoverage> classes = new HashSet<IClassCoverage>();
 		final Set<ISourceFileCoverage> sources = new HashSet<ISourceFileCoverage>();
-		for (Map.Entry<String, IClassCoverage> entry : current.classes
+		for (Map.Entry<String, IClassCoverage> entry : currentClasses
 				.entrySet()) {
 			final IClassCoverage currentClassCoverage = entry.getValue();
-			final IClassCoverage baseClassCoverage = base.classes
+			final IClassCoverage baseClassCoverage = baseClasses
 					.get(entry.getKey());
 
 			final String sourceName = currentClassCoverage.getPackageName()
 					+ "/" + currentClassCoverage.getSourceFileName();
-			final ISourceFileCoverage currentSourceCoverage = current.sources
+			final ISourceFileCoverage currentSourceCoverage = currentSources
 					.get(sourceName);
-			final ISourceFileCoverage baseSourceCoverage = base.sources
+			final ISourceFileCoverage baseSourceCoverage = baseSources
 					.get(sourceName);
 
 			if (baseClassCoverage == null // new class
 					|| baseSourceCoverage == null // new source
-					|| comparator.compare(baseClassCoverage,
+					|| COMPARATOR.compare(baseClassCoverage,
 							currentClassCoverage) != 0 // modified class
-					|| comparator.compare(baseSourceCoverage,
+					|| COMPARATOR.compare(baseSourceCoverage,
 							currentSourceCoverage) != 0 // modified source
 			) {
 				classes.add(currentClassCoverage);
@@ -159,6 +170,19 @@ public class Diff extends Command {
 		return new BundleCoverageImpl("diff report", classes, sources);
 	}
 
+	private static void extractFromBundle(final IBundleCoverage bundle,
+			final Map<String, IClassCoverage> classes,
+			final Map<String, ISourceFileCoverage> sources) {
+		for (IPackageCoverage p : bundle.getPackages()) {
+			for (IClassCoverage c : p.getClasses()) {
+				classes.put(c.getPackageName() + "/" + c.getName(), c);
+			}
+			for (ISourceFileCoverage s : p.getSourceFiles()) {
+				sources.put(s.getPackageName() + "/" + s.getName(), s);
+			}
+		}
+	}
+
 	private static class Data {
 		final Map<String, IClassCoverage> classes = new HashMap<String, IClassCoverage>();
 		final Map<String, ISourceFileCoverage> sources = new HashMap<String, ISourceFileCoverage>();
@@ -167,6 +191,7 @@ public class Diff extends Command {
 	private static class ReportHandler extends DefaultHandler {
 		private final Data data = new Data();
 
+		private BundleCoverageImpl bundleCoverage;
 		private ClassCoverageImpl classCoverage;
 		private MethodCoverageImpl methodCoverage;
 
@@ -271,6 +296,9 @@ public class Diff extends Command {
 									+ classCoverage.getSourceFileName());
 					sourceFileCoverage.inc(classCoverage);
 				}
+
+				bundleCoverage = new BundleCoverageImpl("bundle",
+						data.classes.values(), data.sources.values());
 			}
 		}
 
