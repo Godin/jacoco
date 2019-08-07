@@ -72,6 +72,9 @@ public class Diff extends Command {
 	@Option(name = "--html", usage = "output directory for the HTML report", metaVar = "<dir>")
 	File html;
 
+	@Option(name = "--name")
+	String name = "diff report";
+
 	public String description() {
 		return "";
 	}
@@ -95,7 +98,7 @@ public class Diff extends Command {
 		return 0;
 	}
 
-	private static IBundleCoverage diff(final InputStream base,
+	private IBundleCoverage diff(final InputStream base,
 			final InputStream current)
 			throws IOException, SAXException, ParserConfigurationException {
 
@@ -131,7 +134,7 @@ public class Diff extends Command {
 	/**
 	 * TODO document
 	 */
-	private static IBundleCoverage diff(final IBundleCoverage base,
+	private IBundleCoverage diff(final IBundleCoverage base,
 			final IBundleCoverage current) {
 		final Map<String, IClassCoverage> baseClasses = new HashMap<String, IClassCoverage>();
 		final Map<String, ISourceFileCoverage> baseSources = new HashMap<String, ISourceFileCoverage>();
@@ -155,6 +158,11 @@ public class Diff extends Command {
 			final ISourceFileCoverage baseSourceCoverage = baseSources
 					.get(sourceName);
 
+			if (!currentClassCoverage.containsCode()) { // TODO when?
+				// since 0.8.3 empty nodes are preserved in XML
+				continue;
+			}
+
 			if (baseClassCoverage == null // new class
 					|| baseSourceCoverage == null // new source
 					|| COMPARATOR.compare(baseClassCoverage,
@@ -163,11 +171,13 @@ public class Diff extends Command {
 							currentSourceCoverage) != 0 // modified source
 			) {
 				classes.add(currentClassCoverage);
-				sources.add(currentSourceCoverage);
+				if (currentSourceCoverage != null) { // TODO when?
+					sources.add(currentSourceCoverage);
+				}
 			}
 		}
 
-		return new BundleCoverageImpl("diff report", classes, sources);
+		return new BundleCoverageImpl(name, classes, sources);
 	}
 
 	private static void extractFromBundle(final IBundleCoverage bundle,
@@ -216,8 +226,13 @@ public class Diff extends Command {
 
 			} else if ("class".equals(qName)) {
 				classCoverage = new ClassData(attributes.getValue("name"));
-				classCoverage.setSourceFileName(
-						attributes.getValue("sourcefilename"));
+				String sourceFileName = attributes.getValue("sourcefilename");
+				if (sourceFileName == null) {
+					// TODO attempt to workaround absence prior to 0.8.2
+					sourceFileName = classCoverage.getName().substring(classCoverage.getName().lastIndexOf('/') + 1);
+					sourceFileName += ".java";
+				}
+				classCoverage.setSourceFileName(sourceFileName);
 				data.classes.put(classCoverage.getPackageName() + "/"
 						+ classCoverage.getName(), classCoverage);
 
@@ -294,7 +309,9 @@ public class Diff extends Command {
 					sourceFileCoverage = (SourceData) data.sources
 							.get(classCoverage.getPackageName() + "/"
 									+ classCoverage.getSourceFileName());
-					sourceFileCoverage.inc(classCoverage);
+					if (sourceFileCoverage != null) { // TODO when?
+						sourceFileCoverage.inc(classCoverage);
+					}
 				}
 
 				bundleCoverage = new BundleCoverageImpl("bundle",
