@@ -33,6 +33,9 @@ abstract class AbstractMatcher {
 	 */
 	final void firstIsALoad0(final MethodNode methodNode) {
 		cursor = methodNode.instructions.getFirst();
+		if (cursor == null) {
+			return;
+		}
 		skipNonOpcodes();
 		if (cursor.getOpcode() == Opcodes.ALOAD
 				&& ((VarInsnNode) cursor).var == 0) {

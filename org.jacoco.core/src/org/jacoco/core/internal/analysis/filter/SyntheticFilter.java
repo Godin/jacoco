@@ -19,7 +19,7 @@ import org.objectweb.asm.tree.MethodNode;
  */
 public final class SyntheticFilter implements IFilter {
 
-	private static boolean isScalaClass(final IFilterContext context) {
+	static boolean isScalaClass(final IFilterContext context) {
 		return context.getClassAttributes().contains("ScalaSig")
 				|| context.getClassAttributes().contains("Scala");
 	}
