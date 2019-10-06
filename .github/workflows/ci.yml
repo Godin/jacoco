@@ -1,0 +1,50 @@
+name: CI
+on: [push, pull_request]
+jobs:
+  build_with_different_JDKs:
+    if: false && (github.event == 'push' || github.event.pull_request.head.repo.full_name != github.repository)
+    strategy:
+      fail-fast: false
+      matrix:
+        jdk: [6, 7, 8, 9, 10, 11, 12, 13]
+        os: [ubuntu-latest]
+    name: 'JDK ${{ matrix.jdk }} / ${{matrix.os}}'
+    runs-on: ${{ matrix.os }}
+    steps:
+    - uses: actions/checkout@v1
+    - uses: actions/setup-java@v1
+      with:
+        java-version: ${{ matrix.jdk }}
+    - name: 'Prepare toolchains.xml'
+      run: >
+           cat ${GITHUB_WORKSPACE}/.github/workflows/toolchains.xml
+           | sed "s#JDK_VERSION#${{ matrix.jdk }}#"
+           | sed "s#JDK_HOME#${JAVA_HOME}#"
+           > toolchains.xml
+    - if: matrix.jdk < 8
+      uses: actions/setup-java@v1
+      with:
+        java-version: 8
+    - run: >
+           mvn -V -B -e verify
+           -Dbytecode.version=${{ matrix.jdk }}
+           -Djdk.version=${{ matrix.jdk }}
+           --toolchains=toolchains.xml
+
+  build_on_different_OSes:
+    if: github.event == 'push' || github.event.pull_request.head.repo.full_name != github.repository
+    strategy:
+      fail-fast: false
+      matrix:
+        jdk: [11]
+        os: [windows-latest, macos-latest]
+    name: 'JDK ${{ matrix.jdk }} / ${{ matrix.os }}'
+    runs-on: ${{ matrix.os }}
+    steps:
+    - uses: actions/checkout@v1
+    - uses: actions/setup-java@v1
+      with:
+        java-version: ${{ matrix.jdk }}
+    - run: >
+           mvn -V -B -e verify
+           -Dbytecode.version=${{ matrix.jdk }}
