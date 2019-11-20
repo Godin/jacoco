@@ -21,10 +21,20 @@ object KotlinSafeCallOperatorTarget {
         return x?.length // assertFullyCovered(0, 2)
     }
 
+    private fun nested(x: CharSequence?): CharSequence? {
+        return x  // assertEmpty()
+                ?.subSequence(0, 0) // assertFullyCovered(1, 1)
+                ?.subSequence(0, 0) // assertFullyCovered(1, 1)
+                ?.subSequence(0, 0) // assertFullyCovered(0, 2)
+    }
+
     @JvmStatic
     fun main(args: Array<String>) {
         example("")
         example(null)
+
+        nested("")
+        nested(null)
     }
 
 }
