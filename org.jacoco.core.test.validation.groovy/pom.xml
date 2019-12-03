@@ -27,7 +27,7 @@
 
   <properties>
     <gmaven.version>1.6.2</gmaven.version>
-    <groovy.version>2.5.8</groovy.version>
+    <groovy.version>2.5.9-SNAPSHOT</groovy.version>
   </properties>
 
   <dependencies>
@@ -72,4 +72,23 @@
       </plugin>
     </plugins>
   </build>
+
+  <!--
+  Requires -Denforcer.skip
+
+  Doesn't work - see https://github.com/jacoco/jacoco/issues/884#issuecomment-559981361
+
+  git clone git@github.com:apache/groovy.git -b GROOVY_2_5_X
+  gradle-4.10.3 installGroovy
+  #mkdir ~/.m2/repository/org/codehaus/groovy/groovy/2.5.9-SNAPSHOT/
+  #cp -v target/install/lib/groovy-2.5.9-SNAPSHOT.jar ~/.m2/repository/org/codehaus/groovy/groovy/2.5.9-SNAPSHOT/
+  -->
+  <!--
+  <repositories>
+    <repository>
+      <id>groovy-snapshot</id>
+      <url>https://oss.jfrog.org/artifactory/oss-snapshot-local</url>
+    </repository>
+  </repositories>
+  -->
 </project>
