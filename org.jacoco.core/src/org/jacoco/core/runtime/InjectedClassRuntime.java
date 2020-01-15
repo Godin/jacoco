@@ -32,6 +32,8 @@ public class InjectedClassRuntime extends AbstractRuntime {
 
 	private final String injectedClassName;
 
+	private Class<?> injected;
+
 	/**
 	 * Creates a new runtime which will define a class to the same class loader
 	 * and in the same package and protection domain as given class.
@@ -51,9 +53,10 @@ public class InjectedClassRuntime extends AbstractRuntime {
 	@Override
 	public void startup(final RuntimeData data) throws Exception {
 		super.startup(data);
-		Lookup //
+		injected = Lookup //
 				.privateLookupIn(locator, Lookup.lookup()) //
-				.defineClass(createClass(injectedClassName)) //
+				.defineClass(createClass(injectedClassName)); //
+		injected //
 				.getField(FIELD_NAME) //
 				.set(null, data);
 	}
