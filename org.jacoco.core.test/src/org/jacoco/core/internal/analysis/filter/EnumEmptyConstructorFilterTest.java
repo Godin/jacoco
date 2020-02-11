@@ -13,8 +13,11 @@
 package org.jacoco.core.internal.analysis.filter;
 
 import org.jacoco.core.internal.instr.InstrSupport;
+import org.jacoco.core.test.TargetLoader;
 import org.junit.Test;
+import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.Opcodes;
+import org.objectweb.asm.tree.ClassNode;
 import org.objectweb.asm.tree.MethodNode;
 
 /**
@@ -23,6 +26,22 @@ import org.objectweb.asm.tree.MethodNode;
 public class EnumEmptyConstructorFilterTest extends FilterTestBase {
 
 	private final EnumEmptyConstructorFilter filter = new EnumEmptyConstructorFilter();
+
+	@Test
+	public void test() {
+		ClassNode classNode = new ClassNode(Opcodes.ASM7);
+		classNode.visit(Opcodes.V1_8, 0, "Example", null, "java/lang/Object",
+				null);
+		MethodNode methodNode = new MethodNode(Opcodes.ASM7, Opcodes.ACC_NATIVE, "x", "()V",
+				null, null);
+		classNode.methods.add(methodNode);
+
+		ClassWriter out = new ClassWriter(0);
+		classNode.accept(out);
+
+		TargetLoader loader = new TargetLoader();
+		Class<?> cls = loader.add("Example", out.toByteArray());
+	}
 
 	@Test
 	public void should_filter() {
