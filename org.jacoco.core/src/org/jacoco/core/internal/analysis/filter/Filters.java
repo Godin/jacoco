@@ -55,6 +55,10 @@ public final class Filters implements IFilter {
 
 	public void filter(final MethodNode methodNode,
 			final IFilterContext context, final IFilterOutput output) {
+
+		System.out.println(context.getClassName());
+		System.out.println(methodNode.name);
+
 		for (final IFilter filter : filters) {
 			filter.filter(methodNode, context, output);
 		}

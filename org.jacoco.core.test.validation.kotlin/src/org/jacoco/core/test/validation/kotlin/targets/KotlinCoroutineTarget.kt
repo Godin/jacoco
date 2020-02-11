@@ -12,8 +12,10 @@
  *******************************************************************************/
 package org.jacoco.core.test.validation.kotlin.targets
 
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.runBlocking
 import org.jacoco.core.test.validation.targets.Stubs.nop
+import java.lang.RuntimeException
 
 /**
  * Test target for coroutines.
@@ -34,10 +36,31 @@ object KotlinCoroutineTarget {
         nop() // assertFullyCovered()
     }
 
+    private var f = true
+
+    private suspend fun a() {
+        nop() // assertFullyCovered()
+        b() // assertFullyCovered()
+    } // assertNotCovered()
+
+    private suspend fun b() {
+        if (f) { // assertFullyCovered(1, 1)
+            f = false // assertFullyCovered()
+            delay(1) // assertFullyCovered()
+        } // assertEmpty()
+        throw RuntimeException() // assertFullyCovered()
+    }
+
     @JvmStatic
     fun main(args: Array<String>) {
 
         runBlocking { // assertFullyCovered()
+
+            try {
+                a() // assertFullyCovered()
+            } catch (e: RuntimeException) {
+            }
+
             val x = 42
             nop(x) // assertFullyCovered()
             suspendingFunction() // assertFullyCovered()

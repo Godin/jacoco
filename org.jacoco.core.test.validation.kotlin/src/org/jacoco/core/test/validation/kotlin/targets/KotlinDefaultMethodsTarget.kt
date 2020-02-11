@@ -17,6 +17,16 @@ package org.jacoco.core.test.validation.kotlin.targets
  */
 object KotlinDefaultMethodsTarget {
 
+    interface X {
+        fun x()
+        fun x2() = Unit
+    }
+
+    class CC : X {
+        override fun x() {
+        }
+    }
+
     interface I {
         fun m1() = Unit // assertNotCovered()
         fun m2() = Unit // assertFullyCovered()
@@ -29,6 +39,9 @@ object KotlinDefaultMethodsTarget {
 
     @JvmStatic
     fun main(args: Array<String>) {
+        X::javaClass
+        CC().x2()
+
         C().m1()
         C().m2()
     }
