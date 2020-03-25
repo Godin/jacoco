@@ -52,12 +52,14 @@ public class Agent implements IAgent {
 		if (singleton == null) {
 			final Agent agent = new Agent(options, IExceptionLogger.SYSTEM_ERR);
 			agent.startup();
-			Runtime.getRuntime().addShutdownHook(new Thread() {
-				@Override
-				public void run() {
-					agent.shutdown();
-				}
-			});
+			if (options.getOutput() != OutputMode.none) {
+				Runtime.getRuntime().addShutdownHook(new Thread() {
+					@Override
+					public void run() {
+						agent.shutdown();
+					}
+				});
+			}
 			singleton = agent;
 		}
 		return singleton;
