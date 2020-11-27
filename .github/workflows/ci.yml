@@ -1,0 +1,25 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - github-actions
+
+jobs:
+  build:
+    strategy:
+      matrix:
+        jdk: [5]
+    name: 'JDK ${{ matrix.jdk }}'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - run: wget https://bintray.com/artifact/download/jacoco/generic/jdk-5u22-linux-x64.tar.gz
+      - uses: actions/setup-java@v1
+        with:
+          java-version: 5
+          jdkFile: jdk-5u22-linux-x64.tar.gz
+      #- uses: actions/setup-java@v1
+      #  with:
+      #    java-version: ${{ matrix.jdk }}
+      - run: mvn -V -B -e package -Dbytecode.version=${{ matrix.jdk }}
