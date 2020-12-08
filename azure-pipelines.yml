@@ -1,0 +1,65 @@
+jobs:
+- job:
+  strategy:
+    matrix:
+      JDK 5:
+        JDK_VERSION: 5
+      JDK 8:
+        JDK_VERSION: 8
+      JDK 8 with ECJ:
+        JDK_VERSION: 8
+        ECJ: true
+  pool:
+    vmImage: 'ubuntu-18.04'
+  steps:
+  - bash: |
+      set -e
+      url_var=JDK${JDK_VERSION}_URL
+      JDK_URL=${!url_var}
+      mkdir .jdk
+      echo \
+      curl -L $JDK_URL -C .jdk -o .jdk/jdk.tar.gz
+      echo \
+      tar -xzf .jdk/jdk.tar.gz -C .jdk --strip-components 1
+      echo "
+      <toolchains>
+        <toolchain>
+          <type>jdk</type>
+          <provides>
+            <id>$JDK_VERSION</id>
+            <version>$JDK_VERSION</version>
+          </provides>
+          <configuration>
+            <jdkHome>$PWD/.jdk</jdkHome>
+          </configuration>
+        <toolchain>
+      </toolchains>
+      " > toolchains.xml
+    displayName: Setup JDK
+  - bash: |
+      if [[ "$JDK_VERSION" -ge "8" ]]; then
+        # TODO add comment
+        export JAVA_HOME=$PWD/.jdk
+      fi
+      if [[ "$BUILD_SOURCEBRANCH" == "refs/heads/azure-pipelines-test" && "$JDK_VERSION" == "5" ]]; then
+        echo \
+        mvn -V -B -e -f org.jacoco.build \
+          verify -Djdk.version=$JDK_VERSION \
+          sonar:sonar deploy:deploy -DdeployAtEnd \
+          --toolchains=toolchains.xml --settings=.azure-pipelines/settings.xml
+      elif [[ "$JDK_VERSION" == "5" ]]; then
+        echo \
+        mvn -V -B -e \
+          verify -Djdk.version=$JDK_VERSION \
+          --toolchains=toolchains.xml
+      else
+        echo \
+        mvn -V -B -e \
+          verify -Djdk.version=$JDK_VERSION -Dbytecode.version=$JDK_VERSION -Decj=${ECJ:-} \
+          --toolchains=toolchains.xml
+      fi
+    displayName: Build
+    env:
+      SONAR_TOKEN: $(SONAR_TOKEN)
+      SONATYPE_USERNAME: $(SONATYPE_USERNAME)
+      SONATYPE_PASSWORD: $(SONATYPE_PASSWORD)
