@@ -2,33 +2,6 @@ jobs:
 - job:
   strategy:
     matrix:
-      JDK 5:
-        JDK_VERSION: 5
-      JDK 6:
-        JDK_VERSION: 6
-      JDK 7:
-        JDK_VERSION: 7
-      JDK 8:
-        JDK_VERSION: 8
-      JDK 8 with ECJ:
-        JDK_VERSION: 8
-        ECJ: true
-      JDK 9:
-        JDK_VERSION: 9
-      JDK 10:
-        JDK_VERSION: 10
-      JDK 11:
-        JDK_VERSION: 11
-      JDK 12:
-        JDK_VERSION: 12
-      JDK 13:
-        JDK_VERSION: 13
-      JDK 14:
-        JDK_VERSION: 14
-      JDK 15:
-        JDK_VERSION: 15
-      JDK 16:
-        JDK_VERSION: 16
       JDK 17:
         JDK_VERSION: 17
   pool:
