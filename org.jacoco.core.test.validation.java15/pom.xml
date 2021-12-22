@@ -25,7 +25,7 @@
   <name>JaCoCo :: Test :: Core :: Validation Java 15</name>
 
   <properties>
-    <bytecode.version>15</bytecode.version>
+    <bytecode.version>17</bytecode.version>
   </properties>
 
   <dependencies>
