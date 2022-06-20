@@ -15,6 +15,8 @@ package org.jacoco.ant;
 import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Method;
 import java.net.URLDecoder;
 
 import org.junit.Test;
@@ -31,7 +33,41 @@ public class TestTarget {
 		System.out.println("Target executed");
 	}
 
+	private static void illegalAccess() throws Exception {
+		try {
+			Class.forName("java.lang.invoke.MethodHandles$Lookup")
+					.getField("ORIGINAL");
+		} catch (ClassNotFoundException e) {
+			// Java < 7
+			return;
+		} catch (NoSuchFieldException e) {
+			// Java < 16
+			return;
+		}
+
+		final Method getModule = Class.class.getMethod("getModule");
+		final Class<?> moduleClass = Class.forName("java.lang.Module");
+		if ((Boolean) moduleClass.getMethod("isOpen", String.class, moduleClass)
+				.invoke(getModule.invoke(String.class), "java.lang",
+						getModule.invoke(TestTarget.class))) {
+			throw new AssertionError();
+		}
+
+		final Constructor<?> c = Class.forName("java.lang.Module")
+				.getDeclaredConstructors()[0];
+		try {
+			c.setAccessible(true);
+			throw new AssertionError();
+		} catch (RuntimeException e) {
+			if (!e.getClass().getName()
+					.equals("java.lang.reflect.InaccessibleObjectException")) {
+				throw new AssertionError();
+			}
+		}
+	}
+
 	public static void main(String[] args) throws Exception {
+		illegalAccess();
 
 		// Load some class from the bootstrap classloader:
 		new java.sql.Timestamp(0);
