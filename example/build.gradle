@@ -1,0 +1,37 @@
+plugins {
+    id 'org.jetbrains.kotlin.jvm' version '1.6.10'
+    id 'jacoco'
+}
+
+jacoco {
+    toolVersion = '0.8.8'
+}
+
+repositories {
+    mavenLocal()
+    mavenCentral()
+}
+
+tasks.withType(Test) {
+    testLogging.showStandardStreams = true
+    jvmArgs '-XX:+AllowRedefinitionToAddDeleteMethods'
+    jacoco.excludes = [
+        'kotlin.coroutines.jvm.internal.DebugProbesKt',
+        'kotlinx.coroutines.debug.internal.DebugProbesKt',
+        'kotlinx.coroutines.debug.internal.NoOpProbesKt',
+    ]
+    jacoco.includes = ['org.example.*']
+}
+
+dependencies {
+    testImplementation 'net.bytebuddy:byte-buddy:1.12.13'
+    testImplementation 'net.bytebuddy:byte-buddy-agent:1.12.13'
+
+    testImplementation('junit:junit:4.13')
+
+    testImplementation 'org.jetbrains.kotlinx:kotlinx-coroutines-debug:1.6.4'
+//    testImplementation(files('/tmp/j/kotlinx.coroutines/kotlinx-coroutines-debug/build/libs/kotlinx-coroutines-debug-1.6.4-SNAPSHOT.jar'))
+//    testImplementation 'net.java.dev.jna:jna:5.9.0'
+//    testImplementation 'net.java.dev.jna:jna-platform:5.9.0'
+//    testImplementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4'
+}

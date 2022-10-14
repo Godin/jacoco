@@ -1,0 +1,43 @@
+https://github.com/jacoco/jacoco/issues/1357
+
+[source,shell]
+----
+docker run --rm -it -v `pwd`:/project mingc/android-build-box bash
+
+apt-get update
+apt-get install openjdk-17-jdk
+
+. $HOME/.bash_profile
+jenv local system
+
+./gradlew :app:testDebugUnitTestCoverage
+----
+
+* Seems that it fails starting with JDK 13.
+* ByteBuddy version seems to be `1.10.9` (see https://github.com/Kotlin/kotlinx.coroutines/blob/1.6.4/gradle.properties#L18)
+  it was released 29 March 2020 (https://github.com/raphw/byte-buddy/releases/tag/byte-buddy-1.10.9)
+  around JDK 14 release
+
+[source,groovy]
+----
+tasks.withType(Test) {
+  jacoco.excludes = [
+      'kotlin.coroutines.jvm.internal.DebugProbesKt',
+      'kotlinx.coroutines.debug.internal.DebugProbesKt',
+      'kotlinx.coroutines.debug.internal.NoOpProbesKt',
+  ]
+}
+----
+
+[source,groovy]
+----
+tasks.withType(Test) {
+    jacoco.includes = ['org.example.*']
+}
+----
+
+https://bugs.openjdk.org/browse/JDK-8192936
+
+`-XX:+AllowRedefinitionToAddDeleteMethods`
+
+https://github.com/raphw/byte-buddy/issues/1248
