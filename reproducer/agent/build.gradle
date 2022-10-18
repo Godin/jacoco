@@ -1,0 +1,24 @@
+plugins {
+    id 'java'
+    id 'com.github.johnrengelman.shadow' version '7.1.2'
+}
+
+repositories {
+    mavenCentral()
+}
+
+jar {
+    manifest {
+        attributes(
+                'Premain-Class': 'org.example.agent.Agent',
+                'Can-Redefine-Classes': 'true',
+                'Can-Retransform-Classes': 'true',
+        )
+    }
+}
+
+tasks.build.dependsOn tasks.shadowJar
+
+dependencies {
+    implementation("org.ow2.asm:asm-tree:9.4")
+}

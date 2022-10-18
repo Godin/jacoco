@@ -12,9 +12,13 @@
  *******************************************************************************/
 package org.jacoco.core.runtime;
 
-import org.objectweb.asm.ClassWriter;
-import org.objectweb.asm.MethodVisitor;
-import org.objectweb.asm.Opcodes;
+import org.objectweb.asm.*;
+import org.objectweb.asm.tree.*;
+
+import java.lang.instrument.ClassFileTransformer;
+import java.lang.instrument.Instrumentation;
+import java.lang.instrument.UnmodifiableClassException;
+import java.security.ProtectionDomain;
 
 /**
  * {@link IRuntime} which defines a new class using
@@ -32,6 +36,8 @@ public class InjectedClassRuntime extends AbstractRuntime {
 
 	private final String injectedClassName;
 
+	private Class<?> injected;
+
 	/**
 	 * Creates a new runtime which will define a class to the same class loader
 	 * and in the same package and protection domain as given class.
@@ -48,14 +54,67 @@ public class InjectedClassRuntime extends AbstractRuntime {
 				'/') + '/' + simpleClassName;
 	}
 
+	public static void patch(final Instrumentation instrumentation) throws UnmodifiableClassException {
+		final ClassFileTransformer retransformer = new ClassFileTransformer() {
+			public byte[] transform(ClassLoader loader, String className, Class<?> classBeingRedefined, ProtectionDomain protectionDomain, byte[] classBytes) {
+				if (!"java/lang/Class".equals(className)) {
+					return null;
+				}
+				ClassNode classNode = new ClassNode();
+				new ClassReader(classBytes).accept(classNode, 0);
+
+				for (MethodNode m : classNode.methods) {
+					if ("getModule".equals(m.name)) {
+						for (AbstractInsnNode n : m.instructions) {
+							if (n.getOpcode() == Opcodes.ARETURN) {
+								InsnList insnList = new InsnList();
+								LabelNode labelNode = new LabelNode();
+								insnList.add(new LdcInsnNode("java.lang.$JaCoCo"));
+								insnList.add(new VarInsnNode(Opcodes.ALOAD, 0));
+								insnList.add(new MethodInsnNode(Opcodes.INVOKEVIRTUAL, "java/lang/Class", "getName", "()Ljava/lang/String;", false));
+								insnList.add(new MethodInsnNode(Opcodes.INVOKEVIRTUAL, "java/lang/String", "equals", "(Ljava/lang/Object;)Z", false));
+								insnList.add(new JumpInsnNode(Opcodes.IFEQ, labelNode));
+								insnList.add(new LdcInsnNode(Type.getType(Object.class)));
+								insnList.add(new MethodInsnNode(Opcodes.INVOKEVIRTUAL, "java/lang/Class", "getModule", "()Ljava/lang/Module;", false));
+								insnList.add(new InsnNode(Opcodes.POP));
+								insnList.add(labelNode);
+								m.instructions.insertBefore(n, insnList);
+							}
+						}
+					}
+				}
+
+				ClassWriter classWriter = new ClassWriter(ClassWriter.COMPUTE_FRAMES | ClassWriter.COMPUTE_MAXS);
+				classNode.accept(classWriter);
+				return classWriter.toByteArray();
+			}
+		};
+		instrumentation.addTransformer(retransformer, true);
+		instrumentation.retransformClasses(Class.class);
+		instrumentation.removeTransformer(retransformer);
+	}
+
 	@Override
 	public void startup(final RuntimeData data) throws Exception {
 		super.startup(data);
-		Lookup //
+		injected = Lookup //
 				.privateLookupIn(locator, Lookup.lookup()) //
-				.defineClass(createClass(injectedClassName)) //
+				.defineClass(createClass(injectedClassName)); //
+		injected //
 				.getField(FIELD_NAME) //
 				.set(null, data);
+		// https://github.com/jboss-modules/jboss-modules/blob/367d7479d23b165d2cf7e2419f31d78223b957a4/src/main/java/org/jboss/modules/JDKModuleFinder.java#L159
+		System.out.println(getModule(injected));
+		System.out.println(getModule(locator));
+	}
+
+	/**
+	 * @return {@code cls.getModule()}
+	 */
+	private static Object getModule(final Class<?> cls) throws Exception {
+		return Class.class //
+			.getMethod("getModule") //
+			.invoke(cls);
 	}
 
 	public void shutdown() {

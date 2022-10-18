@@ -1,0 +1,26 @@
+plugins {
+    id 'java'
+    id 'jacoco'
+    id 'com.github.johnrengelman.shadow' version '7.1.2'
+}
+
+repositories {
+    mavenLocal()
+    mavenCentral()
+}
+
+jacoco.toolVersion = '0.8.8'
+
+jar {
+    manifest {
+        attributes(
+                'Main-Class': 'org.example.main.Example1',
+        )
+    }
+}
+
+tasks.build.dependsOn tasks.shadowJar
+
+dependencies {
+    implementation("org.ow2.asm:asm-tree:9.4")
+}

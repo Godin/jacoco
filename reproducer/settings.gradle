@@ -1,0 +1,3 @@
+rootProject.name = 'reproducer'
+include 'agent'
+include 'example'

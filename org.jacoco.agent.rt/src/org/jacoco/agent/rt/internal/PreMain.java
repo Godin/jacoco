@@ -59,6 +59,7 @@ public final class PreMain {
 			throws Exception {
 
 		if (redefineJavaBaseModule(inst)) {
+			InjectedClassRuntime.patch(inst);
 			return new InjectedClassRuntime(Object.class, "$JaCoCo");
 		}
 
