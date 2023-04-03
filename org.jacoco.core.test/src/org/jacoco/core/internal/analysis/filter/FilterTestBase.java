@@ -38,6 +38,8 @@ public abstract class FilterTestBase {
 
 	private final Map<AbstractInsnNode, Set<AbstractInsnNode>> replacedBranches = new HashMap<AbstractInsnNode, Set<AbstractInsnNode>>();
 
+	private final Map<AbstractInsnNode, AbstractInsnNode> merged = new HashMap<AbstractInsnNode, AbstractInsnNode>();
+
 	protected final IFilterOutput output = new IFilterOutput() {
 		public void ignore(final AbstractInsnNode fromInclusive,
 				final AbstractInsnNode toInclusive) {
@@ -49,7 +51,7 @@ public abstract class FilterTestBase {
 
 		public void merge(final AbstractInsnNode i1,
 				final AbstractInsnNode i2) {
-			fail();
+			merged.put(i1, i2);
 		}
 
 		public void replaceBranches(final AbstractInsnNode source,
@@ -75,6 +77,11 @@ public abstract class FilterTestBase {
 			final Set<AbstractInsnNode> newTargets) {
 		assertEquals(Collections.singletonMap(source, newTargets),
 				replacedBranches);
+	}
+
+	final void assertMerged(final AbstractInsnNode i1,
+			final AbstractInsnNode i2) {
+		assertEquals(Collections.singletonMap(i1, i2), merged);
 	}
 
 	static class Range {
