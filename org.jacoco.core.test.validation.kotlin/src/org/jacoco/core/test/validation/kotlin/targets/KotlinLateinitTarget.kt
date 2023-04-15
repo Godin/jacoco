@@ -12,17 +12,34 @@
  *******************************************************************************/
 package org.jacoco.core.test.validation.kotlin.targets
 
-import org.jacoco.core.test.validation.targets.Stubs.nop
-
 /**
  * This test target is `lateinit` property.
  */
 object KotlinLateinitTarget {
-    private lateinit var x: String
+    class Example<T : Any> {
+        lateinit var publicMember: String // assertFullyCovered()
+        lateinit var publicGenericMember: T // assertFullyCovered()
+        private lateinit var privateMember: String // assertEmpty()
+        private lateinit var privateGenericMember: T // assertEmpty()
+        fun getPrivateMember() = privateMember // assertFullyCovered()
+        fun getPrivateGenericMember() = privateGenericMember // assertFullyCovered()
+
+        fun init(value: T) {
+            publicMember = ""
+            publicGenericMember = value
+            privateMember = ""
+            privateGenericMember = value
+        }
+    }
 
     @JvmStatic
     fun main(args: Array<String>) {
-        x = ""
-        nop(x) // assertFullyCovered()
+        val e = Example<String>()
+        e.init("")
+
+        e.publicMember // assertFullyCovered()
+        e.publicGenericMember // assertFullyCovered()
+        e.getPrivateMember() // assertFullyCovered()
+        e.getPrivateGenericMember() // assertFullyCovered()
     }
 }

@@ -21,6 +21,41 @@ import org.objectweb.asm.tree.MethodNode;
 
 /**
  * Unit tests for {@link KotlinLateinitFilter}.
+ *
+ * {@link #should_filter_Kotlin_1_2()} = IFNONNULL label
+ *
+ * Kotlin 1.5.0
+ * added ATHROW
+ * https://github.com/JetBrains/kotlin/commit/7c9578116bfa4aebac5a62c4bdaa1a11dd82426c
+ * and differentiates between private and public
+ * TODO link
+ * {@link #should_filter_Kotlin_1_5_0_private()} = IFNONNULL ACONST_NULL ATHROW label
+ * {@link #should_filter_Kotlin_1_5_0_public()} = IFNULL ACONST_NULL ATHROW
+ *
+ * Kotlin 1.5.30
+ * https://github.com/JetBrains/kotlin/commit/81b09ca09f012ed42bb9e90d4b6d802c697c07b6
+ * removed ATHROW
+ * and while not obvious from the above commit,
+ * seems that it adds differentiation between generic and non-generic
+ * {@link #should_filter_Kotlin_1_5_30_private()} = IFNONNULL ACONST_NULL GOTO label
+ * {@link #should_filter_Kotlin_1_5_30_private_generic()} = IFNONNULL GETSTATIC GOTO label
+ * {@link #should_filter_Kotlin_1_5_30_public()} = IFNULL ACONST_NULL ARETURN
+ * {@link #should_filter_Kotlin_1_5_30_public_generic()} = IFNULL GETSTATIC ARETURN
+ *
+ * Kotlin 1.6.0
+ * added POP
+ * https://github.com/JetBrains/kotlin/commit/041773fd2584bc279813361eb7fc11ae84c214fd
+ * {@link #should_filter_Kotlin_1_6_0_private()} = IFNONNULL POP ACONST_NULL label
+ * {@link #should_filter_Kotlin_1_6_0_private_generic()} = IFNONNULL POP GETSTATIC label
+ *
+ * Kotlin 1.6.20
+ * added POP
+ * https://github.com/jetBrains/kotlin/commit/0a67ab54fec635f82e0507cbdd4299ae0dbe71b0
+ * {@link #should_filter_Kotlin_1_6_20_public()} = IFNULL POP ACONST_NULL ARETURN
+ * {@link #should_filter_Kotlin_1_5_30_public_generic()} = IFNULL POP GETSTATIC ARETURN
+ *
+ * TODO see also
+ * https://github.com/JetBrains/intellij-coverage/commit/82522416ef5452910276927218229495ef60a5a7
  */
 public class KotlinLateinitFilterTest extends FilterTestBase {
 
@@ -29,6 +64,10 @@ public class KotlinLateinitFilterTest extends FilterTestBase {
 	private final MethodNode m = new MethodNode(InstrSupport.ASM_API_VERSION, 0,
 			"name", "()V", null, null);
 
+	/**
+	 * @deprecated superseded by {@link #should_filter_Kotlin_1_2()}
+	 */
+	@Deprecated
 	@Test
 	public void testLateinitBranchIsFiltered() {
 		final Label l1 = new Label();
@@ -49,8 +88,8 @@ public class KotlinLateinitFilterTest extends FilterTestBase {
 				"kotlin/jvm/internal/Intrinsics",
 				"throwUninitializedPropertyAccessException",
 				"(Ljava/lang/String;)V", false);
-		final AbstractInsnNode expectedTo = m.instructions.getLast();
 		m.visitLabel(l2);
+		final AbstractInsnNode expectedTo = m.instructions.getLast();
 		m.visitMethodInsn(Opcodes.INVOKEVIRTUAL,
 				"android/os/PowerManager$WakeLock", "acquire", "", false);
 
@@ -66,8 +105,11 @@ public class KotlinLateinitFilterTest extends FilterTestBase {
 	 *   fun example() = x
 	 * }
 	 * </pre>
+	 *
+	 * @deprecated superseded by {@link #should_filter_Kotlin_1_5_0_private()}
 	 */
 	@Test
+	@Deprecated
 	public void should_filter_Kotlin_1_5() {
 		final MethodNode m = new MethodNode(InstrSupport.ASM_API_VERSION, 0,
 				"example", "()Ljava/lang/String;", null, null);
@@ -86,14 +128,420 @@ public class KotlinLateinitFilterTest extends FilterTestBase {
 				"(Ljava/lang/String;)V", false);
 		m.visitInsn(Opcodes.ACONST_NULL);
 		m.visitInsn(Opcodes.ATHROW);
-		final AbstractInsnNode expectedTo = m.instructions.getLast();
 		m.visitLabel(label);
+		final AbstractInsnNode expectedTo = m.instructions.getLast();
 		m.visitVarInsn(Opcodes.ALOAD, 1);
 		m.visitInsn(Opcodes.ARETURN);
 
 		filter.filter(m, context, output);
 
 		assertIgnored(new Range(expectedFrom, expectedTo));
+	}
+
+	/**
+	 * <pre>
+	 * class Example {
+	 *   private lateinit var member: String
+	 *   fun get() = member
+	 * }
+	 * </pre>
+	 */
+	@Test
+	public void should_filter_Kotlin_1_2() {
+		final MethodNode m = new MethodNode(0, "get", "()Ljava/lang/String;",
+				null, null);
+		final Label label = new Label();
+		m.visitInsn(Opcodes.DUP);
+		m.visitJumpInsn(Opcodes.IFNONNULL, label);
+		final AbstractInsnNode expectedFrom = m.instructions.getLast();
+		m.visitLdcInsn("member");
+		m.visitMethodInsn(Opcodes.INVOKESTATIC,
+				"kotlin/jvm/internal/Intrinsics",
+				"throwUninitializedPropertyAccessException",
+				"(Ljava/lang/String;)V", false);
+		m.visitLabel(label);
+		final AbstractInsnNode expectedTo = m.instructions.getLast();
+
+		filter.filter(m, context, output);
+
+		assertIgnored(new Range(expectedFrom, expectedTo));
+	}
+
+	/**
+	 * <pre>
+	 * class Example {
+	 *   private lateinit var member: String
+	 *   fun get() = member
+	 * }
+	 * </pre>
+	 */
+	@Test
+	public void should_filter_Kotlin_1_5_0_private() {
+		final MethodNode m = new MethodNode(0, "get", "()Ljava/lang/String;",
+				null, null);
+		final Label label = new Label();
+		m.visitVarInsn(Opcodes.ALOAD, 0);
+		m.visitFieldInsn(Opcodes.GETFIELD, "Example", "member",
+				"Ljava/lang/String;");
+		m.visitVarInsn(Opcodes.ASTORE, 1);
+		m.visitVarInsn(Opcodes.ALOAD, 1);
+		m.visitJumpInsn(Opcodes.IFNONNULL, label);
+		final AbstractInsnNode expectedFrom = m.instructions.getLast();
+		m.visitLdcInsn("member");
+		m.visitMethodInsn(Opcodes.INVOKESTATIC,
+				"kotlin/jvm/internal/Intrinsics",
+				"throwUninitializedPropertyAccessException",
+				"(Ljava/lang/String;)V", false);
+		m.visitInsn(Opcodes.ACONST_NULL);
+		m.visitInsn(Opcodes.ATHROW);
+		m.visitLabel(label);
+		final AbstractInsnNode expectedTo = m.instructions.getLast();
+		m.visitVarInsn(Opcodes.ALOAD, 1);
+		m.visitInsn(Opcodes.ARETURN);
+
+		filter.filter(m, context, output);
+
+		assertIgnored(new Range(expectedFrom, expectedTo));
+	}
+
+	/**
+	 * <pre>
+	 * class Example {
+	 *   lateinit var member: String
+	 * }
+	 * </pre>
+	 */
+	@Test
+	public void should_filter_Kotlin_1_5_0_public() {
+		final MethodNode m = new MethodNode(0, "getMember",
+				"()Ljava/lang/String;", null, null);
+		final Label label = new Label();
+		m.visitVarInsn(Opcodes.ALOAD, 0);
+		m.visitFieldInsn(Opcodes.GETFIELD, "Example", "member",
+				"Ljava/lang/String;");
+		m.visitVarInsn(Opcodes.ASTORE, 1);
+		m.visitVarInsn(Opcodes.ALOAD, 1);
+		m.visitJumpInsn(Opcodes.IFNULL, label);
+		final AbstractInsnNode branch = m.instructions.getLast();
+		m.visitVarInsn(Opcodes.ALOAD, 1);
+		m.visitInsn(Opcodes.ARETURN);
+		m.visitLabel(label);
+		final AbstractInsnNode expectedFrom = m.instructions.getLast();
+		m.visitLdcInsn("member");
+		m.visitMethodInsn(Opcodes.INVOKESTATIC,
+				"kotlin/jvm/internal/Intrinsics",
+				"throwUninitializedPropertyAccessException",
+				"(Ljava/lang/String;)V", false);
+		m.visitInsn(Opcodes.ACONST_NULL);
+		m.visitInsn(Opcodes.ATHROW);
+		final AbstractInsnNode expectedTo = m.instructions.getLast();
+
+		filter.filter(m, context, output);
+
+		assertIgnored(new Range(branch, branch),
+				new Range(expectedFrom, expectedTo));
+	}
+
+	/**
+	 * <pre>
+	 * class Example {
+	 *   lateinit var member: String
+	 * }
+	 * </pre>
+	 */
+	@Test
+	public void should_filter_Kotlin_1_5_30_public() {
+		final MethodNode m = new MethodNode(0, "getMember",
+				"()Ljava/lang/String;", null, null);
+		final Label label = new Label();
+		m.visitVarInsn(Opcodes.ALOAD, 0);
+		m.visitFieldInsn(Opcodes.GETFIELD, "Example", "member",
+				"Ljava/lang/String;");
+		m.visitVarInsn(Opcodes.ASTORE, 1);
+		m.visitVarInsn(Opcodes.ALOAD, 1);
+		m.visitJumpInsn(Opcodes.IFNULL, label);
+		final AbstractInsnNode branch = m.instructions.getLast();
+		m.visitVarInsn(Opcodes.ALOAD, 1);
+		m.visitInsn(Opcodes.ARETURN);
+		m.visitLabel(label);
+		final AbstractInsnNode expectedFrom = m.instructions.getLast();
+		m.visitLdcInsn("member");
+		m.visitMethodInsn(Opcodes.INVOKESTATIC,
+				"kotlin/jvm/internal/Intrinsics",
+				"throwUninitializedPropertyAccessException",
+				"(Ljava/lang/String;)V", false);
+		m.visitInsn(Opcodes.ACONST_NULL);
+		m.visitInsn(Opcodes.ARETURN);
+		final AbstractInsnNode expectedTo = m.instructions.getLast();
+
+		filter.filter(m, context, output);
+
+		assertIgnored(new Range(branch, branch),
+				new Range(expectedFrom, expectedTo));
+	}
+
+	/**
+	 * <pre>
+	 * class Example<T : Any> {
+	 *   lateinit var member: T
+	 * }
+	 * </pre>
+	 */
+	@Test
+	public void should_filter_Kotlin_1_5_30_public_generic() {
+		final MethodNode m = new MethodNode(0, "getMember",
+				"()Ljava/lang/Object;", null, null);
+		final Label label = new Label();
+		m.visitVarInsn(Opcodes.ALOAD, 0);
+		m.visitFieldInsn(Opcodes.GETFIELD, "Example", "member",
+				"Ljava/lang/String;");
+		m.visitVarInsn(Opcodes.ASTORE, 1);
+		m.visitVarInsn(Opcodes.ALOAD, 1);
+		m.visitJumpInsn(Opcodes.IFNULL, label);
+		final AbstractInsnNode branch = m.instructions.getLast();
+		m.visitVarInsn(Opcodes.ALOAD, 1);
+		m.visitInsn(Opcodes.ARETURN);
+		m.visitLabel(label);
+		final AbstractInsnNode expectedFrom = m.instructions.getLast();
+		m.visitLdcInsn("member");
+		m.visitMethodInsn(Opcodes.INVOKESTATIC,
+				"kotlin/jvm/internal/Intrinsics",
+				"throwUninitializedPropertyAccessException",
+				"(Ljava/lang/String;)V", false);
+		m.visitFieldInsn(Opcodes.GETSTATIC, "kotlin/Unit", "INSTANCE",
+				"Lkotlin/Unit;");
+		m.visitInsn(Opcodes.ARETURN);
+		final AbstractInsnNode expectedTo = m.instructions.getLast();
+
+		filter.filter(m, context, output);
+
+		assertIgnored(new Range(branch, branch),
+				new Range(expectedFrom, expectedTo));
+	}
+
+	/**
+	 * <pre>
+	 * class Example {
+	 *   private lateinit var member: String
+	 *   fun get() = member
+	 * }
+	 * </pre>
+	 */
+	@Test
+	public void should_filter_Kotlin_1_5_30_private() {
+		final MethodNode m = new MethodNode(0, "get", "()Ljava/lang/String;",
+				null, null);
+		final Label label = new Label();
+		final Label label2 = new Label();
+		m.visitVarInsn(Opcodes.ALOAD, 0);
+		m.visitFieldInsn(Opcodes.GETFIELD, "Example", "member",
+				"Ljava/lang/String;");
+		m.visitVarInsn(Opcodes.ASTORE, 1);
+		m.visitVarInsn(Opcodes.ALOAD, 1);
+		m.visitJumpInsn(Opcodes.IFNONNULL, label);
+		final AbstractInsnNode expectedFrom = m.instructions.getLast();
+		m.visitLdcInsn("member");
+		m.visitMethodInsn(Opcodes.INVOKESTATIC,
+				"kotlin/jvm/internal/Intrinsics",
+				"throwUninitializedPropertyAccessException",
+				"(Ljava/lang/String;)V", false);
+		m.visitInsn(Opcodes.ACONST_NULL);
+		m.visitJumpInsn(Opcodes.GOTO, label2);
+		m.visitLabel(label);
+		final AbstractInsnNode expectedTo = m.instructions.getLast();
+		m.visitVarInsn(Opcodes.ALOAD, 1);
+		m.visitLabel(label2);
+		m.visitInsn(Opcodes.ARETURN);
+
+		filter.filter(m, context, output);
+
+		assertIgnored(new Range(expectedFrom, expectedTo));
+	}
+
+	/**
+	 * <pre>
+	 * class Example<T : Any> {
+	 *   private lateinit var member: T
+	 *   fun get(): T = member
+	 * }
+	 * </pre>
+	 */
+	@Test
+	public void should_filter_Kotlin_1_5_30_private_generic() {
+		final MethodNode m = new MethodNode(0, "get", "()Ljava/lang/Object;",
+				null, null);
+		final Label label = new Label();
+		final Label label2 = new Label();
+		m.visitVarInsn(Opcodes.ALOAD, 0);
+		m.visitFieldInsn(Opcodes.GETFIELD, "Example", "member",
+				"Ljava/lang/Object;");
+		m.visitVarInsn(Opcodes.ASTORE, 1);
+		m.visitVarInsn(Opcodes.ALOAD, 1);
+		m.visitJumpInsn(Opcodes.IFNONNULL, label);
+		final AbstractInsnNode expectedFrom = m.instructions.getLast();
+		m.visitLdcInsn("member");
+		m.visitMethodInsn(Opcodes.INVOKESTATIC,
+				"kotlin/jvm/internal/Intrinsics",
+				"throwUninitializedPropertyAccessException",
+				"(Ljava/lang/String;)V", false);
+		m.visitFieldInsn(Opcodes.GETSTATIC, "kotlin/Unit", "INSTANCE",
+				"Lkotlin/Unit;");
+		m.visitJumpInsn(Opcodes.GOTO, label2);
+		m.visitLabel(label);
+		final AbstractInsnNode expectedTo = m.instructions.getLast();
+		m.visitVarInsn(Opcodes.ALOAD, 1);
+		m.visitLabel(label2);
+		m.visitInsn(Opcodes.ARETURN);
+
+		filter.filter(m, context, output);
+
+		assertIgnored(new Range(expectedFrom, expectedTo));
+	}
+
+	/**
+	 * <pre>
+	 * class Example {
+	 *   private lateinit var member: String
+	 *   fun get() = member
+	 * }
+	 * </pre>
+	 */
+	@Test
+	public void should_filter_Kotlin_1_6_0_private() {
+		final MethodNode m = new MethodNode(0, "get", "()Ljava/lang/String;",
+				null, null);
+		final Label label = new Label();
+		m.visitVarInsn(Opcodes.ALOAD, 0);
+		m.visitFieldInsn(Opcodes.GETFIELD, "Example", "member",
+				"Ljava/lang/String;");
+		m.visitInsn(Opcodes.DUP);
+		m.visitJumpInsn(Opcodes.IFNONNULL, label);
+		final AbstractInsnNode expectedFrom = m.instructions.getLast();
+		m.visitInsn(Opcodes.POP);
+		m.visitLdcInsn("member");
+		m.visitMethodInsn(Opcodes.INVOKESTATIC,
+				"kotlin/jvm/internal/Intrinsics",
+				"throwUninitializedPropertyAccessException",
+				"(Ljava/lang/String;)V", false);
+		m.visitInsn(Opcodes.ACONST_NULL);
+		m.visitLabel(label);
+		final AbstractInsnNode expectedTo = m.instructions.getLast();
+		m.visitInsn(Opcodes.ARETURN);
+
+		filter.filter(m, context, output);
+
+		assertIgnored(new Range(expectedFrom, expectedTo));
+	}
+
+	/**
+	 * <pre>
+	 * class Example<T : Any> {
+	 *   private lateinit var member: T
+	 *   fun get(): T = member
+	 * }
+	 * </pre>
+	 */
+	@Test
+	public void should_filter_Kotlin_1_6_0_private_generic() {
+		final MethodNode m = new MethodNode(0, "get", "()Ljava/lang/Object;",
+				null, null);
+		final Label label = new Label();
+		m.visitVarInsn(Opcodes.ALOAD, 0);
+		m.visitFieldInsn(Opcodes.GETFIELD, "Example", "member",
+				"Ljava/lang/String;");
+		m.visitInsn(Opcodes.DUP);
+		m.visitJumpInsn(Opcodes.IFNONNULL, label);
+		final AbstractInsnNode expectedFrom = m.instructions.getLast();
+		m.visitInsn(Opcodes.POP);
+		m.visitLdcInsn("member");
+		m.visitMethodInsn(Opcodes.INVOKESTATIC,
+				"kotlin/jvm/internal/Intrinsics",
+				"throwUninitializedPropertyAccessException",
+				"(Ljava/lang/String;)V", false);
+		m.visitFieldInsn(Opcodes.GETSTATIC, "kotlin/Unit", "INSTANCE",
+				"Lkotlin/Unit;");
+		m.visitLabel(label);
+		final AbstractInsnNode expectedTo = m.instructions.getLast();
+		m.visitInsn(Opcodes.ARETURN);
+
+		filter.filter(m, context, output);
+
+		assertIgnored(new Range(expectedFrom, expectedTo));
+	}
+
+	/**
+	 * <pre>
+	 * class Example {
+	 *   lateinit var member: String
+	 * }
+	 * </pre>
+	 */
+	@Test
+	public void should_filter_Kotlin_1_6_20_public() {
+		final MethodNode m = new MethodNode(0, "getMember",
+				"()Ljava/lang/String;", null, null);
+		final Label label = new Label();
+		m.visitVarInsn(Opcodes.ALOAD, 0);
+		m.visitFieldInsn(Opcodes.GETFIELD, "Example", "member",
+				"Ljava/lang/String;");
+		m.visitInsn(Opcodes.DUP);
+		m.visitJumpInsn(Opcodes.IFNULL, label);
+		final AbstractInsnNode branch = m.instructions.getLast();
+		m.visitInsn(Opcodes.ARETURN);
+		m.visitLabel(label);
+		final AbstractInsnNode expectedFrom = m.instructions.getLast();
+		m.visitInsn(Opcodes.POP);
+		m.visitLdcInsn("member");
+		m.visitMethodInsn(Opcodes.INVOKESTATIC,
+				"kotlin/jvm/internal/Intrinsics",
+				"throwUninitializedPropertyAccessException",
+				"(Ljava/lang/String;)V", false);
+		m.visitInsn(Opcodes.ACONST_NULL);
+		m.visitInsn(Opcodes.ARETURN);
+		final AbstractInsnNode expectedTo = m.instructions.getLast();
+
+		filter.filter(m, context, output);
+
+		assertIgnored(new Range(branch, branch),
+				new Range(expectedFrom, expectedTo));
+	}
+
+	/**
+	 * <pre>
+	 * class Example<T : Any> {
+	 *   lateinit var member: T
+	 * }
+	 * </pre>
+	 */
+	@Test
+	public void should_filter_Kotlin_1_6_20_public_generic() {
+		final MethodNode m = new MethodNode(0, "getMember",
+				"()Ljava/lang/Object;", null, null);
+		final Label label = new Label();
+		m.visitVarInsn(Opcodes.ALOAD, 0);
+		m.visitFieldInsn(Opcodes.GETFIELD, "Example", "member",
+				"Ljava/lang/String;");
+		m.visitInsn(Opcodes.DUP);
+		m.visitJumpInsn(Opcodes.IFNULL, label);
+		final AbstractInsnNode branch = m.instructions.getLast();
+		m.visitInsn(Opcodes.ARETURN);
+		m.visitLabel(label);
+		final AbstractInsnNode expectedFrom = m.instructions.getLast();
+		m.visitInsn(Opcodes.POP);
+		m.visitLdcInsn("member");
+		m.visitMethodInsn(Opcodes.INVOKESTATIC,
+				"kotlin/jvm/internal/Intrinsics",
+				"throwUninitializedPropertyAccessException",
+				"(Ljava/lang/String;)V", false);
+		m.visitFieldInsn(Opcodes.GETSTATIC, "kotlin/Unit", "INSTANCE",
+				"Lkotlin/Unit;");
+		m.visitInsn(Opcodes.ARETURN);
+		final AbstractInsnNode expectedTo = m.instructions.getLast();
+
+		filter.filter(m, context, output);
+
+		assertIgnored(new Range(branch, branch),
+				new Range(expectedFrom, expectedTo));
 	}
 
 }

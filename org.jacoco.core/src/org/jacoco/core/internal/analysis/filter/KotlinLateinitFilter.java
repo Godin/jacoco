@@ -34,27 +34,46 @@ public class KotlinLateinitFilter implements IFilter {
 	private static class Matcher extends AbstractMatcher {
 		public void match(final AbstractInsnNode start,
 				final IFilterOutput output) {
+			if (Opcodes.IFNONNULL == start.getOpcode()) {
+				cursor = start;
+				helper();
+				// TODO ?
+				// label
+				// ACONST_NULL GOTO label
+				// GETSTATIC GOTO label
+				// ACONST_NULL label
+				if (cursor != null) {
+					output.ignore(start, ((JumpInsnNode) start).label);
+				}
+			} else if (Opcodes.IFNULL == start.getOpcode()) {
+				cursor = ((JumpInsnNode) start).label;
+				helper();
+				// GETSTATIC ARETURN
+				// ACONST_NULL ARETURN
+				// ACONST_NULL ATHROW
+				next();
+				next();
+				if (cursor != null && (Opcodes.ARETURN == cursor.getOpcode()
+						|| Opcodes.ATHROW == cursor.getOpcode())) {
+					output.ignore(start, start);
+					output.ignore(((JumpInsnNode) start).label, cursor);
+				}
+			}
+		}
 
-			if (Opcodes.IFNONNULL != start.getOpcode()) {
+		// TODO rename
+		private void helper() {
+			next();
+			if (cursor == null) {
+				return;
+			} else if (Opcodes.POP == cursor.getOpcode()) {
+				nextIs(Opcodes.LDC);
+			} else if (Opcodes.LDC != cursor.getOpcode()) {
 				return;
 			}
-			cursor = start;
-
-			nextIs(Opcodes.LDC);
 			nextIsInvoke(Opcodes.INVOKESTATIC, "kotlin/jvm/internal/Intrinsics",
 					"throwUninitializedPropertyAccessException",
 					"(Ljava/lang/String;)V");
-
-			if (cursor != null
-					&& skipNonOpcodes(cursor.getNext()) != skipNonOpcodes(
-							((JumpInsnNode) start).label)) {
-				nextIs(Opcodes.ACONST_NULL);
-				nextIs(Opcodes.ATHROW);
-			}
-
-			if (cursor != null) {
-				output.ignore(start, cursor);
-			}
 		}
 	}
 }
