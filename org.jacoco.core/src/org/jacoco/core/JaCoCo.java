@@ -41,7 +41,7 @@ public final class JaCoCo {
 				.getBundle("org.jacoco.core.jacoco");
 		VERSION = bundle.getString("VERSION");
 		COMMITID = bundle.getString("COMMITID");
-		COMMITID_SHORT = COMMITID.substring(0, 7);
+		COMMITID_SHORT = "";// COMMITID.substring(0, 7);
 		HOMEURL = bundle.getString("HOMEURL");
 		RUNTIMEPACKAGE = bundle.getString("RUNTIMEPACKAGE");
 	}
