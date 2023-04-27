@@ -1,0 +1,19 @@
+  public static final <R extends java.lang.Object> R example(int, kotlin.jvm.functions.Function0<? extends R>);
+      LocalVariableTable:
+        Start  Length  Slot  Name   Signature
+           16      36     3 $i$f$example   I
+           25      27     4 start   J
+           37      15     6 result   Ljava/lang/Object;
+           45       7     7 elapsed   J
+            0      52     0 priority   I
+            0      52     1 block   Lkotlin/jvm/functions/Function0;
+
+  public static java.lang.Object example$default(int, kotlin.jvm.functions.Function0, int, java.lang.Object);
+      LocalVariableTable:
+        Start  Length  Slot  Name   Signature
+            0      80     2 $i$f$example   I
+            0      80     3 start   J
+           64      16     6 result   Ljava/lang/Object;
+           71       9     7 elapsed   J
+            0      80     0 priority   I
+            0      80     1 block   Lkotlin/jvm/functions/Function0;
