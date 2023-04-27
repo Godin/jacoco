@@ -138,32 +138,36 @@ class ProbeInserter extends MethodVisitor implements IProbeInserter {
 					"ClassReader.accept() should be called with EXPAND_FRAMES flag");
 		}
 
-		final Object[] newLocal = new Object[Math.max(nLocal + 2, variable + 1)];
-		int idx = 0; // Arrays index for existing locals
-		int newIdx = 0; // Array index for new locals
-		int pos = 0; // Current variable position
-		while (idx < nLocal || pos <= variable) {
-			if (pos == variable - 1) {
-				newLocal[newIdx++] = Opcodes.TOP;
-				pos++;
-			} else if (pos == variable) {
-				newLocal[newIdx++] = InstrSupport.DATAFIELD_DESC;
-				pos++;
-			} else {
-				if (idx < nLocal) {
-					final Object t = local[idx++];
-					newLocal[newIdx++] = t;
-					pos++;
-					if (t == Opcodes.LONG || t == Opcodes.DOUBLE) {
-						pos++;
-					}
-				} else {
-					// Fill unused slots with TOP
-					newLocal[newIdx++] = Opcodes.TOP;
-					pos++;
-				}
+		final Object[] newLocal = new Object[Math.max(nLocal + 2, variable + 2) + 1];
+
+		int slot = 0;
+		int idx = 0;
+		int newIdx = 0;
+		// before
+		while (slot < variable - 1 && idx < nLocal) {
+			final Object t = local[idx++];
+			newLocal[newIdx++] = t;
+			slot++;
+			if (t == Opcodes.LONG || t == Opcodes.DOUBLE) {
+				slot++;
 			}
 		}
+		// gap
+		final boolean b = slot == variable;
+		while (slot < variable) {
+			newLocal[newIdx++] = Opcodes.TOP;
+			slot++;
+		}
+		newLocal[newIdx++] = InstrSupport.DATAFIELD_DESC;
+		// rest
+		if (idx < nLocal && b) {
+			newLocal[newIdx++] = Opcodes.TOP;
+		}
+		while (idx < nLocal) {
+			final Object t = local[idx++];
+			newLocal[newIdx++] = t;
+		}
+
 		mv.visitFrame(type, newIdx, newLocal, nStack, stack);
 	}
 

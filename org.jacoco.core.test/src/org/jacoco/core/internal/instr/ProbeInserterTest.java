@@ -315,6 +315,42 @@ public class ProbeInserterTest {
 		}, 0, new Object[] {});
 	}
 
+	@Test
+	public void test() {
+		ProbeInserter pi = new ProbeInserter(Opcodes.ACC_STATIC, "m", "(II)V", actualVisitor,
+				arrayStrategy);
+
+		pi.visitFrame(Opcodes.F_NEW, 2, new Object[] { //
+				Opcodes.DOUBLE, // 0, 1
+				Opcodes.DOUBLE, // 2, 3 => 4, 5
+		}, 0, new Object[] {});
+
+		expectedVisitor.visitFrame(Opcodes.F_NEW, 4, new Object[] { //
+				Opcodes.DOUBLE, // 0, 1
+				Opcodes.TOP, // 2
+				"[Z", // 3
+				Opcodes.DOUBLE // 4, 5
+		}, 0, new Object[] {});
+	}
+
+	@Test
+	public void test2() {
+		ProbeInserter pi = new ProbeInserter(Opcodes.ACC_STATIC, "m", "(I)V", actualVisitor,
+				arrayStrategy);
+
+		pi.visitFrame(Opcodes.F_NEW, 2, new Object[]{ //
+				Opcodes.DOUBLE, // slots 0,1
+				Opcodes.DOUBLE, // slots 2,3
+		}, 0, new Object[]{});
+
+		expectedVisitor.visitFrame(Opcodes.F_NEW, 4, new Object[]{ //
+				Opcodes.DOUBLE, // slots 0, 1
+				"[Z", // slot 2
+				Opcodes.TOP, // slot 3
+				Opcodes.DOUBLE // slot 4
+		}, 0, new Object[]{});
+	}
+
 	@Test(expected = IllegalArgumentException.class)
 	public void testVisitFrame_invalidType() {
 		ProbeInserter pi = new ProbeInserter(0, "m", "()V", actualVisitor,
