@@ -333,6 +333,39 @@ public class ProbeInserterTest {
 		}, 0, new Object[] {});
 	}
 
+	@Test
+	public void visitFrame_test1() {
+		ProbeInserter pi = new ProbeInserter(0, "m", "()V", actualVisitor,
+				arrayStrategy);
+
+		pi.visitFrame(Opcodes.F_NEW, 1, new Object[] { //
+				Opcodes.DOUBLE //
+		}, 0, new Object[] {});
+
+		expectedVisitor.visitFrame(Opcodes.F_NEW, 2, new Object[] { //
+				Opcodes.DOUBLE, //
+				"[Z" // probe array
+		}, 0, new Object[] {});
+	}
+
+	@Test
+	public void visitFrame_test2() {
+		ProbeInserter pi = new ProbeInserter(0, "m", "()V", actualVisitor,
+				arrayStrategy);
+
+		pi.visitFrame(Opcodes.F_NEW, 2, new Object[] { //
+				Opcodes.DOUBLE, //
+				Opcodes.INTEGER //
+		}, 0, new Object[] {});
+
+		expectedVisitor.visitFrame(Opcodes.F_NEW, 4, new Object[] { //
+				Opcodes.DOUBLE, //
+				"[Z", // probe array
+				Opcodes.TOP, //
+				Opcodes.INTEGER, //
+		}, 0, new Object[] {});
+	}
+
 	@Test(expected = IllegalArgumentException.class)
 	public void visitFrame_must_only_support_resolved_frames() {
 		ProbeInserter pi = new ProbeInserter(0, "m", "()V", actualVisitor,
