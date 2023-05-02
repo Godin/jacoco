@@ -46,7 +46,16 @@ public class SafetySlotTest {
 		final byte[] instrumented = new Instrumenter(runtime)
 				.instrument(original, "Sample");
 
+		asmify(instrumented);
+
 		new TargetLoader().add("Sample", instrumented).newInstance();
+	}
+
+	private static void asmify(byte[] bytes) {
+		org.objectweb.asm.util.TraceClassVisitor traceClassVisitor = new org.objectweb.asm.util.TraceClassVisitor(
+				null, new org.objectweb.asm.util.ASMifier(),
+				new java.io.PrintWriter(System.out));
+		new ClassReader(bytes).accept(traceClassVisitor, 0);
 	}
 
 	private static byte[] createClass() throws Exception {
