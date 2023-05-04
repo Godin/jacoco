@@ -45,6 +45,9 @@ object KotlinDataClassTarget {
         nop(d.varReadWrite)
         d.varReadWrite = 1
 
+        /* synthetic `copy$default` */
+        d.copy()
+
         DataClassOverrideNotCovered(0)
         DataClassOverrideCovered(0).toString()
     }

@@ -22,14 +22,14 @@ object KotlinWhenExpressionTarget {
         object Sealed2 : Sealed()
     }
 
-    private fun whenSealed(p: Sealed): Int = when (p) { // assertFullyCovered()
-        is Sealed.Sealed1 -> 1 // assertFullyCovered(0, 2)
+    private fun whenSealed(p: Sealed): Int = when (p) { // assertFullyCovered(0, 2)
+        is Sealed.Sealed1 -> 1 // assertFullyCovered()
         is Sealed.Sealed2 -> 2 // assertFullyCovered()
     } // assertFullyCovered()
 
     @Suppress("REDUNDANT_ELSE_IN_WHEN")
-    private fun whenSealedRedundantElse(p: Sealed): Int = when (p) { // assertFullyCovered()
-        is Sealed.Sealed1 -> 1 // assertFullyCovered(0, 2)
+    private fun whenSealedRedundantElse(p: Sealed): Int = when (p) { // assertFullyCovered(0, 2)
+        is Sealed.Sealed1 -> 1 // assertFullyCovered(0, 0)
         is Sealed.Sealed2 -> 2 // assertFullyCovered(0, 0)
         else -> throw NoWhenBranchMatchedException() // assertEmpty()
     } // assertFullyCovered()
@@ -73,6 +73,7 @@ object KotlinWhenExpressionTarget {
         else -> 6 // assertFullyCovered()
     } // assertFullyCovered()
 
+    @OptIn(ExperimentalStdlibApi::class)
     @JvmStatic
     fun main(args: Array<String>) {
         whenSealed(Sealed.Sealed1)
@@ -86,6 +87,9 @@ object KotlinWhenExpressionTarget {
 
         whenEnumRedundantElse(Enum.A)
         whenEnumRedundantElse(Enum.B)
+
+        /* https://github.com/Kotlin/KEEP/blob/master/proposals/enum-entries.md */
+        Enum.entries
 
         whenString("")
         whenString("a")
