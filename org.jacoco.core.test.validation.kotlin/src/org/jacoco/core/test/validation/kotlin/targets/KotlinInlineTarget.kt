@@ -35,9 +35,10 @@ object KotlinInlineTarget {
     @JvmStatic
     fun main(args: Array<String>) {
 
-        inlined_top_level() // assertFullyCovered()
-
-        inlined() // assertFullyCovered()
+        /*
+        https://youtrack.jetbrains.com/issue/KT-55381/Provide-a-way-to-detect-InlineOnly-functions-in-bytecode
+        https://github.com/JetBrains/kotlin/blob/0b09be73c6ff3575ab39300327155e1a97ba3a64/compiler/backend/src/org/jetbrains/kotlin/codegen/inline/MethodInliner.kt#L836-L846
+        */
 
         /* Following inlined method for some reasons doesn't appear in SMAP: */
         assert(t()) // assertPartlyCovered(2, 2)
