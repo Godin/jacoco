@@ -25,6 +25,8 @@ import java.util.*
  */
 object KotlinWipTarget {
 
+    /** pop from let ( @kotlin.internal.InlineOnly ) is not ignored */
+
     suspend fun <T> List<T>.z() : T = this[0]
 
     suspend inline fun <reified T : Any> List<T>.y() : T =
