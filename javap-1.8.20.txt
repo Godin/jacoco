@@ -394,8 +394,8 @@ Constant pool:
        154: aload         6
        156: invokestatic  #95                 // Method kotlin/ResultKt.throwOnFailure:(Ljava/lang/Object;)V
        159: aload         6
-       161: pop
-       162: iconst_0
+       161: pop                 // not covered, not ignored
+       162: iconst_0            // ignored as inlined
        163: istore        5
        165: getstatic     #58                 // Field kotlin/Unit.INSTANCE:Lkotlin/Unit;
        168: checkcast     #111                // class java/lang/String

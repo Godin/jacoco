@@ -142,7 +142,14 @@ public final class KotlinCoroutineFilter implements IFilter {
 					if (cursor != null && skipNonOpcodes(cursor
 							.getNext()) == continuationAfterLoadedResult) {
 						ignore.add(i);
-						ignore.add(cursor);
+
+						if (continuationAfterLoadedResult.getOpcode() == Opcodes.POP) {
+							ignore.add(cursor);
+//							ignore.add(continuationAfterLoadedResult);
+						} else {
+							ignore.add(cursor);
+						}
+
 						suspensionPoint++;
 						break;
 					}
