@@ -1,0 +1,516 @@
+Classfile /Users/evgeny.mandrikov/projects/jacoco/jacoco/org.jacoco.core.test.validation.kotlin/target/classes/org/jacoco/core/test/validation/kotlin/targets/KotlinWipTarget.class
+  Last modified 26 May 2023; size 4868 bytes
+  SHA-256 checksum f9f65e496ee49996cf6149ef1f51741764cd50fca523e2692bb8eeec557c5cfc
+  Compiled from "KotlinWipTarget.kt"
+public final class org.jacoco.core.test.validation.kotlin.targets.KotlinWipTarget
+  minor version: 0
+  major version: 52
+  flags: (0x0031) ACC_PUBLIC, ACC_FINAL, ACC_SUPER
+  this_class: #2                          // org/jacoco/core/test/validation/kotlin/targets/KotlinWipTarget
+  super_class: #4                         // java/lang/Object
+  interfaces: 0, fields: 1, methods: 6, attributes: 4
+Constant pool:
+    #1 = Utf8               org/jacoco/core/test/validation/kotlin/targets/KotlinWipTarget
+    #2 = Class              #1            // org/jacoco/core/test/validation/kotlin/targets/KotlinWipTarget
+    #3 = Utf8               java/lang/Object
+    #4 = Class              #3            // java/lang/Object
+    #5 = Utf8               <init>
+    #6 = Utf8               ()V
+    #7 = NameAndType        #5:#6         // "<init>":()V
+    #8 = Methodref          #4.#7         // java/lang/Object."<init>":()V
+    #9 = Utf8               this
+   #10 = Utf8               Lorg/jacoco/core/test/validation/kotlin/targets/KotlinWipTarget;
+   #11 = Utf8               z
+   #12 = Utf8               (Ljava/util/List;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+   #13 = Utf8               <T:Ljava/lang/Object;>(Ljava/util/List<+TT;>;Lkotlin/coroutines/Continuation<-TT;>;)Ljava/lang/Object;
+   #14 = Utf8               Lorg/jetbrains/annotations/Nullable;
+   #15 = Utf8               Lorg/jetbrains/annotations/NotNull;
+   #16 = Utf8               java/util/List
+   #17 = Class              #16           // java/util/List
+   #18 = Utf8               get
+   #19 = Utf8               (I)Ljava/lang/Object;
+   #20 = NameAndType        #18:#19       // get:(I)Ljava/lang/Object;
+   #21 = InterfaceMethodref #17.#20       // java/util/List.get:(I)Ljava/lang/Object;
+   #22 = Utf8               $this$z
+   #23 = Utf8               Ljava/util/List;
+   #24 = Utf8               $completion
+   #25 = Utf8               Lkotlin/coroutines/Continuation;
+   #26 = Utf8               y
+   #27 = Utf8               T
+   #28 = String             #27           // T
+   #29 = Utf8               kotlin/jvm/internal/Intrinsics
+   #30 = Class              #29           // kotlin/jvm/internal/Intrinsics
+   #31 = Utf8               reifiedOperationMarker
+   #32 = Utf8               (ILjava/lang/String;)V
+   #33 = NameAndType        #31:#32       // reifiedOperationMarker:(ILjava/lang/String;)V
+   #34 = Methodref          #30.#33       // kotlin/jvm/internal/Intrinsics.reifiedOperationMarker:(ILjava/lang/String;)V
+   #35 = Utf8               kotlin/jvm/internal/Reflection
+   #36 = Class              #35           // kotlin/jvm/internal/Reflection
+   #37 = Utf8               getOrCreateKotlinClass
+   #38 = Utf8               (Ljava/lang/Class;)Lkotlin/reflect/KClass;
+   #39 = NameAndType        #37:#38       // getOrCreateKotlinClass:(Ljava/lang/Class;)Lkotlin/reflect/KClass;
+   #40 = Methodref          #36.#39       // kotlin/jvm/internal/Reflection.getOrCreateKotlinClass:(Ljava/lang/Class;)Lkotlin/reflect/KClass;
+   #41 = Utf8               kotlin/Unit
+   #42 = Class              #41           // kotlin/Unit
+   #43 = Utf8               areEqual
+   #44 = Utf8               (Ljava/lang/Object;Ljava/lang/Object;)Z
+   #45 = NameAndType        #43:#44       // areEqual:(Ljava/lang/Object;Ljava/lang/Object;)Z
+   #46 = Methodref          #30.#45       // kotlin/jvm/internal/Intrinsics.areEqual:(Ljava/lang/Object;Ljava/lang/Object;)Z
+   #47 = Utf8               kotlin/jvm/internal/InlineMarker
+   #48 = Class              #47           // kotlin/jvm/internal/InlineMarker
+   #49 = Utf8               mark
+   #50 = Utf8               (I)V
+   #51 = NameAndType        #49:#50       // mark:(I)V
+   #52 = Methodref          #48.#51       // kotlin/jvm/internal/InlineMarker.mark:(I)V
+   #53 = NameAndType        #11:#12       // z:(Ljava/util/List;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+   #54 = Methodref          #2.#53        // org/jacoco/core/test/validation/kotlin/targets/KotlinWipTarget.z:(Ljava/util/List;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+   #55 = Utf8               INSTANCE
+   #56 = Utf8               Lkotlin/Unit;
+   #57 = NameAndType        #55:#56       // INSTANCE:Lkotlin/Unit;
+   #58 = Fieldref           #42.#57       // kotlin/Unit.INSTANCE:Lkotlin/Unit;
+   #59 = Utf8               $i$a$-let-KotlinWipTarget$y$2
+   #60 = Utf8               I
+   #61 = Utf8               it
+   #62 = Utf8               Ljava/lang/Object;
+   #63 = Utf8               $i$f$y
+   #64 = Utf8               $this$y
+   #65 = Utf8               kotlin/reflect/KClass
+   #66 = Class              #65           // kotlin/reflect/KClass
+   #67 = Utf8               x
+   #68 = Utf8               (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+   #69 = Utf8               (Lkotlin/coroutines/Continuation<-Ljava/lang/String;>;)Ljava/lang/Object;
+   #70 = Utf8               org/jacoco/core/test/validation/kotlin/targets/KotlinWipTarget$x$1
+   #71 = Class              #70           // org/jacoco/core/test/validation/kotlin/targets/KotlinWipTarget$x$1
+   #72 = Utf8               label
+   #73 = NameAndType        #72:#60       // label:I
+   #74 = Fieldref           #71.#73       // org/jacoco/core/test/validation/kotlin/targets/KotlinWipTarget$x$1.label:I
+   #75 = Integer            -2147483648
+   #76 = Utf8               (Lorg/jacoco/core/test/validation/kotlin/targets/KotlinWipTarget;Lkotlin/coroutines/Continuation;)V
+   #77 = NameAndType        #5:#76        // "<init>":(Lorg/jacoco/core/test/validation/kotlin/targets/KotlinWipTarget;Lkotlin/coroutines/Continuation;)V
+   #78 = Methodref          #71.#77       // org/jacoco/core/test/validation/kotlin/targets/KotlinWipTarget$x$1."<init>":(Lorg/jacoco/core/test/validation/kotlin/targets/KotlinWipTarget;Lkotlin/coroutines/Continuation;)V
+   #79 = Utf8               result
+   #80 = NameAndType        #79:#62       // result:Ljava/lang/Object;
+   #81 = Fieldref           #71.#80       // org/jacoco/core/test/validation/kotlin/targets/KotlinWipTarget$x$1.result:Ljava/lang/Object;
+   #82 = Utf8               kotlin/coroutines/intrinsics/IntrinsicsKt
+   #83 = Class              #82           // kotlin/coroutines/intrinsics/IntrinsicsKt
+   #84 = Utf8               getCOROUTINE_SUSPENDED
+   #85 = Utf8               ()Ljava/lang/Object;
+   #86 = NameAndType        #84:#85       // getCOROUTINE_SUSPENDED:()Ljava/lang/Object;
+   #87 = Methodref          #83.#86       // kotlin/coroutines/intrinsics/IntrinsicsKt.getCOROUTINE_SUSPENDED:()Ljava/lang/Object;
+   #88 = Utf8               kotlin/ResultKt
+   #89 = Class              #88           // kotlin/ResultKt
+   #90 = Utf8               throwOnFailure
+   #91 = Utf8               (Ljava/lang/Object;)V
+   #92 = NameAndType        #90:#91       // throwOnFailure:(Ljava/lang/Object;)V
+   #93 = Methodref          #89.#92       // kotlin/ResultKt.throwOnFailure:(Ljava/lang/Object;)V
+   #94 = Utf8
+   #95 = String             #94           //
+   #96 = Utf8               java/util/Collections
+   #97 = Class              #96           // java/util/Collections
+   #98 = Utf8               singletonList
+   #99 = Utf8               (Ljava/lang/Object;)Ljava/util/List;
+  #100 = NameAndType        #98:#99       // singletonList:(Ljava/lang/Object;)Ljava/util/List;
+  #101 = Methodref          #97.#100      // java/util/Collections.singletonList:(Ljava/lang/Object;)Ljava/util/List;
+  #102 = Utf8               singletonList(\"\")
+  #103 = String             #102          // singletonList(\"\")
+  #104 = Utf8               checkNotNullExpressionValue
+  #105 = Utf8               (Ljava/lang/Object;Ljava/lang/String;)V
+  #106 = NameAndType        #104:#105     // checkNotNullExpressionValue:(Ljava/lang/Object;Ljava/lang/String;)V
+  #107 = Methodref          #30.#106      // kotlin/jvm/internal/Intrinsics.checkNotNullExpressionValue:(Ljava/lang/Object;Ljava/lang/String;)V
+  #108 = Utf8               java/lang/String
+  #109 = Class              #108          // java/lang/String
+  #110 = Utf8               singletonList(\"\").y()
+  #111 = String             #110          // singletonList(\"\").y()
+  #112 = Utf8               java/lang/IllegalStateException
+  #113 = Class              #112          // java/lang/IllegalStateException
+  #114 = Utf8               call to \'resume\' before \'invoke\' with coroutine
+  #115 = String             #114          // call to \'resume\' before \'invoke\' with coroutine
+  #116 = Utf8               (Ljava/lang/String;)V
+  #117 = NameAndType        #5:#116       // "<init>":(Ljava/lang/String;)V
+  #118 = Methodref          #113.#117     // java/lang/IllegalStateException."<init>":(Ljava/lang/String;)V
+  #119 = Utf8               this_$iv
+  #120 = Utf8               $this$y$iv
+  #121 = Utf8               $i$a$-let-KotlinWipTarget$y$2$iv
+  #122 = Utf8               $continuation
+  #123 = Utf8               $result
+  #124 = Utf8               kotlin/coroutines/Continuation
+  #125 = Class              #124          // kotlin/coroutines/Continuation
+  #126 = Utf8               main
+  #127 = Utf8               ([Ljava/lang/String;)V
+  #128 = Utf8               Lkotlin/jvm/JvmStatic;
+  #129 = Utf8               args
+  #130 = String             #129          // args
+  #131 = Utf8               checkNotNullParameter
+  #132 = NameAndType        #131:#105     // checkNotNullParameter:(Ljava/lang/Object;Ljava/lang/String;)V
+  #133 = Methodref          #30.#132      // kotlin/jvm/internal/Intrinsics.checkNotNullParameter:(Ljava/lang/Object;Ljava/lang/String;)V
+  #134 = Utf8               org/jacoco/core/test/validation/kotlin/targets/KotlinWipTarget$main$1
+  #135 = Class              #134          // org/jacoco/core/test/validation/kotlin/targets/KotlinWipTarget$main$1
+  #136 = Utf8               (Lkotlin/coroutines/Continuation;)V
+  #137 = NameAndType        #5:#136       // "<init>":(Lkotlin/coroutines/Continuation;)V
+  #138 = Methodref          #135.#137     // org/jacoco/core/test/validation/kotlin/targets/KotlinWipTarget$main$1."<init>":(Lkotlin/coroutines/Continuation;)V
+  #139 = Utf8               kotlin/jvm/functions/Function2
+  #140 = Class              #139          // kotlin/jvm/functions/Function2
+  #141 = Utf8               kotlinx/coroutines/BuildersKt
+  #142 = Class              #141          // kotlinx/coroutines/BuildersKt
+  #143 = Utf8               runBlocking$default
+  #144 = Utf8               (Lkotlin/coroutines/CoroutineContext;Lkotlin/jvm/functions/Function2;ILjava/lang/Object;)Ljava/lang/Object;
+  #145 = NameAndType        #143:#144     // runBlocking$default:(Lkotlin/coroutines/CoroutineContext;Lkotlin/jvm/functions/Function2;ILjava/lang/Object;)Ljava/lang/Object;
+  #146 = Methodref          #142.#145     // kotlinx/coroutines/BuildersKt.runBlocking$default:(Lkotlin/coroutines/CoroutineContext;Lkotlin/jvm/functions/Function2;ILjava/lang/Object;)Ljava/lang/Object;
+  #147 = Utf8               [Ljava/lang/String;
+  #148 = Utf8               <clinit>
+  #149 = Methodref          #2.#7         // org/jacoco/core/test/validation/kotlin/targets/KotlinWipTarget."<init>":()V
+  #150 = NameAndType        #55:#10       // INSTANCE:Lorg/jacoco/core/test/validation/kotlin/targets/KotlinWipTarget;
+  #151 = Fieldref           #2.#150       // org/jacoco/core/test/validation/kotlin/targets/KotlinWipTarget.INSTANCE:Lorg/jacoco/core/test/validation/kotlin/targets/KotlinWipTarget;
+  #152 = Utf8               Lkotlin/Metadata;
+  #153 = Utf8               mv
+  #154 = Integer            1
+  #155 = Integer            5
+  #156 = Utf8               k
+  #157 = Utf8               xi
+  #158 = Integer            48
+  #159 = Utf8               d1
+  #160 = Utf8               \u0000&\n\u0002\u0018\u0002\n\u0002\u0010\u0000\n\u0002\b\u0002\n\u0002\u0010\u0002\n\u0000\n\u0002\u0010\u0011\n\u0002\u0010\u000e\n\u0002\b\u0005\n\u0002\u0010 \n\u0002\b\u0003\bÆ\u0002\u0018\u00002\u00020\u0001B\u0007\b\u0002¢\u0006\u0002\u0010\u0002J\u001b\u0010\u0003\u001a\u00020\u00042\f\u0010\u0005\u001a\b\u0012\u0004\u0012\u00020\u00070\u0006H\u0007¢\u0006\u0002\u0010\bJ\u0011\u0010\t\u001a\u00020\u0007H\u0086@ø\u0001\u0000¢\u0006\u0002\u0010\nJ\'\u0010\u000b\u001a\u0002H\f\"\n\b\u0000\u0010\f\u0018\u0001*\u00020\u0001*\b\u0012\u0004\u0012\u0002H\f0\rH\u0086Hø\u0001\u0000¢\u0006\u0002\u0010\u000eJ!\u0010\u000f\u001a\u0002H\f\"\u0004\b\u0000\u0010\f*\b\u0012\u0004\u0012\u0002H\f0\rH\u0086@ø\u0001\u0000¢\u0006\u0002\u0010\u000e\u0082\u0002\u0004\n\u0002\b\u0019¨\u0006\u0010
+  #161 = Utf8               d2
+  #162 = Utf8               org.jacoco.core.test.validation.kotlin
+  #163 = Utf8               KotlinWipTarget.kt
+  #164 = Utf8               RuntimeInvisibleAnnotations
+  #165 = Utf8               Code
+  #166 = Utf8               LineNumberTable
+  #167 = Utf8               LocalVariableTable
+  #168 = Utf8               Signature
+  #169 = Utf8               RuntimeInvisibleParameterAnnotations
+  #170 = Utf8               StackMapTable
+  #171 = Utf8               RuntimeVisibleAnnotations
+  #172 = Utf8               InnerClasses
+  #173 = Utf8               SourceFile
+  #174 = Utf8               SourceDebugExtension
+{
+  public static final org.jacoco.core.test.validation.kotlin.targets.KotlinWipTarget INSTANCE;
+    descriptor: Lorg/jacoco/core/test/validation/kotlin/targets/KotlinWipTarget;
+    flags: (0x0019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL
+    RuntimeInvisibleAnnotations:
+      0: #15()
+        org.jetbrains.annotations.NotNull
+
+  private org.jacoco.core.test.validation.kotlin.targets.KotlinWipTarget();
+    descriptor: ()V
+    flags: (0x0002) ACC_PRIVATE
+    Code:
+      stack=1, locals=1, args_size=1
+         0: aload_0
+         1: invokespecial #8                  // Method java/lang/Object."<init>":()V
+         4: return
+      LineNumberTable:
+        line 26: 0
+      LocalVariableTable:
+        Start  Length  Slot  Name   Signature
+            0       5     0  this   Lorg/jacoco/core/test/validation/kotlin/targets/KotlinWipTarget;
+
+  public final <T extends java.lang.Object> java.lang.Object z(java.util.List<? extends T>, kotlin.coroutines.Continuation<? super T>);
+    descriptor: (Ljava/util/List;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+    flags: (0x0011) ACC_PUBLIC, ACC_FINAL
+    Code:
+      stack=2, locals=3, args_size=3
+         0: aload_1
+         1: iconst_0
+         2: invokeinterface #21,  2           // InterfaceMethod java/util/List.get:(I)Ljava/lang/Object;
+         7: areturn
+      LineNumberTable:
+        line 28: 0
+      LocalVariableTable:
+        Start  Length  Slot  Name   Signature
+            0       8     0  this   Lorg/jacoco/core/test/validation/kotlin/targets/KotlinWipTarget;
+            0       8     1 $this$z   Ljava/util/List;
+            0       8     2 $completion   Lkotlin/coroutines/Continuation;
+    Signature: #13                          // <T:Ljava/lang/Object;>(Ljava/util/List<+TT;>;Lkotlin/coroutines/Continuation<-TT;>;)Ljava/lang/Object;
+    RuntimeInvisibleAnnotations:
+      0: #14()
+        org.jetbrains.annotations.Nullable
+    RuntimeInvisibleParameterAnnotations:
+      parameter 0:
+        0: #15()
+          org.jetbrains.annotations.NotNull
+      parameter 1:
+        0: #15()
+          org.jetbrains.annotations.NotNull
+
+  public final <T extends java.lang.Object> java.lang.Object y(java.util.List<? extends T>, kotlin.coroutines.Continuation<? super T>);
+    descriptor: (Ljava/util/List;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+    flags: (0x1011) ACC_PUBLIC, ACC_FINAL, ACC_SYNTHETIC
+    Code:
+      stack=4, locals=8, args_size=3
+         0: iconst_0
+         1: istore_3
+         2: iconst_4
+         3: ldc           #28                 // String T
+         5: invokestatic  #34                 // Method kotlin/jvm/internal/Intrinsics.reifiedOperationMarker:(ILjava/lang/String;)V
+         8: ldc           #4                  // class java/lang/Object
+        10: invokestatic  #40                 // Method kotlin/jvm/internal/Reflection.getOrCreateKotlinClass:(Ljava/lang/Class;)Lkotlin/reflect/KClass;
+        13: astore        4
+        15: aload         4
+        17: ldc           #42                 // class kotlin/Unit
+        19: invokestatic  #40                 // Method kotlin/jvm/internal/Reflection.getOrCreateKotlinClass:(Ljava/lang/Class;)Lkotlin/reflect/KClass;
+        22: invokestatic  #46                 // Method kotlin/jvm/internal/Intrinsics.areEqual:(Ljava/lang/Object;Ljava/lang/Object;)Z
+        25: ifeq          66
+        28: aload_0
+        29: aload_1
+        30: aload_2
+        31: iconst_0
+        32: invokestatic  #52                 // Method kotlin/jvm/internal/InlineMarker.mark:(I)V
+        35: invokevirtual #54                 // Method z:(Ljava/util/List;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+        38: iconst_1
+        39: invokestatic  #52                 // Method kotlin/jvm/internal/InlineMarker.mark:(I)V
+        42: astore        5
+        44: aload         5
+        46: astore        6
+        48: iconst_0
+        49: istore        7
+        51: getstatic     #58                 // Field kotlin/Unit.INSTANCE:Lkotlin/Unit;
+        54: iconst_1
+        55: ldc           #28                 // String T
+        57: invokestatic  #34                 // Method kotlin/jvm/internal/Intrinsics.reifiedOperationMarker:(ILjava/lang/String;)V
+        60: checkcast     #4                  // class java/lang/Object
+        63: goto          73
+        66: aload_1
+        67: iconst_0
+        68: invokeinterface #21,  2           // InterfaceMethod java/util/List.get:(I)Ljava/lang/Object;
+        73: areturn
+      StackMapTable: number_of_entries = 2
+        frame_type = 253 /* append */
+          offset_delta = 66
+          locals = [ int, class kotlin/reflect/KClass ]
+        frame_type = 70 /* same_locals_1_stack_item */
+          stack = [ class java/lang/Object ]
+      LineNumberTable:
+        line 31: 13
+        line 32: 15
+        line 47: 48
+        line 32: 51
+        line 32: 63
+        line 33: 66
+        line 34: 73
+      LocalVariableTable:
+        Start  Length  Slot  Name   Signature
+           51      12     7 $i$a$-let-KotlinWipTarget$y$2   I
+           48      15     6    it   Ljava/lang/Object;
+            2      72     3 $i$f$y   I
+            0      74     0  this   Lorg/jacoco/core/test/validation/kotlin/targets/KotlinWipTarget;
+            0      74     1 $this$y   Ljava/util/List;
+            0      74     2 $completion   Lkotlin/coroutines/Continuation;
+    Signature: #13                          // <T:Ljava/lang/Object;>(Ljava/util/List<+TT;>;Lkotlin/coroutines/Continuation<-TT;>;)Ljava/lang/Object;
+
+  public final java.lang.Object x(kotlin.coroutines.Continuation<? super java.lang.String>);
+    descriptor: (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+    flags: (0x0011) ACC_PUBLIC, ACC_FINAL
+    Code:
+      stack=5, locals=10, args_size=2
+         0: aload_1
+         1: instanceof    #71                 // class org/jacoco/core/test/validation/kotlin/targets/KotlinWipTarget$x$1
+         4: ifeq          39
+         7: aload_1
+         8: checkcast     #71                 // class org/jacoco/core/test/validation/kotlin/targets/KotlinWipTarget$x$1
+        11: astore        8
+        13: aload         8
+        15: getfield      #74                 // Field org/jacoco/core/test/validation/kotlin/targets/KotlinWipTarget$x$1.label:I
+        18: ldc           #75                 // int -2147483648
+        20: iand
+        21: ifeq          39
+        24: aload         8
+        26: dup
+        27: getfield      #74                 // Field org/jacoco/core/test/validation/kotlin/targets/KotlinWipTarget$x$1.label:I
+        30: ldc           #75                 // int -2147483648
+        32: isub
+        33: putfield      #74                 // Field org/jacoco/core/test/validation/kotlin/targets/KotlinWipTarget$x$1.label:I
+        36: goto          50
+        39: new           #71                 // class org/jacoco/core/test/validation/kotlin/targets/KotlinWipTarget$x$1
+        42: dup
+        43: aload_0
+        44: aload_1
+        45: invokespecial #78                 // Method org/jacoco/core/test/validation/kotlin/targets/KotlinWipTarget$x$1."<init>":(Lorg/jacoco/core/test/validation/kotlin/targets/KotlinWipTarget;Lkotlin/coroutines/Continuation;)V
+        48: astore        8
+        50: aload         8
+        52: getfield      #81                 // Field org/jacoco/core/test/validation/kotlin/targets/KotlinWipTarget$x$1.result:Ljava/lang/Object;
+        55: astore        7
+        57: invokestatic  #87                 // Method kotlin/coroutines/intrinsics/IntrinsicsKt.getCOROUTINE_SUSPENDED:()Ljava/lang/Object;
+        60: astore        9
+        62: aload         8
+        64: getfield      #74                 // Field org/jacoco/core/test/validation/kotlin/targets/KotlinWipTarget$x$1.label:I
+        67: tableswitch   { // 0 to 1
+                       0: 88
+                       1: 151
+                 default: 190
+            }
+        88: aload         7
+        90: invokestatic  #93                 // Method kotlin/ResultKt.throwOnFailure:(Ljava/lang/Object;)V
+        93: aload_0
+        94: astore_2
+        95: ldc           #95                 // String
+        97: invokestatic  #101                // Method java/util/Collections.singletonList:(Ljava/lang/Object;)Ljava/util/List;
+       100: astore_3
+       101: aload_3
+       102: ldc           #103                // String singletonList(\"\")
+       104: invokestatic  #107                // Method kotlin/jvm/internal/Intrinsics.checkNotNullExpressionValue:(Ljava/lang/Object;Ljava/lang/String;)V
+       107: aload_3
+       108: astore_3
+       109: iconst_0
+       110: istore        4
+       112: ldc           #109                // class java/lang/String
+       114: invokestatic  #40                 // Method kotlin/jvm/internal/Reflection.getOrCreateKotlinClass:(Ljava/lang/Class;)Lkotlin/reflect/KClass;
+       117: nop
+       118: ldc           #42                 // class kotlin/Unit
+       120: invokestatic  #40                 // Method kotlin/jvm/internal/Reflection.getOrCreateKotlinClass:(Ljava/lang/Class;)Lkotlin/reflect/KClass;
+       123: invokestatic  #46                 // Method kotlin/jvm/internal/Intrinsics.areEqual:(Ljava/lang/Object;Ljava/lang/Object;)Z
+       126: ifeq          175
+       129: aload_2
+       130: aload_3
+       131: aload         8
+       133: aload         8
+       135: iconst_1
+       136: putfield      #74                 // Field org/jacoco/core/test/validation/kotlin/targets/KotlinWipTarget$x$1.label:I
+       139: invokevirtual #54                 // Method z:(Ljava/util/List;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+       142: dup
+       143: aload         9
+       145: if_acmpne     161
+       // START NOT COVERED
+       148: aload         9
+       150: areturn
+       151: iconst_0
+       152: istore        4
+       154: aload         7
+       156: invokestatic  #93                 // Method kotlin/ResultKt.throwOnFailure:(Ljava/lang/Object;)V
+       159: aload         7
+       161: astore        5 // NOT IGNORED!!!
+       // END NOT COVERED
+       163: iconst_0
+       164: istore        6
+       166: getstatic     #58                 // Field kotlin/Unit.INSTANCE:Lkotlin/Unit;
+       169: checkcast     #109                // class java/lang/String
+       172: goto          182
+       175: aload_3
+       176: iconst_0
+       177: invokeinterface #21,  2           // InterfaceMethod java/util/List.get:(I)Ljava/lang/Object;
+       182: nop
+       183: dup
+       184: ldc           #111                // String singletonList(\"\").y()
+       186: invokestatic  #107                // Method kotlin/jvm/internal/Intrinsics.checkNotNullExpressionValue:(Ljava/lang/Object;Ljava/lang/String;)V
+       189: areturn
+       // NOT COVERED:
+       190: new           #113                // class java/lang/IllegalStateException
+       193: dup
+       194: ldc           #115                // String call to \'resume\' before \'invoke\' with coroutine
+       196: invokespecial #118                // Method java/lang/IllegalStateException."<init>":(Ljava/lang/String;)V
+       199: athrow
+      LineNumberTable:
+        line 36: 60
+        line 36: 93
+        line 48: 117
+        line 49: 118
+        line 36: 148
+        line 50: 163
+        line 49: 166
+        line 49: 172
+        line 51: 175
+        line 52: 182
+        line 36: 183
+      LocalVariableTable:
+        Start  Length  Slot  Name   Signature
+           93       8     0  this   Lorg/jacoco/core/test/validation/kotlin/targets/KotlinWipTarget;
+          101      41     2 this_$iv   Lorg/jacoco/core/test/validation/kotlin/targets/KotlinWipTarget;
+          109      33     3 $this$y$iv   Ljava/util/List;
+          175       7     3 $this$y$iv   Ljava/util/List;
+          166       6     6 $i$a$-let-KotlinWipTarget$y$2$iv   I
+          112      39     4 $i$f$y   I
+           50     140     8 $continuation   Lkotlin/coroutines/Continuation;
+           57     133     7 $result   Ljava/lang/Object;
+          154      29     4 $i$f$y   I
+    Signature: #69                          // (Lkotlin/coroutines/Continuation<-Ljava/lang/String;>;)Ljava/lang/Object;
+    RuntimeInvisibleAnnotations:
+      0: #14()
+        org.jetbrains.annotations.Nullable
+    RuntimeInvisibleParameterAnnotations:
+      parameter 0:
+        0: #15()
+          org.jetbrains.annotations.NotNull
+
+  public static final void main(java.lang.String[]);
+    descriptor: ([Ljava/lang/String;)V
+    flags: (0x0019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL
+    Code:
+      stack=4, locals=1, args_size=1
+         0: aload_0
+         1: ldc           #130                // String args
+         3: invokestatic  #133                // Method kotlin/jvm/internal/Intrinsics.checkNotNullParameter:(Ljava/lang/Object;Ljava/lang/String;)V
+         6: aconst_null
+         7: new           #135                // class org/jacoco/core/test/validation/kotlin/targets/KotlinWipTarget$main$1
+        10: dup
+        11: aconst_null
+        12: invokespecial #138                // Method org/jacoco/core/test/validation/kotlin/targets/KotlinWipTarget$main$1."<init>":(Lkotlin/coroutines/Continuation;)V
+        15: checkcast     #140                // class kotlin/jvm/functions/Function2
+        18: iconst_1
+        19: aconst_null
+        20: invokestatic  #146                // Method kotlinx/coroutines/BuildersKt.runBlocking$default:(Lkotlin/coroutines/CoroutineContext;Lkotlin/jvm/functions/Function2;ILjava/lang/Object;)Ljava/lang/Object;
+        23: pop
+        24: return
+      LineNumberTable:
+        line 40: 6
+        line 43: 24
+      LocalVariableTable:
+        Start  Length  Slot  Name   Signature
+            0      25     0  args   [Ljava/lang/String;
+    RuntimeVisibleAnnotations:
+      0: #128()
+        kotlin.jvm.JvmStatic
+    RuntimeInvisibleParameterAnnotations:
+      parameter 0:
+        0: #15()
+          org.jetbrains.annotations.NotNull
+
+  static {};
+    descriptor: ()V
+    flags: (0x0008) ACC_STATIC
+    Code:
+      stack=2, locals=0, args_size=0
+         0: new           #2                  // class org/jacoco/core/test/validation/kotlin/targets/KotlinWipTarget
+         3: dup
+         4: invokespecial #149                // Method "<init>":()V
+         7: putstatic     #151                // Field INSTANCE:Lorg/jacoco/core/test/validation/kotlin/targets/KotlinWipTarget;
+        10: return
+}
+InnerClasses:
+  static final #71;                       // class org/jacoco/core/test/validation/kotlin/targets/KotlinWipTarget$x$1
+  static final #135;                      // class org/jacoco/core/test/validation/kotlin/targets/KotlinWipTarget$main$1
+SourceFile: "KotlinWipTarget.kt"
+SourceDebugExtension:
+  SMAP
+  KotlinWipTarget.kt
+  Kotlin
+  *S Kotlin
+  *F
+  + 1 KotlinWipTarget.kt
+  org/jacoco/core/test/validation/kotlin/targets/KotlinWipTarget
+  + 2 fake.kt
+  kotlin/jvm/internal/FakeKt
+  *L
+  1#1,46:1
+  31#1,2:48
+  33#1,2:51
+  1#2:47
+  1#2:50
+  *S KotlinDebug
+  *F
+  + 1 KotlinWipTarget.kt
+  org/jacoco/core/test/validation/kotlin/targets/KotlinWipTarget
+  *L
+  36#1:48,2
+  36#1:51,2
+  36#1:50
+  *E
+RuntimeVisibleAnnotations:
+  0: #152(#153=[I#154,I#155,I#154],#156=I#154,#157=I#158,#159=[s#160],#161=[s#10,s#94,s#6,s#126,s#94,s#129,s#94,s#94,s#127,s#67,s#68,s#26,s#27,s#94,s#12,s#11,s#162])
+    kotlin.Metadata(
+      mv=[1,5,1]
+      k=1
+      xi=48
+      d1=["\u0000&\n\u0002\u0018\u0002\n\u0002\u0010\u0000\n\u0002\b\u0002\n\u0002\u0010\u0002\n\u0000\n\u0002\u0010\u0011\n\u0002\u0010\u000e\n\u0002\b\u0005\n\u0002\u0010 \n\u0002\b\u0003\bÆ\u0002\u0018\u00002\u00020\u0001B\u0007\b\u0002¢\u0006\u0002\u0010\u0002J\u001b\u0010\u0003\u001a\u00020\u00042\f\u0010\u0005\u001a\b\u0012\u0004\u0012\u00020\u00070\u0006H\u0007¢\u0006\u0002\u0010\bJ\u0011\u0010\t\u001a\u00020\u0007H\u0086@ø\u0001\u0000¢\u0006\u0002\u0010\nJ\'\u0010\u000b\u001a\u0002H\f\"\n\b\u0000\u0010\f\u0018\u0001*\u00020\u0001*\b\u0012\u0004\u0012\u0002H\f0\rH\u0086Hø\u0001\u0000¢\u0006\u0002\u0010\u000eJ!\u0010\u000f\u001a\u0002H\f\"\u0004\b\u0000\u0010\f*\b\u0012\u0004\u0012\u0002H\f0\rH\u0086@ø\u0001\u0000¢\u0006\u0002\u0010\u000e\u0082\u0002\u0004\n\u0002\b\u0019¨\u0006\u0010"]
+      d2=["Lorg/jacoco/core/test/validation/kotlin/targets/KotlinWipTarget;","","()V","main","","args","","","([Ljava/lang/String;)V","x","(Lkotlin/coroutines/Continuation;)Ljava/lang/Object;","y","T","","(Ljava/util/List;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;","z","org.jacoco.core.test.validation.kotlin"]
+    )

@@ -12,6 +12,7 @@
  *******************************************************************************/
 package org.jacoco.core.internal.analysis;
 
+import java.io.PrintWriter;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -25,7 +26,13 @@ import org.objectweb.asm.AnnotationVisitor;
 import org.objectweb.asm.Attribute;
 import org.objectweb.asm.FieldVisitor;
 import org.objectweb.asm.MethodVisitor;
+import org.objectweb.asm.tree.AbstractInsnNode;
+import org.objectweb.asm.tree.LineNumberNode;
 import org.objectweb.asm.tree.MethodNode;
+import org.objectweb.asm.util.Printer;
+import org.objectweb.asm.util.Textifier;
+import org.objectweb.asm.util.TraceClassVisitor;
+import org.objectweb.asm.util.TraceMethodVisitor;
 
 /**
  * Analyzes the structure of a class.
@@ -121,6 +128,20 @@ public class ClassAnalyzer extends ClassProbesVisitor
 		final MethodCoverageImpl mc = new MethodCoverageImpl(name, desc,
 				signature);
 		mcc.calculate(mc);
+
+		System.out.println("=== " + name + " " + desc);
+		for (AbstractInsnNode i : methodNode.instructions) {
+			if (i.getType() == AbstractInsnNode.LINE) {
+				System.out.println("Line " + ((LineNumberNode) i).line);
+			}
+			if (i.getOpcode() == -1) {
+				continue;
+			}
+			System.out.print(mcc.instructions.get(i).getInstructionCounter().getCoveredCount() + " ");
+			System.out.print(Printer.OPCODES[i.getOpcode()]);
+			System.out.print(mcc.ignored.contains(i) ? " // ignored" : "");
+			System.out.println();
+		}
 
 		if (mc.containsCode()) {
 			// Only consider methods that actually contain code

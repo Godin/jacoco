@@ -31,9 +31,9 @@ import org.objectweb.asm.tree.AbstractInsnNode;
  */
 class MethodCoverageCalculator implements IFilterOutput {
 
-	private final Map<AbstractInsnNode, Instruction> instructions;
+	public final Map<AbstractInsnNode, Instruction> instructions;
 
-	private final Set<AbstractInsnNode> ignored;
+	public final Set<AbstractInsnNode> ignored;
 
 	/**
 	 * Instructions that should be merged form disjoint sets. Coverage
