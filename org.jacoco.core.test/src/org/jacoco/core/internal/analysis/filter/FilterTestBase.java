@@ -79,6 +79,11 @@ public abstract class FilterTestBase {
 				replacedBranches);
 	}
 
+	final void assertMerged(
+			final Map<AbstractInsnNode, AbstractInsnNode> expected) {
+		assertEquals(expected, merged);
+	}
+
 	final void assertMerged(final AbstractInsnNode i1,
 			final AbstractInsnNode i2) {
 		assertEquals(Collections.singletonMap(i1, i2), merged);
