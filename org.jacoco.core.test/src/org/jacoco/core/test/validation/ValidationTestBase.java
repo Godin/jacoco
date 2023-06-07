@@ -15,22 +15,32 @@ package org.jacoco.core.test.validation;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
+import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
 
 import org.jacoco.core.analysis.Analyzer;
 import org.jacoco.core.analysis.CoverageBuilder;
+import org.jacoco.core.analysis.IBundleCoverage;
 import org.jacoco.core.analysis.ICounter;
 import org.jacoco.core.analysis.ILine;
 import org.jacoco.core.data.ExecutionData;
 import org.jacoco.core.data.ExecutionDataStore;
+import org.jacoco.core.data.SessionInfo;
 import org.jacoco.core.internal.analysis.CounterImpl;
 import org.jacoco.core.test.InstrumentingLoader;
 import org.jacoco.core.test.TargetLoader;
 import org.jacoco.core.test.validation.Source.Line;
 import org.jacoco.core.test.validation.targets.Stubs;
+import org.jacoco.report.DirectorySourceFileLocator;
+import org.jacoco.report.FileMultiReportOutput;
+import org.jacoco.report.IReportVisitor;
+import org.jacoco.report.ISourceFileLocator;
+import org.jacoco.report.html.HTMLFormatter;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runners.model.MultipleFailureException;
@@ -87,6 +97,7 @@ public abstract class ValidationTestBase {
 			analyze(analyzer, data);
 		}
 		source = Source.load(target, builder.getBundle("Test"));
+		writeReport(builder.getBundle("Test"), store.getContents());
 	}
 
 	private void analyze(final Analyzer analyzer, final ExecutionData data)
@@ -94,6 +105,19 @@ public abstract class ValidationTestBase {
 		final byte[] bytes = TargetLoader
 				.getClassDataAsBytes(target.getClassLoader(), data.getName());
 		analyzer.analyzeClass(bytes, data.getName());
+	}
+
+	private void writeReport(final IBundleCoverage bundle,
+			final Collection<ExecutionData> data) throws IOException {
+		final File destination = new File(
+				"target/reports/" + getClass().getSimpleName());
+		final IReportVisitor visitor = new HTMLFormatter()
+				.createVisitor(new FileMultiReportOutput(destination));
+		visitor.visitInfo(Collections.<SessionInfo> emptyList(), data);
+		final ISourceFileLocator sourceFileLocator = new DirectorySourceFileLocator(
+				new File("src"), "UTF-8", 4);
+		visitor.visitBundle(bundle, sourceFileLocator);
+		visitor.visitEnd();
 	}
 
 	/**
