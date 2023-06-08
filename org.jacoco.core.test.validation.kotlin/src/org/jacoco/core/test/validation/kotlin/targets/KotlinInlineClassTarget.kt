@@ -21,7 +21,7 @@ object KotlinInlineClassTarget {
 
     @JvmInline
     value class Example( // assertEmpty()
-        val value: String // assertNotCovered()
+        val value: String // assertEmpty()
     ) { // assertEmpty()
         init {
             nop() // assertFullyCovered()
