@@ -113,6 +113,9 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-plugin-plugin</artifactId>
+        <!-- TODO 3.7.0 produces HelpMojo that requires Java 7 -->
+        <version>3.9.0</version>
+        <!-- TODO NOTE maven-shade-plugin 3.5.0 can process bytecode only up to version 19 -->
         <executions>
           <execution>
             <id>default-descriptor</id>
@@ -124,6 +127,27 @@
               <goal>helpmojo</goal>
             </goals>
           </execution>
+        </executions>
+      </plugin>
+
+      <!-- https://maven.apache.org/plugin-tools/maven-plugin-report-plugin/index.html -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-plugin-report-plugin</artifactId>
+        <version>3.9.0</version>
+        <!-- FIXME
+[WARNING]  * org.apache.maven.plugins:maven-plugin-report-plugin:3.9.0
+[WARNING]   Declared at location(s):
+[WARNING]    * org.jacoco:jacoco-maven-plugin:0.8.11-SNAPSHOT (jacoco-maven-plugin/pom.xml) @ line 136
+[WARNING]   Used in module(s):
+[WARNING]    * org.jacoco:jacoco-maven-plugin:0.8.11-SNAPSHOT (jacoco-maven-plugin/pom.xml)
+[WARNING]   Plugin issue(s):
+[WARNING]    * Plugin depends on plexus-container-default, which is EOL
+[WARNING]   Mojo issue(s):
+[WARNING]    * Mojo plugin-report:report (org.apache.maven.plugin.plugin.report.PluginReport)
+[WARNING]      - Parameter 'localRepository' uses deprecated parameter expression '${localRepository}': ArtifactRepository type is deprecated and its use in Mojos should be avoided.
+        -->
+        <executions>
           <execution>
             <id>report</id>
             <phase>package</phase>
