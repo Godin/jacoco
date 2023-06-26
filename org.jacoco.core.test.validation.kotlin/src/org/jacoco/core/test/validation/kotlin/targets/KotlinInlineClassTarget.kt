@@ -28,7 +28,7 @@ object KotlinInlineClassTarget {
         }
 
         val property: Int
-            get() = value
+            get() = value // assertFullyCovered()
 
         fun getValue() = value // assertFullyCovered()
 
