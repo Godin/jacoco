@@ -14,12 +14,24 @@ package org.jacoco.core.internal.analysis.filter;
 
 import org.objectweb.asm.tree.MethodNode;
 
+/**
+ * TODO add comment
+ */
 final class KotlinInlineClassFilter implements IFilter {
 
-	@Override
 	public void filter(final MethodNode methodNode,
 			final IFilterContext context, final IFilterOutput output) {
-		// TODO
+		if (!KotlinGeneratedFilter.isKotlinClass(context)) {
+			return;
+		}
+		if (!context.getClassAnnotations().contains("Lkotlin/jvm/JvmInline;")) {
+			return;
+		}
+		if (!methodNode.desc.startsWith("()")) {
+			return;
+		}
+		output.ignore(methodNode.instructions.getFirst(),
+				methodNode.instructions.getLast());
 	}
 
 }
