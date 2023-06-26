@@ -22,14 +22,14 @@ object KotlinWhenExpressionTarget {
         object Sealed2 : Sealed()
     }
 
-    private fun whenSealed(p: Sealed): Int = when (p) { // assertFullyCovered(0, 2)
-        is Sealed.Sealed1 -> 1 // assertFullyCovered()
+    private fun whenSealed(p: Sealed): Int = when (p) { // assertFullyCovered()
+        is Sealed.Sealed1 -> 1 // assertFullyCovered(0, 2)
         is Sealed.Sealed2 -> 2 // assertFullyCovered()
     } // assertFullyCovered()
 
     @Suppress("REDUNDANT_ELSE_IN_WHEN")
-    private fun whenSealedRedundantElse(p: Sealed): Int = when (p) { // assertFullyCovered(0, 2)
-        is Sealed.Sealed1 -> 1 // assertFullyCovered(0, 0)
+    private fun whenSealedRedundantElse(p: Sealed): Int = when (p) { // assertFullyCovered()
+        is Sealed.Sealed1 -> 1 // assertFullyCovered(0, 2)
         is Sealed.Sealed2 -> 2 // assertFullyCovered(0, 0)
         else -> throw NoWhenBranchMatchedException() // assertEmpty()
     } // assertFullyCovered()
