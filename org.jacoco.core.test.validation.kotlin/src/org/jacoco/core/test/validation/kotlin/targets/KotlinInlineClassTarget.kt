@@ -21,14 +21,16 @@ object KotlinInlineClassTarget {
 
     @JvmInline
     value class Example( // assertEmpty()
-        val value: String // assertEmpty()
+        val value: Int // assertEmpty()
     ) { // assertEmpty()
         init {
             nop() // assertFullyCovered()
         }
 
         val property: Int
-            get() = value.length // assertFullyCovered()
+            get() = value
+
+        fun getValue() = value // assertFullyCovered()
 
         fun function() {
             nop() // assertFullyCovered()
@@ -37,10 +39,11 @@ object KotlinInlineClassTarget {
 
     @JvmStatic
     fun main(args: Array<String>) {
-        val v = Example("")
+        val v = Example(42)
         v.value
         v.property
         v.function()
+        v.getValue()
     }
 
 }
