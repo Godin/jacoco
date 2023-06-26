@@ -23,6 +23,6 @@ object KotlinLateinitTarget {
     @JvmStatic
     fun main(args: Array<String>) {
         x = ""
-        nop(x) // assertFullyCovered()
+        nop(x) // assertCovered("FULLY", 0, 0, "1.5.30", "PARTLY", 1, 1)
     }
 }

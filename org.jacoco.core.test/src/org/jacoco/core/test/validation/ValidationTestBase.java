@@ -41,7 +41,7 @@ public abstract class ValidationTestBase {
 
 	protected static final boolean isJDKCompiler = Compiler.DETECT.isJDK();
 
-	private static final String[] STATUS_NAME = new String[4];
+	protected static final String[] STATUS_NAME = new String[4];
 
 	{
 		STATUS_NAME[ICounter.EMPTY] = "EMPTY";
@@ -160,7 +160,7 @@ public abstract class ValidationTestBase {
 	 * Predefined assertion methods:
 	 */
 
-	private void assertCoverage(final Line line, final int insnStatus,
+	protected void assertCoverage(final Line line, final int insnStatus,
 			final int missedBranches, final int coveredBranches) {
 		final ILine coverage = line.getCoverage();
 
