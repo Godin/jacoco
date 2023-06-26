@@ -19,10 +19,14 @@ import org.jacoco.core.test.validation.targets.Stubs.nop
  */
 object KotlinInlineClassTarget {
 
+    interface Base {
+        fun base(p: String)
+    }
+
     @JvmInline
     value class Example( // assertEmpty()
         val value: Int // assertEmpty()
-    ) { // assertEmpty()
+    ) : Base { // assertEmpty()
         init {
             nop() // assertFullyCovered()
         }
@@ -32,9 +36,13 @@ object KotlinInlineClassTarget {
 
         fun getValue() = value // assertFullyCovered()
 
-        fun function() {
+        fun function() { // assertEmpty()
             nop() // assertFullyCovered()
-        }
+        } // assertFullyCovered()
+
+        override fun base(p: String) { // assertEmpty()
+            nop() // assertFullyCovered()
+        } // assertFullyCovered()
     }
 
     @JvmStatic
@@ -44,6 +52,7 @@ object KotlinInlineClassTarget {
         v.property
         v.function()
         v.getValue()
+        v.base("")
     }
 
 }
