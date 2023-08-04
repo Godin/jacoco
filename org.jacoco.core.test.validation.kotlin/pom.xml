@@ -25,7 +25,7 @@
   <name>JaCoCo :: Test :: Core :: Validation Kotlin</name>
 
   <properties>
-    <kotlin.version>1.5.0</kotlin.version>
+    <kotlin.version>1.8.10</kotlin.version>
   </properties>
 
   <dependencies>
@@ -43,6 +43,31 @@
       <artifactId>kotlinx-coroutines-core</artifactId>
       <version>1.0.1</version>
     </dependency>
+    <dependency>
+      <groupId>org.jetbrains.compose.compiler</groupId>
+      <artifactId>compiler-hosted</artifactId>
+      <version>1.4.2</version>
+    </dependency>
+    <!--
+    <dependency>
+      <groupId>org.jetbrains.compose.runtime</groupId>
+      <artifactId>runtime</artifactId>
+      <version>1.4.1</version>
+    </deopendency>
+    -->
+<!--    <dependency>-->
+<!--      <groupId>org.jetbrains.compose.desktop</groupId>-->
+<!--      <artifactId>desktop</artifactId>-->
+<!--      <version>1.4.0</version>-->
+<!--    </dependency>-->
+
+    <dependency>
+      <groupId>androidx.compose.runtime</groupId>
+      <artifactId>runtime</artifactId>
+      <version>1.4.3</version>
+      <scope>system</scope>
+      <systemPath>/Users/evgeny.mandrikov/projects/jacoco/test-jetbrains-compose/runtime-1.4.3/classes.jar</systemPath>
+    </dependency>
   </dependencies>
 
   <build>
@@ -51,6 +76,12 @@
         <groupId>org.jetbrains.kotlin</groupId>
         <artifactId>kotlin-maven-plugin</artifactId>
         <version>${kotlin.version}</version>
+        <configuration>
+          <args>
+            <!-- ${settings.localRepository} -->
+            <arg>-Xplugin=/Users/evgeny.mandrikov/.m2/repository/org/jetbrains/compose/compiler/compiler-hosted/1.4.2/compiler-hosted-1.4.2.jar</arg>
+          </args>
+        </configuration>
         <executions>
           <execution>
             <id>compile</id>
@@ -63,4 +94,11 @@
       </plugin>
     </plugins>
   </build>
+
+  <repositories>
+    <repository>
+      <id>google</id>
+      <url>https://maven.google.com/</url>
+    </repository>
+  </repositories>
 </project>
