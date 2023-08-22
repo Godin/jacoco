@@ -65,8 +65,14 @@ public final class MethodProbesAdapter extends MethodVisitor {
 	@Override
 	public void visitTryCatchBlock(final Label start, final Label end,
 			final Label handler, final String type) {
-		probesVisitor.visitTryCatchBlock(getTryCatchLabel(start),
-				getTryCatchLabel(end), handler, type);
+		// TODO apply
+		// https://github.com/jacoco/jacoco/pull/627/files#diff-b5fb05a150f1077d39a272dda68bfc5302f2d4efeb382e298f452ae55f7e05bd
+		// only when monitorexit
+		final Label endLabel = LabelInfo.isSuccessorOfMonitorExit(end)
+				? getTryCatchLabel(end)
+				: end;
+		probesVisitor.visitTryCatchBlock(getTryCatchLabel(start), endLabel,
+				handler, type);
 	}
 
 	private Label getTryCatchLabel(Label label) {

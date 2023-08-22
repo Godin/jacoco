@@ -374,13 +374,12 @@ public class MethodProbesAdapterTest implements IProbeIdGenerator {
 		adapter.visitLabel(end);
 
 		Label probe = new Label();
-		expectedVisitor.visitTryCatchBlock(start, probe, handler1,
+		expectedVisitor.visitTryCatchBlock(start, end, handler1,
 				"java/lang/Exception");
-		expectedVisitor.visitTryCatchBlock(start, probe, handler2,
+		expectedVisitor.visitTryCatchBlock(start, end, handler2,
 				"java/lang/Throwable");
 		expectedVisitor.visitLabel(start);
 		expectedVisitor.visitInsn(Opcodes.NOP);
-		expectedVisitor.visitLabel(probe);
 		expectedVisitor.visitProbe(1000);
 		expectedVisitor.visitLabel(end);
 	}
@@ -395,6 +394,7 @@ public class MethodProbesAdapterTest implements IProbeIdGenerator {
 		LabelInfo.setTarget(start);
 		Label end = new Label();
 		LabelInfo.setSuccessor(end);
+		LabelInfo.setSuccessorOfMonitorExit(end);
 		LabelInfo.setTarget(end);
 		Label handlerStart = new Label();
 		Label handlerEnd = new Label();

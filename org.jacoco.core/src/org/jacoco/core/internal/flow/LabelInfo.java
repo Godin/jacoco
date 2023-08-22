@@ -33,6 +33,8 @@ public final class LabelInfo {
 
 	private boolean successor = false;
 
+	private boolean successorOfMonitorExit = false;
+
 	private boolean methodInvocationLine = false;
 
 	private boolean done = false;
@@ -106,6 +108,16 @@ public final class LabelInfo {
 	public static boolean isSuccessor(final Label label) {
 		final LabelInfo info = get(label);
 		return info == null ? false : info.successor;
+	}
+
+	public static void setSuccessorOfMonitorExit(final Label label) {
+		final LabelInfo info = create(label);
+		info.successorOfMonitorExit = true;
+	}
+
+	public static boolean isSuccessorOfMonitorExit(final Label label) {
+		final LabelInfo info = get(label);
+		return info == null ? false : info.successorOfMonitorExit;
 	}
 
 	/**
