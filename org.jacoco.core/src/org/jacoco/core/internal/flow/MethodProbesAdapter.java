@@ -73,10 +73,7 @@ public final class MethodProbesAdapter extends MethodVisitor {
 		// only when monitorexit
 		// final Label endLabel = getTryCatchLabel(end);
 
-		if (LabelInfo.isSuccessorOf(end, Opcodes.MONITORENTER)) {
-			skipLabels.add(start);
-			skipLabels.add(end);
-		}
+		// TODO idea: probe inserted at the beginning of catch-any handler causes issue
 
 		final Label endLabel = false && LabelInfo.isSuccessorOf(end, Opcodes.MONITOREXIT)
 				? getTryCatchLabel(end)
