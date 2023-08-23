@@ -13,6 +13,7 @@
 package org.jacoco.core.internal.flow;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 
 import org.jacoco.core.internal.instr.InstrSupport;
@@ -62,14 +63,22 @@ public final class MethodProbesAdapter extends MethodVisitor {
 		this.analyzer = analyzer;
 	}
 
+	private HashSet<Label> skipLabels = new HashSet<Label>();
+
 	@Override
 	public void visitTryCatchBlock(final Label start, final Label end,
 			final Label handler, final String type) {
 		// TODO apply
 		// https://github.com/jacoco/jacoco/pull/627/files#diff-b5fb05a150f1077d39a272dda68bfc5302f2d4efeb382e298f452ae55f7e05bd
 		// only when monitorexit
-//		final Label endLabel = getTryCatchLabel(end);
-		final Label endLabel = LabelInfo.isSuccessorOfMonitorExit(end)
+		// final Label endLabel = getTryCatchLabel(end);
+
+		if (LabelInfo.isSuccessorOf(end, Opcodes.MONITORENTER)) {
+			skipLabels.add(start);
+			skipLabels.add(end);
+		}
+
+		final Label endLabel = false && LabelInfo.isSuccessorOf(end, Opcodes.MONITOREXIT)
 				? getTryCatchLabel(end)
 				: end;
 		probesVisitor.visitTryCatchBlock(getTryCatchLabel(start), endLabel,
@@ -96,7 +105,12 @@ public final class MethodProbesAdapter extends MethodVisitor {
 			if (tryCatchProbeLabels.containsKey(label)) {
 				probesVisitor.visitLabel(tryCatchProbeLabels.get(label));
 			}
-			probesVisitor.visitProbe(idGenerator.nextId());
+			if (skipLabels.contains(label)) {
+				// reserve id without adding probe
+				idGenerator.nextId();
+			} else {
+				probesVisitor.visitProbe(idGenerator.nextId());
+			}
 		}
 		probesVisitor.visitLabel(label);
 	}

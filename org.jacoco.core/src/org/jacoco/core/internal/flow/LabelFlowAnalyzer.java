@@ -54,7 +54,7 @@ public final class LabelFlowAnalyzer extends MethodVisitor {
 	 */
 	boolean first = true;
 
-	boolean monitorexit = false;
+	int predecessor = Opcodes.NOP;
 
 	/**
 	 * Label instance of the last line start.
@@ -88,7 +88,7 @@ public final class LabelFlowAnalyzer extends MethodVisitor {
 			throw new AssertionError("Subroutines not supported.");
 		}
 		successor = opcode != Opcodes.GOTO;
-		monitorexit = false;
+		predecessor = opcode;
 		first = false;
 	}
 
@@ -100,9 +100,7 @@ public final class LabelFlowAnalyzer extends MethodVisitor {
 		if (successor) {
 			LabelInfo.setSuccessor(label);
 		}
-		if (monitorexit) {
-			LabelInfo.setSuccessorOfMonitorExit(label);
-		}
+		LabelInfo.setSuccessorOf(label, predecessor);
 	}
 
 	@Override
@@ -114,12 +112,14 @@ public final class LabelFlowAnalyzer extends MethodVisitor {
 	public void visitTableSwitchInsn(final int min, final int max,
 			final Label dflt, final Label... labels) {
 		visitSwitchInsn(dflt, labels);
+		predecessor = Opcodes.TABLESWITCH;
 	}
 
 	@Override
 	public void visitLookupSwitchInsn(final Label dflt, final int[] keys,
 			final Label[] labels) {
 		visitSwitchInsn(dflt, labels);
+		predecessor = Opcodes.LOOKUPSWITCH;
 	}
 
 	private void visitSwitchInsn(final Label dflt, final Label[] labels) {
@@ -153,15 +153,11 @@ public final class LabelFlowAnalyzer extends MethodVisitor {
 		case Opcodes.RETURN:
 		case Opcodes.ATHROW:
 			successor = false;
-			monitorexit = false;
-			break;
-		case Opcodes.MONITOREXIT:
-			successor = true;
-			monitorexit = true;
+			predecessor = opcode;
 			break;
 		default:
 			successor = true;
-			monitorexit = false;
+			predecessor = opcode;
 			break;
 		}
 		first = false;
@@ -170,21 +166,21 @@ public final class LabelFlowAnalyzer extends MethodVisitor {
 	@Override
 	public void visitIntInsn(final int opcode, final int operand) {
 		successor = true;
-		monitorexit = false;
+		predecessor = opcode;
 		first = false;
 	}
 
 	@Override
 	public void visitVarInsn(final int opcode, final int var) {
 		successor = true;
-		monitorexit = false;
+		predecessor = opcode;
 		first = false;
 	}
 
 	@Override
 	public void visitTypeInsn(final int opcode, final String type) {
 		successor = true;
-		monitorexit = false;
+		predecessor = opcode;
 		first = false;
 	}
 
@@ -192,7 +188,7 @@ public final class LabelFlowAnalyzer extends MethodVisitor {
 	public void visitFieldInsn(final int opcode, final String owner,
 			final String name, final String desc) {
 		successor = true;
-		monitorexit = false;
+		predecessor = opcode;
 		first = false;
 	}
 
@@ -200,7 +196,7 @@ public final class LabelFlowAnalyzer extends MethodVisitor {
 	public void visitMethodInsn(final int opcode, final String owner,
 			final String name, final String desc, final boolean itf) {
 		successor = true;
-		monitorexit = false;
+		predecessor = opcode;
 		first = false;
 		markMethodInvocationLine();
 	}
@@ -209,7 +205,7 @@ public final class LabelFlowAnalyzer extends MethodVisitor {
 	public void visitInvokeDynamicInsn(final String name, final String desc,
 			final Handle bsm, final Object... bsmArgs) {
 		successor = true;
-		monitorexit = false;
+		predecessor = Opcodes.INVOKEDYNAMIC;
 		first = false;
 		markMethodInvocationLine();
 	}
@@ -223,21 +219,21 @@ public final class LabelFlowAnalyzer extends MethodVisitor {
 	@Override
 	public void visitLdcInsn(final Object cst) {
 		successor = true;
-		monitorexit = false;
+		predecessor = Opcodes.LDC;
 		first = false;
 	}
 
 	@Override
 	public void visitIincInsn(final int var, final int increment) {
 		successor = true;
-		monitorexit = false;
+		predecessor = Opcodes.IINC;
 		first = false;
 	}
 
 	@Override
 	public void visitMultiANewArrayInsn(final String desc, final int dims) {
 		successor = true;
-		monitorexit = false;
+		predecessor = Opcodes.MULTIANEWARRAY;
 		first = false;
 	}
 

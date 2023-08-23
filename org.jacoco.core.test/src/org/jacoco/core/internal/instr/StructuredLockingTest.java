@@ -28,7 +28,8 @@ public class StructuredLockingTest {
 	@org.junit.Ignore
 	@Test
 	public void wip() throws IOException {
-		FileOutputStream fileOutputStream = new FileOutputStream("/Users/evgeny.mandrikov/projects/jacoco/jacoco-issue-1381/Example.class");
+		FileOutputStream fileOutputStream = new FileOutputStream(
+				"/Users/evgeny.mandrikov/projects/jacoco/jacoco-issue-1381/Example.class");
 		fileOutputStream.write(createClass());
 		fileOutputStream.close();
 	}
@@ -66,7 +67,8 @@ public class StructuredLockingTest {
 			methodVisitor.visitEnd();
 		}
 		{
-			methodVisitor = classWriter.visitMethod(ACC_STATIC, "oldTarget", "()V", null, null);
+			methodVisitor = classWriter.visitMethod(ACC_STATIC, "oldTarget",
+					"()V", null, null);
 			methodVisitor.visitCode();
 			Label label0 = new Label();
 			Label label1 = new Label();
@@ -81,7 +83,8 @@ public class StructuredLockingTest {
 			methodVisitor.visitTryCatchBlock(label2, label6, label5, null);
 			methodVisitor.visitLabel(label4);
 			methodVisitor.visitLineNumber(6, label4);
-			methodVisitor.visitFieldInsn(GETSTATIC, "Example", "lock", "Ljava/lang/Object;");
+			methodVisitor.visitFieldInsn(GETSTATIC, "Example", "lock",
+					"Ljava/lang/Object;");
 			methodVisitor.visitInsn(DUP);
 			methodVisitor.visitVarInsn(ASTORE, 0);
 			methodVisitor.visitInsn(MONITORENTER);
@@ -98,7 +101,8 @@ public class StructuredLockingTest {
 			Label label9 = new Label();
 			methodVisitor.visitLabel(label9);
 			methodVisitor.visitLineNumber(8, label9);
-			methodVisitor.visitMethodInsn(INVOKESTATIC, "Example", "nop", "()V", false);
+			methodVisitor.visitMethodInsn(INVOKESTATIC, "Example", "nop", "()V",
+					false);
 			Label label10 = new Label();
 			methodVisitor.visitLabel(label10);
 			methodVisitor.visitLineNumber(7, label10);
@@ -110,7 +114,8 @@ public class StructuredLockingTest {
 			methodVisitor.visitInsn(MONITOREXIT);
 			methodVisitor.visitLabel(label1);
 			methodVisitor.visitLineNumber(13, label1);
-			methodVisitor.visitMethodInsn(INVOKESTATIC, "Example", "nop", "()V", false);
+			methodVisitor.visitMethodInsn(INVOKESTATIC, "Example", "nop", "()V",
+					false);
 			Label label11 = new Label();
 			methodVisitor.visitLabel(label11);
 			methodVisitor.visitLineNumber(10, label11);
@@ -127,7 +132,8 @@ public class StructuredLockingTest {
 			methodVisitor.visitLineNumber(13, label5);
 			methodVisitor.visitVarInsn(ASTORE, 3);
 			methodVisitor.visitLabel(label6);
-			methodVisitor.visitMethodInsn(INVOKESTATIC, "Example", "nop", "()V", false);
+			methodVisitor.visitMethodInsn(INVOKESTATIC, "Example", "nop", "()V",
+					false);
 			Label label12 = new Label();
 			methodVisitor.visitLabel(label12);
 			methodVisitor.visitLineNumber(14, label12);
@@ -137,7 +143,8 @@ public class StructuredLockingTest {
 			methodVisitor.visitEnd();
 		}
 		{
-			methodVisitor = classWriter.visitMethod(ACC_STATIC, "target", "()V", null, null);
+			methodVisitor = classWriter.visitMethod(ACC_STATIC, "target", "()V",
+					null, null);
 			methodVisitor.visitCode();
 			Label label0 = new Label();
 			Label label1 = new Label();
@@ -148,11 +155,13 @@ public class StructuredLockingTest {
 
 			Label weirdCatchStart = new Label();
 			Label weirdCatchHandler = new Label();
-			methodVisitor.visitTryCatchBlock(weirdCatchStart, label2, weirdCatchHandler, null);
+			methodVisitor.visitTryCatchBlock(weirdCatchStart, label2,
+					weirdCatchHandler, null);
 
 			Label label4 = new Label();
 			methodVisitor.visitLabel(label4);
-			methodVisitor.visitFieldInsn(GETSTATIC, "Example", "lock", "Ljava/lang/Object;");
+			methodVisitor.visitFieldInsn(GETSTATIC, "Example", "lock",
+					"Ljava/lang/Object;");
 			methodVisitor.visitInsn(DUP);
 			methodVisitor.visitVarInsn(ASTORE, 0);
 			methodVisitor.visitInsn(MONITORENTER);
@@ -167,7 +176,8 @@ public class StructuredLockingTest {
 			methodVisitor.visitJumpInsn(IF_ICMPGE, label6);
 			Label label7 = new Label();
 			methodVisitor.visitLabel(label7);
-			methodVisitor.visitMethodInsn(INVOKESTATIC, "Example", "nop", "()V", false);
+			methodVisitor.visitMethodInsn(INVOKESTATIC, "Example", "nop", "()V",
+					false);
 			Label label8 = new Label();
 			methodVisitor.visitLabel(label8);
 			methodVisitor.visitIincInsn(1, 1);
@@ -178,7 +188,7 @@ public class StructuredLockingTest {
 
 			methodVisitor.visitLabel(weirdCatchStart);
 			methodVisitor.visitInsn(MONITOREXIT);
-//			methodVisitor.visitLabel(label1);
+			// methodVisitor.visitLabel(label1);
 			Label label9 = new Label();
 			methodVisitor.visitJumpInsn(GOTO, label9);
 			methodVisitor.visitLabel(label2);

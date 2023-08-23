@@ -394,7 +394,7 @@ public class MethodProbesAdapterTest implements IProbeIdGenerator {
 		LabelInfo.setTarget(start);
 		Label end = new Label();
 		LabelInfo.setSuccessor(end);
-		LabelInfo.setSuccessorOfMonitorExit(end);
+		LabelInfo.setSuccessorOf(end, Opcodes.MONITOREXIT);
 		LabelInfo.setTarget(end);
 		Label handlerStart = new Label();
 		Label handlerEnd = new Label();
