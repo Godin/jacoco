@@ -25,6 +25,7 @@ import java.io.IOException;
 
 public class StructuredLockingTest {
 
+	@org.junit.Ignore
 	@Test
 	public void wip() throws IOException {
 		FileOutputStream fileOutputStream = new FileOutputStream("/Users/evgeny.mandrikov/projects/jacoco/jacoco-issue-1381/Example.class");
