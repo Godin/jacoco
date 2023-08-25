@@ -66,7 +66,7 @@ public class StructuredLockingTest {
 			methodVisitor.visitMaxs(2, 0);
 			methodVisitor.visitEnd();
 		}
-		{
+		{ // https://github.com/jacoco/jacoco/issues/626#issuecomment-349466549
 			methodVisitor = classWriter.visitMethod(ACC_STATIC, "oldTarget",
 					"()V", null, null);
 			methodVisitor.visitCode();
@@ -142,7 +142,7 @@ public class StructuredLockingTest {
 			methodVisitor.visitMaxs(2, 4);
 			methodVisitor.visitEnd();
 		}
-		{
+		{ // mimic https://github.com/jacoco/jacoco/issues/1381
 			methodVisitor = classWriter.visitMethod(ACC_STATIC, "target", "()V",
 					null, null);
 			methodVisitor.visitCode();
@@ -150,6 +150,7 @@ public class StructuredLockingTest {
 			Label label1 = new Label();
 			Label label2 = new Label();
 			methodVisitor.visitTryCatchBlock(label0, label1, label2, null);
+
 			Label label3 = new Label();
 			methodVisitor.visitTryCatchBlock(label2, label3, label2, null);
 
