@@ -14,14 +14,14 @@ package org.jacoco.core.internal.instr;
 
 import static org.objectweb.asm.Opcodes.*;
 
+import java.io.FileOutputStream;
+import java.io.IOException;
+
 import org.junit.Test;
 import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.Label;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
-
-import java.io.FileOutputStream;
-import java.io.IOException;
 
 public class StructuredLockingTest {
 
@@ -29,14 +29,14 @@ public class StructuredLockingTest {
 	@Test
 	public void wip() throws IOException {
 		FileOutputStream fileOutputStream = new FileOutputStream(
-				"/Users/evgeny.mandrikov/projects/jacoco/jacoco-issue-1381/Example.class");
+				"/Users/evgeny.mandrikov/projects/jacoco/jacoco-issue-1381/original/Example.class");
 		fileOutputStream.write(createClass());
 		fileOutputStream.close();
 	}
 
 	public byte[] createClass() {
 		ClassWriter classWriter = new ClassWriter(
-				ClassWriter.COMPUTE_FRAMES | ClassWriter.COMPUTE_MAXS);
+				ClassWriter.COMPUTE_MAXS);
 		classWriter.visit(V1_5, ACC_PUBLIC, "Example", null, "java/lang/Object",
 				new String[0]);
 
@@ -146,18 +146,22 @@ public class StructuredLockingTest {
 			methodVisitor = classWriter.visitMethod(ACC_STATIC, "target", "()V",
 					null, null);
 			methodVisitor.visitCode();
+
 			Label label0 = new Label();
 			Label label1 = new Label();
-			Label label2 = new Label();
-			methodVisitor.visitTryCatchBlock(label0, label1, label2, null);
+			final Label handler = new Label();
+			methodVisitor.visitTryCatchBlock(label0, label1, handler, null);
 
-			Label label3 = new Label();
-			methodVisitor.visitTryCatchBlock(label2, label3, label2, null);
+			final Label weirdCatchStart = new Label();
+			final Label weirdCatchEnd = new Label();
+			final Label weirdCatchHandler = new Label();
+			methodVisitor.visitTryCatchBlock(weirdCatchStart, weirdCatchEnd,
+					weirdCatchHandler, "java/lang/Exception");
 
-			Label weirdCatchStart = new Label();
-			Label weirdCatchHandler = new Label();
-			methodVisitor.visitTryCatchBlock(weirdCatchStart, label2,
-					weirdCatchHandler, null);
+			final Label weirdCatch2Start = new Label();
+			final Label weirdCatch2End = new Label();
+			methodVisitor.visitTryCatchBlock(weirdCatch2Start, weirdCatch2End,
+					weirdCatchHandler, "java/lang/Exception");
 
 			Label label4 = new Label();
 			methodVisitor.visitLabel(label4);
@@ -187,30 +191,51 @@ public class StructuredLockingTest {
 			methodVisitor.visitVarInsn(ALOAD, 0);
 			methodVisitor.visitLabel(label1);
 
+			// probe is inserted here
 			methodVisitor.visitLabel(weirdCatchStart);
+			if (false) {
+				simulateProbe(methodVisitor);
+			}
 			methodVisitor.visitInsn(MONITOREXIT);
+			// usually monitorexit is covered by catch all
 			// methodVisitor.visitLabel(label1);
 			Label label9 = new Label();
 			methodVisitor.visitJumpInsn(GOTO, label9);
-			methodVisitor.visitLabel(label2);
+			methodVisitor.visitLabel(weirdCatchEnd);
+
+			methodVisitor.visitLabel(handler);
 			methodVisitor.visitVarInsn(ASTORE, 2);
+			// probe is inserted here
+			methodVisitor.visitLabel(weirdCatch2Start);
+			if (true) {
+				simulateProbe(methodVisitor);
+			}
+			methodVisitor.visitVarInsn(ALOAD, 2);
 			methodVisitor.visitVarInsn(ALOAD, 0);
 			methodVisitor.visitInsn(MONITOREXIT);
-			methodVisitor.visitLabel(label3);
-			methodVisitor.visitVarInsn(ALOAD, 2);
 			methodVisitor.visitInsn(ATHROW);
+			methodVisitor.visitLabel(weirdCatch2End);
+
 			methodVisitor.visitLabel(label9);
 			methodVisitor.visitInsn(RETURN);
 
 			methodVisitor.visitLabel(weirdCatchHandler);
 			methodVisitor.visitInsn(ATHROW);
 
-			methodVisitor.visitMaxs(2, 3);
+			methodVisitor.visitMaxs(3, 3);
 			methodVisitor.visitEnd();
 		}
 		classWriter.visitEnd();
 
 		return classWriter.toByteArray();
+	}
+
+	private static void simulateProbe(MethodVisitor mv) {
+		mv.visitInsn(Opcodes.ICONST_1);
+		mv.visitIntInsn(Opcodes.NEWARRAY, Opcodes.T_BOOLEAN);
+		mv.visitInsn(Opcodes.ICONST_0);
+		mv.visitInsn(Opcodes.ICONST_1);
+		mv.visitInsn(Opcodes.BASTORE);
 	}
 
 }

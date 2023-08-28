@@ -63,7 +63,7 @@ public final class MethodProbesAdapter extends MethodVisitor {
 		this.analyzer = analyzer;
 	}
 
-	private HashSet<Label> skipLabels = new HashSet<Label>();
+	private final HashSet<Label> skipLabels = new HashSet<Label>();
 
 	@Override
 	public void visitTryCatchBlock(final Label start, final Label end,
@@ -73,13 +73,21 @@ public final class MethodProbesAdapter extends MethodVisitor {
 		// only when monitorexit
 		// final Label endLabel = getTryCatchLabel(end);
 
-		// TODO idea: probe inserted at the beginning of catch-any handler causes issue
+		// TODO idea: probe inserted at the beginning of catch-any handler
+		// causes issue
+		if (true) {
+			skipLabels.add(start);
+			skipLabels.add(end);
+			probesVisitor.visitTryCatchBlock(start, end, handler, type);
+			return;
+		}
 
-		final Label endLabel = false && LabelInfo.isSuccessorOf(end, Opcodes.MONITOREXIT)
-				? getTryCatchLabel(end)
-				: end;
-		probesVisitor.visitTryCatchBlock(getTryCatchLabel(start), endLabel,
-				handler, type);
+		// final Label endLabel = false && LabelInfo.isSuccessorOf(end,
+		// Opcodes.MONITOREXIT)
+		// ? getTryCatchLabel(end)
+		// : end;
+		probesVisitor.visitTryCatchBlock(getTryCatchLabel(start),
+				getTryCatchLabel(end), handler, type);
 	}
 
 	private Label getTryCatchLabel(Label label) {

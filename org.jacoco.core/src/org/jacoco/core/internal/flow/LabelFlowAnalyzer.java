@@ -76,7 +76,15 @@ public final class LabelFlowAnalyzer extends MethodVisitor {
 		// makes the start a multitarget. However, if the start of the block
 		// also is the start of the method, no probe will be added.
 		LabelInfo.setTarget(start);
+		// The above needed for example for
+		// if (...) { return; }
+		// try {
+		//   throwException();
+		// } catch (Exception e) {}
 
+		// TODO
+		//   Is it useful? see also e4a474ce30af55463d114b5c18c9b59eadbef00b
+		//   Removal however doesn't help to solve issue.
 		// Mark exception handler as possible target of the block
 		LabelInfo.setTarget(handler);
 	}
