@@ -12,6 +12,7 @@
  *******************************************************************************/
 package org.jacoco.core.internal.instr;
 
+import org.jacoco.core.internal.flow.IFrame;
 import org.objectweb.asm.AnnotationVisitor;
 import org.objectweb.asm.Label;
 import org.objectweb.asm.MethodVisitor;
@@ -78,7 +79,11 @@ class ProbeInserter extends MethodVisitor implements IProbeInserter {
 		beginLabel = new Label();
 	}
 
-	public void insertProbe(final int id) {
+	public void insertProbe(int id) {
+		insertProbe(id, null);
+	}
+
+	public void insertProbe(final int id, IFrame frame) {
 
 		// For a probe we set the corresponding position in the boolean[] array
 		// to true.
@@ -98,7 +103,26 @@ class ProbeInserter extends MethodVisitor implements IProbeInserter {
 		// Stack[1]: I
 		// Stack[0]: [Z
 
+		final Label beforeProbe = new Label();
+		final Label afterProbe = new Label();
+		final Label handler = new Label();
+		if (frame != null && false) {
+//			mv.visitTryCatchBlock(beforeProbe, afterProbe, handler, null);
+//			mv.visitLabel(beforeProbe);
+		}
+
 		mv.visitInsn(Opcodes.BASTORE);
+
+		if (frame != null && false) {
+			mv.visitJumpInsn(Opcodes.GOTO, afterProbe); // +3 bytes
+//			mv.visitLabel(handler);
+//			mv.visitFrame(Opcodes.F_SAME1, 0, null, 1, new Object[] { "java/lang/Throwable" });
+//			frame.push(mv);
+//			mv.visitInsn(Opcodes.POP); // +1 byte
+			mv.visitLabel(afterProbe);
+//			frame.accept(mv);
+//			mv.visitFrame(Opcodes.F_SAME, 0, null, 0, null);
+		}
 	}
 
 	@Override

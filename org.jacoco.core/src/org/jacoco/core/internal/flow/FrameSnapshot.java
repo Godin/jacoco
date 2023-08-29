@@ -18,6 +18,7 @@ import java.util.List;
 
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
+import org.objectweb.asm.Type;
 import org.objectweb.asm.commons.AnalyzerAdapter;
 
 /**
@@ -80,6 +81,16 @@ class FrameSnapshot implements IFrame {
 			mv.visitFrame(Opcodes.F_NEW, locals.length, locals, stack.length,
 					stack);
 		}
+	}
+
+	public void push(MethodVisitor mv) {
+		if (locals == null) {
+			return;
+		}
+		final Object[] newStack = new Object[stack.length + 1];
+        System.arraycopy(stack, 0, newStack, 0, stack.length);
+		newStack[stack.length] = Type.getInternalName(Throwable.class);
+		mv.visitFrame(Opcodes.F_NEW, locals.length, locals, 1, new Object[]{"java/lang/Throwable"});
 	}
 
 }

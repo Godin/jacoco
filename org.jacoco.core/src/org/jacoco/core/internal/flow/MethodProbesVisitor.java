@@ -51,6 +51,10 @@ public abstract class MethodProbesVisitor extends MethodVisitor {
 	public void visitProbe(final int probeId) {
 	}
 
+	public void visitProbe(final int probeId, IFrame frame) {
+		visitProbe(probeId);
+	}
+
 	/**
 	 * Visits a jump instruction. A probe with the given id should be inserted
 	 * in a way that it is executed only when the jump to the given label is

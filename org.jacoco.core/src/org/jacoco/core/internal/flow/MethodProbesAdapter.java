@@ -75,7 +75,7 @@ public final class MethodProbesAdapter extends MethodVisitor {
 
 		// TODO idea: probe inserted at the beginning of catch-any handler
 		// causes issue
-		if (true) {
+		if (false) {
 			skipLabels.add(start);
 			skipLabels.add(end);
 			probesVisitor.visitTryCatchBlock(start, end, handler, type);
@@ -114,7 +114,7 @@ public final class MethodProbesAdapter extends MethodVisitor {
 				// reserve id without adding probe
 				idGenerator.nextId();
 			} else {
-				probesVisitor.visitProbe(idGenerator.nextId());
+				probesVisitor.visitProbe(idGenerator.nextId(), frame(0));
 			}
 		}
 		probesVisitor.visitLabel(label);

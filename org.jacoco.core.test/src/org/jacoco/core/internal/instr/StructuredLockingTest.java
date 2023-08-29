@@ -36,8 +36,8 @@ public class StructuredLockingTest {
 
 	public byte[] createClass() {
 		ClassWriter classWriter = new ClassWriter(
-				ClassWriter.COMPUTE_MAXS);
-		classWriter.visit(V1_5, ACC_PUBLIC, "Example", null, "java/lang/Object",
+				ClassWriter.COMPUTE_MAXS | ClassWriter.COMPUTE_FRAMES);
+		classWriter.visit(V1_7, ACC_PUBLIC, "Example", null, "java/lang/Object",
 				new String[0]);
 
 		classWriter.visitField(ACC_STATIC, "lock", "Ljava/lang/Object;", null,
@@ -217,8 +217,8 @@ public class StructuredLockingTest {
 				simulateProbe(methodVisitor); // 4 - 7 bytes
 				// Exception handler can be reached by both normal and exceptional control flow
 				// https://issuetracker.google.com/issues/296916426
-				methodVisitor.visitInsn(Opcodes.ACONST_NULL);
-				//methodVisitor.visitJumpInsn(Opcodes.GOTO, probeEnd); // 3 bytes
+				// methodVisitor.visitInsn(Opcodes.ACONST_NULL);
+				methodVisitor.visitJumpInsn(Opcodes.GOTO, probeEnd); // 3 bytes
 				methodVisitor.visitLabel(probeCatch);
 				methodVisitor.visitInsn(Opcodes.POP); // 1 byte
 				methodVisitor.visitLabel(probeEnd);

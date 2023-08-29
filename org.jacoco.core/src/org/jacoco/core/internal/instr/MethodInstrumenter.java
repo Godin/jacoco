@@ -45,7 +45,28 @@ class MethodInstrumenter extends MethodProbesVisitor {
 
 	@Override
 	public void visitProbe(final int probeId) {
-		probeInserter.insertProbe(probeId);
+		visitProbe(probeId, null);
+	}
+
+	@Override
+	public void visitProbe(int probeId, IFrame frame) {
+		final Label start = new Label();
+		final Label end = new Label();
+		final Label handler = new Label();
+		final Label after = new Label();
+		mv.visitTryCatchBlock(start, end, handler, null);
+
+		mv.visitLabel(start);
+		probeInserter.insertProbe(probeId, frame);
+		mv.visitJumpInsn(Opcodes.GOTO, after);
+		mv.visitLabel(end);
+
+		mv.visitLabel(handler);
+		frame.push(mv);
+		mv.visitInsn(Opcodes.POP);
+
+		mv.visitLabel(after);
+		frame.accept(mv);
 	}
 
 	@Override
