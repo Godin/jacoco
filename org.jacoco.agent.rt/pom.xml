@@ -69,7 +69,7 @@
                   <shadedPattern>${jacoco.runtime.package.name}.asm</shadedPattern>
                 </relocation>
               </relocations>
-              <filters>
+              <filters combine.children="append">
                 <filter>
                   <artifact>org.ow2.asm:*</artifact>
                   <excludes>
