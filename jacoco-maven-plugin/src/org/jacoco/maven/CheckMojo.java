@@ -35,7 +35,7 @@ import org.jacoco.report.check.Rule;
  * @since 0.6.1
  */
 @Mojo(name = "check", defaultPhase = LifecyclePhase.VERIFY, threadSafe = true)
-public class CheckMojo extends AbstractJacocoMojo implements IViolationsOutput {
+public class CheckMojo extends AbstractJacocoMojo {
 
 	private static final String MSG_SKIPPING = "Skipping JaCoCo execution due to missing execution data file:";
 	private static final String CHECK_SUCCESS = "All coverage checks have been met.";
@@ -178,7 +178,13 @@ public class CheckMojo extends AbstractJacocoMojo implements IViolationsOutput {
 		for (final RuleConfiguration r : rules) {
 			checkerrules.add(r.rule);
 		}
-		support.addRulesChecker(checkerrules, this);
+		support.addRulesChecker(checkerrules, new IViolationsOutput() {
+			@Override
+			public void onViolation(ICoverageNode node, Rule rule, Limit limit,
+					String message) {
+				CheckMojo.this.onViolation(node, rule, limit, message);
+			}
+		});
 
 		try {
 			final IReportVisitor visitor = support.initRootVisitor();
