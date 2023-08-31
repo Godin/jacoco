@@ -24,7 +24,7 @@ import org.objectweb.asm.commons.AnalyzerAdapter;
 /**
  * IFrame implementation which creates snapshots from an {@link AnalyzerAdapter}
  */
-class FrameSnapshot implements IFrame {
+public class FrameSnapshot implements IFrame {
 
 	private static final FrameSnapshot NOP = new FrameSnapshot(null, null);
 
@@ -87,9 +87,6 @@ class FrameSnapshot implements IFrame {
 		if (locals == null) {
 			return;
 		}
-		final Object[] newStack = new Object[stack.length + 1];
-        System.arraycopy(stack, 0, newStack, 0, stack.length);
-		newStack[stack.length] = Type.getInternalName(Throwable.class);
 		mv.visitFrame(Opcodes.F_NEW, locals.length, locals, 1, new Object[]{"java/lang/Throwable"});
 	}
 

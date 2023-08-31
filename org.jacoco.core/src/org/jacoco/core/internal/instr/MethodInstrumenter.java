@@ -12,6 +12,7 @@
  *******************************************************************************/
 package org.jacoco.core.internal.instr;
 
+import org.jacoco.core.internal.flow.FrameSnapshot;
 import org.jacoco.core.internal.flow.IFrame;
 import org.jacoco.core.internal.flow.LabelInfo;
 import org.jacoco.core.internal.flow.MethodProbesVisitor;
@@ -52,21 +53,23 @@ class MethodInstrumenter extends MethodProbesVisitor {
 	public void visitProbe(int probeId, IFrame frame) {
 		final Label start = new Label();
 		final Label end = new Label();
-		final Label handler = new Label();
 		final Label after = new Label();
-		mv.visitTryCatchBlock(start, end, handler, null);
-
-		mv.visitLabel(start);
+		if (ProbeInserter.IMPL == 0) {
+			mv.visitTryCatchBlock(start, end, end, null);
+			mv.visitLabel(start);
+		}
+		// TODO mv in ProbeInserter is likely not the same as here
 		probeInserter.insertProbe(probeId, frame);
-		mv.visitJumpInsn(Opcodes.GOTO, after);
-		mv.visitLabel(end);
-
-		mv.visitLabel(handler);
-		frame.push(mv);
-		mv.visitInsn(Opcodes.POP);
-
-		mv.visitLabel(after);
-		frame.accept(mv);
+		if (ProbeInserter.IMPL == 0) {
+			mv.visitJumpInsn(Opcodes.GOTO, after);
+			mv.visitLabel(end);
+			if (frame != null)
+				((FrameSnapshot) frame).push(mv);
+			mv.visitInsn(Opcodes.ATHROW);
+			mv.visitLabel(after);
+			if (frame != null)
+				frame.accept(mv);
+		}
 	}
 
 	@Override
@@ -79,12 +82,12 @@ class MethodInstrumenter extends MethodProbesVisitor {
 	public void visitJumpInsnWithProbe(final int opcode, final Label label,
 			final int probeId, final IFrame frame) {
 		if (opcode == Opcodes.GOTO) {
-			probeInserter.insertProbe(probeId);
+			probeInserter.insertProbe(probeId, frame);
 			mv.visitJumpInsn(Opcodes.GOTO, label);
 		} else {
 			final Label intermediate = new Label();
 			mv.visitJumpInsn(getInverted(opcode), intermediate);
-			probeInserter.insertProbe(probeId);
+			probeInserter.insertProbe(probeId, frame);
 			mv.visitJumpInsn(Opcodes.GOTO, label);
 			mv.visitLabel(intermediate);
 			frame.accept(mv);

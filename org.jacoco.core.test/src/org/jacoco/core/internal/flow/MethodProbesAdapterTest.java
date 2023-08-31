@@ -107,10 +107,6 @@ public class MethodProbesAdapterTest implements IProbeIdGenerator {
 		probesAdapter.setAnalyzer(analyzer);
 		adapter = analyzer;
 		frame = new IFrame() {
-			public void push(MethodVisitor mv) {
-				throw new UnsupportedOperationException();
-			}
-
 			public void accept(MethodVisitor mv) {
 			}
 		};
