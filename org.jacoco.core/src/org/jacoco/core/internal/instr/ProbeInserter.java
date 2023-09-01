@@ -100,7 +100,7 @@ class ProbeInserter extends MethodVisitor implements IProbeInserter {
 			mv.visitTryCatchBlock(start, end, handler, null);
 			mv.visitLabel(start);
 		}
-		internalInsertProbe(id);
+		internalInsertProbe(id, frame);
 		if (frame != null && IMPL == 1) {
 			mv.visitLabel(end);
 			mv.visitJumpInsn(Opcodes.GOTO, after); // +3 bytes
@@ -112,7 +112,7 @@ class ProbeInserter extends MethodVisitor implements IProbeInserter {
 		}
 	}
 
-	private void internalInsertProbe(final int id) {
+	private void internalInsertProbe(final int id, final IFrame frame) {
 		// For a probe we set the corresponding position in the boolean[] array
 		// to true.
 
@@ -131,26 +131,7 @@ class ProbeInserter extends MethodVisitor implements IProbeInserter {
 		// Stack[1]: I
 		// Stack[0]: [Z
 
-		final Label beforeProbe = new Label();
-		final Label afterProbe = new Label();
-		final Label handler = new Label();
-		if (frame != null && false) {
-//			mv.visitTryCatchBlock(beforeProbe, afterProbe, handler, null);
-//			mv.visitLabel(beforeProbe);
-		}
-
 		mv.visitInsn(Opcodes.BASTORE);
-
-		if (frame != null && false) {
-			mv.visitJumpInsn(Opcodes.GOTO, afterProbe); // +3 bytes
-//			mv.visitLabel(handler);
-//			mv.visitFrame(Opcodes.F_SAME1, 0, null, 1, new Object[] { "java/lang/Throwable" });
-//			frame.push(mv);
-//			mv.visitInsn(Opcodes.POP); // +1 byte
-			mv.visitLabel(afterProbe);
-//			frame.accept(mv);
-//			mv.visitFrame(Opcodes.F_SAME, 0, null, 0, null);
-		}
 	}
 
 	@Override
