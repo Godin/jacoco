@@ -27,6 +27,4 @@ public interface IFrame {
 	 */
 	void accept(MethodVisitor mv);
 
-	void push(MethodVisitor mv);
-
 }
