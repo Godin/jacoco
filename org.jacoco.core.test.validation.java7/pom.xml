@@ -33,5 +33,10 @@
       <groupId>${project.groupId}</groupId>
       <artifactId>org.jacoco.core.test</artifactId>
     </dependency>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>org.jacoco.core.test.validation.java5</artifactId>
+      <version>${project.version}</version>
+    </dependency>
   </dependencies>
 </project>

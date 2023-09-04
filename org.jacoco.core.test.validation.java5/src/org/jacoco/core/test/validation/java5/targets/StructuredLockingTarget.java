@@ -18,6 +18,19 @@ import static org.jacoco.core.test.validation.targets.Stubs.nop;
  * This target uses synchronized blocks which compile to try/catch statements.
  */
 public class StructuredLockingTarget {
+//	static void target() {
+//		Object lock = new Object();
+//		try {
+//			synchronized (lock) {
+//				for (int i = 0; i < 10000000; i++) {
+//					nop();
+//				}
+//				return;
+//			}
+//		} finally {
+//			nop();
+//		}
+//	}
 
 	static void simple() {
 		Object lock1 = new Object();

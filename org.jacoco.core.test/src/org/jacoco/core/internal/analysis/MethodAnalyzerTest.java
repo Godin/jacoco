@@ -13,6 +13,8 @@
 package org.jacoco.core.internal.analysis;
 
 import static org.junit.Assert.assertEquals;
+import static org.objectweb.asm.Opcodes.ALOAD;
+import static org.objectweb.asm.Opcodes.IFNONNULL;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -881,6 +883,72 @@ public class MethodAnalyzerTest implements IProbeIdGenerator {
 		assertLine(1001, 1, 0, 0, 0);
 		assertLine(1002, 2, 0, 0, 0);
 		assertLine(1003, 3, 0, 0, 0);
+	}
+
+	// === Scenario: TODO
+
+	public void createWIP() {
+		Label l0 = new Label();
+		method.visitLabel(l0);
+		method.visitLineNumber(1000, l0);
+		method.visitInsn(Opcodes.MONITORENTER);
+		// force insertion of a probe
+		method.visitVarInsn(ALOAD, /* argument */ 0);
+		Label label = new Label();
+		method.visitJumpInsn(IFNONNULL, label);
+		method.visitInsn(Opcodes.NOP);
+		method.visitLabel(label);
+		// below instructions will be considered covered
+		method.visitInsn(Opcodes.NOP);
+		method.visitInsn(Opcodes.MONITOREXIT);
+		Label l1 = new Label();
+		method.visitLabel(l1);
+		method.visitLineNumber(1001, l0);
+		method.visitInsn(Opcodes.RETURN);
+	}
+
+	@Test
+	public void testWIP() {
+		createWIP();
+		probes[2] = true;
+		runMethodAnalzer();
+		assertEquals(3, nextProbeId);
+		assertLine(1000, 4, 2, 2, 0);
+		assertLine(1001, 0, 1, 0, 0);
+	}
+
+	// TODO how probes are inserted?
+	private void createWIP2() {
+		Label l0 = new Label();
+		method.visitLabel(l0);
+		method.visitLineNumber(1000, l0);
+		method.visitInsn(Opcodes.MONITORENTER);
+		method.visitInsn(Opcodes.NOP);
+		// force insertion of a probe
+		Label handler = new Label();
+		Label start = new Label();
+		Label end = new Label();
+		method.visitTryCatchBlock(start, end, handler, null);
+		method.visitLabel(start);
+		method.visitInsn(Opcodes.NOP);
+		method.visitLabel(end);
+		method.visitInsn(Opcodes.MONITOREXIT);
+		Label l1 = new Label();
+		method.visitLabel(l1);
+		method.visitLineNumber(1001, l0);
+		method.visitInsn(Opcodes.RETURN);
+		method.visitLabel(handler);
+		method.visitInsn(Opcodes.MONITOREXIT);
+		method.visitInsn(Opcodes.RETURN);
+	}
+
+	@Test
+	public void testWIP2() {
+		createWIP2();
+		probes[1] = true;
+		runMethodAnalzer();
+		assertEquals(3, nextProbeId);
+		assertLine(1000, 2, 2, 0, 0);
 	}
 
 	private void runMethodAnalzer() {
