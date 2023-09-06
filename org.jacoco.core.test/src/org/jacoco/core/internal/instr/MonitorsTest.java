@@ -1,8 +1,7 @@
 package org.jacoco.core.internal.instr;
 
 import static org.junit.Assert.assertEquals;
-
-import java.util.List;
+import static org.junit.Assert.fail;
 
 import org.junit.Test;
 import org.objectweb.asm.Label;
@@ -11,6 +10,9 @@ import org.objectweb.asm.tree.AbstractInsnNode;
 import org.objectweb.asm.tree.MethodNode;
 import org.objectweb.asm.tree.TryCatchBlockNode;
 
+/**
+ * Unit test for {@link Monitors}.
+ */
 public class MonitorsTest {
 
 	@Test
@@ -19,7 +21,7 @@ public class MonitorsTest {
 		m.visitInsn(Opcodes.MONITORENTER);
 		m.visitInsn(Opcodes.RETURN);
 		Monitors monitors = analyze(m);
-		assertEquals(1, monitors.statuses.get(m.instructions.get(0)).monitors);
+		assertEquals(1, monitors.getMonitors(m.instructions.get(0)));
 		assertEquals("non-empty monitor stack at return", check(m, monitors));
 	}
 
@@ -29,7 +31,7 @@ public class MonitorsTest {
 		m.visitInsn(Opcodes.MONITOREXIT);
 		m.visitInsn(Opcodes.RETURN);
 		Monitors monitors = analyze(m);
-		assertEquals(-1, monitors.statuses.get(m.instructions.get(0)).monitors);
+		assertEquals(-1, monitors.getMonitors(m.instructions.get(0)));
 		assertEquals("monitor stack underflow", check(m, monitors));
 	}
 
@@ -53,9 +55,9 @@ public class MonitorsTest {
 		m.visitInsn(Opcodes.MONITOREXIT);
 		m.visitInsn(Opcodes.RETURN);
 		Monitors monitors = analyze(m);
-		assertEquals(1, monitors.statuses.get(m.instructions.get(0)).monitors);
-		assertEquals(1, monitors.statuses.get(m.instructions.get(1)).monitors);
-		assertEquals(0, monitors.statuses.get(m.instructions.get(2)).monitors);
+		assertEquals(1, monitors.getMonitors(m.instructions.get(0)));
+		assertEquals(1, monitors.getMonitors(m.instructions.get(1)));
+		assertEquals(0, monitors.getMonitors(m.instructions.get(2)));
 		assertEquals("ok", check(m, monitors));
 	}
 
@@ -89,6 +91,32 @@ public class MonitorsTest {
 		assertEquals("ok", check(m, analyze(m)));
 	}
 
+	@Test
+	public void unreachable() {
+		MethodNode m = new MethodNode(0, "m", "()V", null, null);
+		m.visitInsn(Opcodes.RETURN);
+		m.visitInsn(Opcodes.RETURN);
+		assertEquals("ok", check(m, analyze(m)));
+	}
+
+	@Test
+	public void empty() {
+		MethodNode m = new MethodNode(0, "m", "()V", null, null);
+		assertEquals("ok", check(m, analyze(m)));
+	}
+
+	@Test
+	public void invalid() {
+		MethodNode m = new MethodNode(0, "m", "()V", null, null);
+		m.visitInsn(Opcodes.NOP);
+		try {
+			analyze(m);
+			fail("NullPointerException expected");
+		} catch (NullPointerException e) {
+			// expected
+		}
+	}
+
 	static boolean canThrow(final AbstractInsnNode instruction) {
 		switch (instruction.getType()) {
 		case AbstractInsnNode.LABEL:
@@ -99,8 +127,8 @@ public class MonitorsTest {
 		switch (instruction.getOpcode()) {
 		case Opcodes.MONITORENTER:
 		case Opcodes.MONITOREXIT:
-			// TODO strictly speaking can throw NPE or
-			// IllegalMonitorStateException
+			// TODO according to JVMS can throw NPE or
+			// IllegalMonitorStateException ?
 		case Opcodes.NOP:
 			return false;
 		default:
@@ -108,17 +136,16 @@ public class MonitorsTest {
 		}
 	}
 
-	private String check(MethodNode m, Monitors monitors) {
-		for (AbstractInsnNode instruction : m.instructions) {
-			Monitors.Status status = monitors.statuses.get(instruction);
-			if (status.monitors == 0) {
-				continue;
-			}
-			if (status.monitors == -1) {
-				return "monitor stack underflow";
-			}
-			if (status.monitors == -2) {
-				return "monitor stack height merge conflict";
+	private String check(MethodNode method, Monitors monitors) {
+		for (AbstractInsnNode instruction : method.instructions) {
+			int m = monitors.getMonitors(instruction);
+			switch (m) {
+				case 0:
+					continue;
+				case -1:
+					return "monitor stack underflow";
+				case -2:
+					return "monitor stack height merge conflict";
 			}
 			if (Opcodes.IRETURN <= instruction.getOpcode()
 					&& instruction.getOpcode() <= Opcodes.RETURN) {
@@ -127,13 +154,9 @@ public class MonitorsTest {
 			if (!canThrow(instruction)) {
 				continue;
 			}
-			List<TryCatchBlockNode> handlers = monitors.handlers
-					.get(instruction);
 			boolean catchAll = false;
-			if (handlers != null) {
-				for (TryCatchBlockNode c : handlers) {
-					catchAll |= c.type == null;
-				}
+			for (TryCatchBlockNode c : monitors.getHandlers(instruction)) {
+				catchAll |= c.type == null;
 			}
 			if (!catchAll) {
 				return "non-empty monitor stack at exceptional exit";

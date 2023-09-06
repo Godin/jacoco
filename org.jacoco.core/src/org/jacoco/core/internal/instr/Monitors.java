@@ -1,25 +1,33 @@
 package org.jacoco.core.internal.instr;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Stack;
+import java.util.*;
 
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.tree.*;
 
 import jdk.internal.org.objectweb.asm.util.Textifier;
 
+/**
+ * https://docs.oracle.com/javase/specs/jvms/se15/html/jvms-2.html#jvms-2.11.10
+ */
 public final class Monitors {
 
-	final HashMap<AbstractInsnNode, List<TryCatchBlockNode>> handlers = new HashMap<AbstractInsnNode, List<TryCatchBlockNode>>();
+	// TODO use array instead?
+	private final HashMap<AbstractInsnNode, List<TryCatchBlockNode>> handlers = new HashMap<AbstractInsnNode, List<TryCatchBlockNode>>();
 
-	final HashMap<AbstractInsnNode, Status> statuses = new HashMap<AbstractInsnNode, Status>();
+	// TODO use array instead?
+	private final HashMap<AbstractInsnNode, Status> statuses = new HashMap<AbstractInsnNode, Status>();
 
 	private final Stack<AbstractInsnNode> workList = new Stack<AbstractInsnNode>();
 
-	static final class Status {
-		int monitors;
+	public static Monitors compute(MethodNode method) {
+		Monitors monitors = new Monitors();
+		monitors.analyze(method);
+		return monitors;
+	}
+
+	public static final class Status {
+		public int monitors;
 
 		public Status(int monitors) {
 			this.monitors = monitors;
@@ -27,6 +35,10 @@ public final class Monitors {
 	}
 
 	public void analyze(MethodNode m) {
+		if (m.instructions.size() == 0) {
+			return;
+		}
+
 		for (TryCatchBlockNode c : m.tryCatchBlocks) {
 			for (AbstractInsnNode i = c.start; i != c.end; i = i.getNext()) {
 				List<TryCatchBlockNode> instructionHandlers = handlers.get(i);
@@ -59,6 +71,7 @@ public final class Monitors {
 				for (LabelNode target : switchInstruction.labels) {
 					merge(status, target);
 				}
+				// TODO likely wrong:
 				merge(status, instruction.getNext());
 			} else if (instruction.getOpcode() == Opcodes.LOOKUPSWITCH) {
 				LookupSwitchInsnNode switchInstruction = (LookupSwitchInsnNode) instruction;
@@ -66,6 +79,7 @@ public final class Monitors {
 				for (LabelNode target : switchInstruction.labels) {
 					merge(status, target);
 				}
+				// TODO likely wrong:
 				merge(status, instruction.getNext());
 			} else if (instruction.getType() == AbstractInsnNode.JUMP_INSN) {
 				if (instruction.getOpcode() != Opcodes.GOTO) {
@@ -89,14 +103,25 @@ public final class Monitors {
 		}
 	}
 
+	public List<TryCatchBlockNode> getHandlers(AbstractInsnNode i) {
+		final List<TryCatchBlockNode> result = handlers.get(i);
+		return result != null ? result : Collections.<TryCatchBlockNode>emptyList();
+	}
+
+	/**
+	 * TODO add comment about -1 and -2
+	 *
+	 * @return number of held monitors after execution of given instruction
+	 */
+	public int getMonitors(final AbstractInsnNode i) {
+		final Status status = statuses.get(i);
+		return status != null ? status.monitors : 0;
+	}
+
 	private void mergeIntoHandlers(Status status,
 			AbstractInsnNode instruction) {
-		final List<TryCatchBlockNode> instructionHandlers = handlers
-				.get(instruction);
-		if (instructionHandlers != null) {
-			for (TryCatchBlockNode c : instructionHandlers) {
-				merge(status, c.handler);
-			}
+		for (TryCatchBlockNode c : getHandlers(instruction)) {
+			merge(status, c.handler);
 		}
 	}
 
@@ -120,13 +145,12 @@ public final class Monitors {
 		int index = 0;
 		for (AbstractInsnNode i : m.instructions) {
 			Monitors.Status status = statuses.get(i);
-			List<TryCatchBlockNode> handlers = this.handlers.get(i);
 			System.out.print(index + ":");
 			System.out.print(" ");
 			System.out
 					.print("M=" + (status == null ? "null" : status.monitors));
 			System.out.print(" ");
-			System.out.print("H=" + (handlers == null ? "0" : handlers.size()));
+			System.out.print("H=" + getHandlers(i).size());
 			System.out.print(" ");
 			if (i.getType() == AbstractInsnNode.LABEL) {
 				System.out.println("L");

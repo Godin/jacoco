@@ -19,6 +19,7 @@ import org.jacoco.core.internal.flow.MethodProbesVisitor;
 import org.objectweb.asm.Label;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
+import org.objectweb.asm.tree.MethodNode;
 
 /**
  * This method adapter inserts probes as requested by the
@@ -43,6 +44,12 @@ class MethodInstrumenter extends MethodProbesVisitor {
 	}
 
 	// === IMethodProbesVisitor ===
+
+
+	@Override
+	public void accept(MethodNode methodNode, MethodVisitor methodVisitor) {
+		super.accept(methodNode, methodVisitor);
+	}
 
 	@Override
 	public void visitProbe(final int probeId) {

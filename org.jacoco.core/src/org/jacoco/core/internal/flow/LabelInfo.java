@@ -46,6 +46,8 @@ public final class LabelInfo {
 
 	private Instruction instruction = null;
 
+	private boolean skip = false;
+
 	// instances are only created within this class
 	private LabelInfo() {
 	}
@@ -297,4 +299,12 @@ public final class LabelInfo {
 		return info;
 	}
 
+	public static void setSkipProbe(Label label) {
+		LabelInfo.get(label).skip = true;
+	}
+
+	public static boolean isSkip(final Label label) {
+		LabelInfo info = LabelInfo.get(label);
+		return info != null && info.skip;
+	}
 }

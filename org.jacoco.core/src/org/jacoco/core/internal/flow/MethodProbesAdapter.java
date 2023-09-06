@@ -110,7 +110,7 @@ public final class MethodProbesAdapter extends MethodVisitor {
 			if (tryCatchProbeLabels.containsKey(label)) {
 				probesVisitor.visitLabel(tryCatchProbeLabels.get(label));
 			}
-			if (skipLabels.contains(label)) {
+			if (LabelInfo.isSkip(label) || skipLabels.contains(label)) {
 				// reserve id without adding probe
 				idGenerator.nextId();
 			} else {

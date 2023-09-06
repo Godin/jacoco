@@ -52,6 +52,7 @@ public class JitTest {
 	public void example() throws Exception {
 		final byte[] classBytes = exampleClass();
 		Assert.assertEquals(run(classBytes), "");
+		// TODO visitJumpInsnWithProbe ?
 		Assert.assertTrue(run(instrument(classBytes))
 				.contains("Monitor mismatch in method  Main::main:"
 						+ " non-empty monitor stack at exceptional exit"));
@@ -132,6 +133,51 @@ public class JitTest {
 						// monitor stack underflow
 						// improper monitor pair
 						+ " "));
+	}
+
+	@Test
+	public void test4() throws Exception {
+		final ClassWriter classWriter = createClassWriter();
+		final MethodVisitor mv = classWriter.visitMethod(
+			ACC_PUBLIC | ACC_STATIC, "main", "([Ljava/lang/String;)V", null,
+			null);
+		mv.visitCode();
+		mv.visitFieldInsn(GETSTATIC, "Main", "lock", "Ljava/lang/Object;");
+		mv.visitVarInsn(ASTORE, 1);
+		mv.visitVarInsn(ALOAD, 1);
+		mv.visitInsn(MONITORENTER);
+		Label start = new Label();
+		Label end = new Label();
+		Label handler = new Label();
+		Label handler2 = new Label();
+		Label exit = new Label();
+//		mv.visitTryCatchBlock(start, end, handler2, "java/lang/ArithmeticException");
+//		mv.visitTryCatchBlock(start, end, handler2, "java/lang/Throwable");
+		mv.visitTryCatchBlock(start, end, handler2, null);
+//		mv.visitTryCatchBlock(start, end, handler, null);
+		mv.visitLabel(start);
+		mv.visitInsn(ICONST_1);
+		mv.visitInsn(ICONST_1);
+		mv.visitInsn(IDIV);
+		mv.visitInsn(Opcodes.POP);
+		mv.visitVarInsn(ALOAD, 1);
+		mv.visitLabel(end);
+		mv.visitLabel(handler);
+		mv.visitVarInsn(ALOAD, 1);
+		mv.visitInsn(MONITOREXIT);
+
+		mv.visitLabel(exit);
+		mv.visitInsn(RETURN);
+		mv.visitLabel(handler2);
+//		mv.visitVarInsn(ALOAD, 1);
+//		mv.visitInsn(MONITOREXIT);
+//		mv.visitInsn(ATHROW);
+		mv.visitJumpInsn(Opcodes.GOTO, exit);
+		mv.visitMaxs(0, 0);
+		mv.visitEnd();
+		classWriter.visitEnd();
+		final byte[] classBytes = classWriter.toByteArray();
+		System.out.println(run(classBytes));
 	}
 
 	/**

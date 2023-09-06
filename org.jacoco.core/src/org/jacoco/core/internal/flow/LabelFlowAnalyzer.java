@@ -13,11 +13,17 @@
 package org.jacoco.core.internal.flow;
 
 import org.jacoco.core.internal.instr.InstrSupport;
+import org.jacoco.core.internal.instr.Monitors;
 import org.objectweb.asm.Handle;
 import org.objectweb.asm.Label;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
+import org.objectweb.asm.tree.AbstractInsnNode;
+import org.objectweb.asm.tree.LabelNode;
 import org.objectweb.asm.tree.MethodNode;
+import org.objectweb.asm.tree.TryCatchBlockNode;
+
+import java.util.List;
 
 /**
  * Method visitor to collect flow related information about the {@link Label}s
@@ -40,6 +46,23 @@ public final class LabelFlowAnalyzer extends MethodVisitor {
 			method.tryCatchBlocks.get(i).accept(lfa);
 		}
 		method.instructions.accept(lfa);
+
+		Monitors monitors = Monitors.compute(method);
+		for (AbstractInsnNode i : method.instructions) {
+			if (i.getType() == AbstractInsnNode.LABEL) {
+				Label label = ((LabelNode) i).getLabel();
+				if (LabelInfo.needsProbe(label) && monitors.getMonitors(i) != 0) {
+					// probe can throw
+					boolean catchAll = false;
+					for (TryCatchBlockNode c : monitors.getHandlers(i)) {
+						catchAll |= c.type == null;
+					}
+					if (!catchAll) {
+						LabelInfo.setSkipProbe(label);
+					}
+				}
+			}
+		}
 	}
 
 	/**
