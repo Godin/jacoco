@@ -107,6 +107,7 @@ public class MethodProbesAdapterTest implements IProbeIdGenerator {
 		probesAdapter.setAnalyzer(analyzer);
 		adapter = analyzer;
 		frame = new IFrame() {
+
 			public void accept(MethodVisitor mv) {
 			}
 		};

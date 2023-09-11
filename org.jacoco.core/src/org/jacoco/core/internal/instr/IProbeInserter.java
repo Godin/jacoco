@@ -12,8 +12,6 @@
  *******************************************************************************/
 package org.jacoco.core.internal.instr;
 
-import org.jacoco.core.internal.flow.IFrame;
-
 /**
  * Internal interface for insertion of probes into in the instruction sequence
  * of a method.
@@ -26,9 +24,6 @@ interface IProbeInserter {
 	 * @param id
 	 *            id of the probe to insert
 	 */
-	@Deprecated
 	void insertProbe(int id);
-
-	void insertProbe(int id, IFrame frame);
 
 }

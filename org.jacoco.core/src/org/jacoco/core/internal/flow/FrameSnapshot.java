@@ -18,13 +18,12 @@ import java.util.List;
 
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
-import org.objectweb.asm.Type;
 import org.objectweb.asm.commons.AnalyzerAdapter;
 
 /**
  * IFrame implementation which creates snapshots from an {@link AnalyzerAdapter}
  */
-public class FrameSnapshot implements IFrame {
+class FrameSnapshot implements IFrame {
 
 	private static final FrameSnapshot NOP = new FrameSnapshot(null, null);
 
@@ -81,13 +80,6 @@ public class FrameSnapshot implements IFrame {
 			mv.visitFrame(Opcodes.F_NEW, locals.length, locals, stack.length,
 					stack);
 		}
-	}
-
-	public void push(MethodVisitor mv) {
-		if (locals == null) {
-			return;
-		}
-		mv.visitFrame(Opcodes.F_NEW, locals.length, locals, 1, new Object[]{"java/lang/Throwable"});
 	}
 
 }

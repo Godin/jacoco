@@ -13,7 +13,6 @@
 package org.jacoco.core.internal.flow;
 
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
 
 import org.jacoco.core.internal.instr.InstrSupport;
@@ -63,29 +62,9 @@ public final class MethodProbesAdapter extends MethodVisitor {
 		this.analyzer = analyzer;
 	}
 
-	private final HashSet<Label> skipLabels = new HashSet<Label>();
-
 	@Override
 	public void visitTryCatchBlock(final Label start, final Label end,
 			final Label handler, final String type) {
-		// TODO apply
-		// https://github.com/jacoco/jacoco/pull/627/files#diff-b5fb05a150f1077d39a272dda68bfc5302f2d4efeb382e298f452ae55f7e05bd
-		// only when monitorexit
-		// final Label endLabel = getTryCatchLabel(end);
-
-		// TODO idea: probe inserted at the beginning of catch-any handler
-		// causes issue
-		if (false) {
-			skipLabels.add(start);
-			skipLabels.add(end);
-			probesVisitor.visitTryCatchBlock(start, end, handler, type);
-			return;
-		}
-
-		// final Label endLabel = false && LabelInfo.isSuccessorOf(end,
-		// Opcodes.MONITOREXIT)
-		// ? getTryCatchLabel(end)
-		// : end;
 		probesVisitor.visitTryCatchBlock(getTryCatchLabel(start),
 				getTryCatchLabel(end), handler, type);
 	}
@@ -110,12 +89,11 @@ public final class MethodProbesAdapter extends MethodVisitor {
 			if (tryCatchProbeLabels.containsKey(label)) {
 				probesVisitor.visitLabel(tryCatchProbeLabels.get(label));
 			}
-			if (skipLabels.contains(label)) {
-				// reserve id without adding probe
-				idGenerator.nextId();
-			} else {
-				probesVisitor.visitProbe(idGenerator.nextId(), frame(0));
+			int id = idGenerator.nextId();
+			if (LabelInfo.isSkip(label)) {
+				id = -1;
 			}
+			probesVisitor.visitProbe(id);
 		}
 		probesVisitor.visitLabel(label);
 	}
@@ -130,6 +108,7 @@ public final class MethodProbesAdapter extends MethodVisitor {
 		case Opcodes.ARETURN:
 		case Opcodes.RETURN:
 		case Opcodes.ATHROW:
+			// FIXME non-throwing RETURN can be inside unprotected region
 			probesVisitor.visitInsnWithProbe(opcode, idGenerator.nextId());
 			break;
 		default:

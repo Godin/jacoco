@@ -26,6 +26,7 @@
 
   <properties>
     <kotlin.version>1.5.0</kotlin.version>
+    <bytecode.version>7</bytecode.version>
   </properties>
 
   <dependencies>

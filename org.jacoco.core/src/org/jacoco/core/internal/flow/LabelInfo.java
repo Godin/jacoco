@@ -14,7 +14,6 @@ package org.jacoco.core.internal.flow;
 
 import org.jacoco.core.internal.analysis.Instruction;
 import org.objectweb.asm.Label;
-import org.objectweb.asm.Opcodes;
 
 /**
  * Data container that is attached to {@link Label#info} objects to store flow
@@ -34,8 +33,6 @@ public final class LabelInfo {
 
 	private boolean successor = false;
 
-	private int successorOf = Opcodes.NOP;
-
 	private boolean methodInvocationLine = false;
 
 	private boolean done = false;
@@ -45,6 +42,8 @@ public final class LabelInfo {
 	private Label intermediate = null;
 
 	private Instruction instruction = null;
+
+	private boolean skip = false;
 
 	// instances are only created within this class
 	private LabelInfo() {
@@ -109,16 +108,6 @@ public final class LabelInfo {
 	public static boolean isSuccessor(final Label label) {
 		final LabelInfo info = get(label);
 		return info == null ? false : info.successor;
-	}
-
-	public static void setSuccessorOf(final Label label, final int opcode) {
-		final LabelInfo info = create(label);
-		info.successorOf = opcode;
-	}
-
-	public static boolean isSuccessorOf(final Label label, final int opcode) {
-		final LabelInfo info = get(label);
-		return info == null ? false : info.successorOf == opcode;
 	}
 
 	/**
@@ -297,4 +286,12 @@ public final class LabelInfo {
 		return info;
 	}
 
+	public static void setSkipProbe(Label label) {
+		LabelInfo.get(label).skip = true;
+	}
+
+	public static boolean isSkip(final Label label) {
+		LabelInfo info = LabelInfo.get(label);
+		return info != null && info.skip;
+	}
 }

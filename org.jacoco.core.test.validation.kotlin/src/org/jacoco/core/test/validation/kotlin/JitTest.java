@@ -1,19 +1,10 @@
-package org.jacoco.core.test.validation.java7;
+package org.jacoco.core.test.validation.kotlin;
 
 import static org.objectweb.asm.Opcodes.*;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.List;
-
-import org.jacoco.core.instr.Instrumenter;
-import org.jacoco.core.internal.InputStreams;
-import org.jacoco.core.internal.instr.InstrSupport;
-import org.jacoco.core.runtime.IExecutionDataAccessorGenerator;
+import org.jacoco.core.test.Jit;
+import org.jacoco.core.test.TargetLoader;
+import org.jacoco.core.test.validation.kotlin.targets.KotlinSynchronizedTarget;
 import org.junit.Assert;
 import org.junit.Test;
 import org.objectweb.asm.ClassWriter;
@@ -40,7 +31,7 @@ public class JitTest {
 	public void reproducer() throws Exception {
 		final byte[] classBytes = reproducerClass();
 		Assert.assertEquals(run(classBytes), "");
-		Assert.assertTrue(run(instrument(classBytes))
+		Assert.assertTrue(run(Jit.instrument(classBytes))
 				.contains("Monitor mismatch in method  Main::main:"
 						// There are multiple reasons
 						// non-empty monitor stack at exceptional exit
@@ -52,7 +43,8 @@ public class JitTest {
 	public void example() throws Exception {
 		final byte[] classBytes = exampleClass();
 		Assert.assertEquals(run(classBytes), "");
-		Assert.assertTrue(run(instrument(classBytes))
+		// TODO visitJumpInsnWithProbe ?
+		Assert.assertTrue(run(Jit.instrument(classBytes))
 				.contains("Monitor mismatch in method  Main::main:"
 						+ " non-empty monitor stack at exceptional exit"));
 	}
@@ -125,13 +117,84 @@ public class JitTest {
 		mv.visitEnd();
 		classWriter.visitEnd();
 		final byte[] classBytes = classWriter.toByteArray();
-		System.out.println(run(classBytes));
-		Assert.assertTrue(run(classBytes)
-				.contains("Monitor mismatch in method  Main::main:"
+		final String output = run(classBytes);
+		System.out.println(output);
+		Assert.assertTrue(
+				output.contains("Monitor mismatch in method  Main::main:"
 						// There are multiple reasons
 						// monitor stack underflow
 						// improper monitor pair
 						+ " "));
+	}
+
+	/**
+	 * HotSpot tracks monitors in locals and on stack.
+	 */
+	@Test
+	public void test5() throws Exception {
+		final ClassWriter classWriter = createClassWriter();
+		final MethodVisitor mv = classWriter.visitMethod(
+				ACC_PUBLIC | ACC_STATIC, "main", "([Ljava/lang/String;)V", null,
+				null);
+		mv.visitCode();
+		mv.visitFieldInsn(GETSTATIC, "Main", "lock", "Ljava/lang/Object;");
+		mv.visitFieldInsn(GETSTATIC, "Main", "lock", "Ljava/lang/Object;");
+		mv.visitInsn(MONITORENTER);
+		mv.visitInsn(MONITOREXIT);
+		mv.visitInsn(RETURN);
+		mv.visitMaxs(0, 0);
+		mv.visitEnd();
+		classWriter.visitEnd();
+		final byte[] classBytes = classWriter.toByteArray();
+		final String output = run(classBytes);
+		Assert.assertTrue(output.contains(
+				"Monitor mismatch in method  Main::main: improper monitor pair"));
+	}
+
+	@Test
+	public void test4() throws Exception {
+		final ClassWriter classWriter = createClassWriter();
+		final MethodVisitor mv = classWriter.visitMethod(
+				ACC_PUBLIC | ACC_STATIC, "main", "([Ljava/lang/String;)V", null,
+				null);
+		mv.visitCode();
+		mv.visitFieldInsn(GETSTATIC, "Main", "lock", "Ljava/lang/Object;");
+		mv.visitVarInsn(ASTORE, 1);
+		mv.visitVarInsn(ALOAD, 1);
+		mv.visitInsn(MONITORENTER);
+		Label start = new Label();
+		Label end = new Label();
+		Label handler = new Label();
+		Label handler2 = new Label();
+		Label exit = new Label();
+		// mv.visitTryCatchBlock(start, end, handler2,
+		// "java/lang/ArithmeticException");
+		// mv.visitTryCatchBlock(start, end, handler2, "java/lang/Throwable");
+		mv.visitTryCatchBlock(start, end, handler2, null);
+		// mv.visitTryCatchBlock(start, end, handler, null);
+		mv.visitLabel(start);
+		mv.visitInsn(ICONST_1);
+		mv.visitInsn(ICONST_1);
+		mv.visitInsn(IDIV);
+		mv.visitInsn(Opcodes.POP);
+		mv.visitVarInsn(ALOAD, 1);
+		mv.visitLabel(end);
+		mv.visitLabel(handler);
+		mv.visitVarInsn(ALOAD, 1);
+		mv.visitInsn(MONITOREXIT);
+
+		mv.visitLabel(exit);
+		mv.visitInsn(RETURN);
+		mv.visitLabel(handler2);
+		// mv.visitVarInsn(ALOAD, 1);
+		// mv.visitInsn(MONITOREXIT);
+		// mv.visitInsn(ATHROW);
+		mv.visitJumpInsn(Opcodes.GOTO, exit);
+		mv.visitMaxs(0, 0);
+		mv.visitEnd();
+		classWriter.visitEnd();
+		final byte[] classBytes = classWriter.toByteArray();
+		System.out.println(run(classBytes));
 	}
 
 	/**
@@ -262,9 +325,11 @@ public class JitTest {
 		mv.visitMaxs(0, 0);
 		mv.visitEnd();
 		classWriter.visitEnd();
-		Assert.assertTrue(run(classWriter.toByteArray(), true)
+		Assert.assertTrue(Jit.run(classWriter.toByteArray(), true, "Main")
 				.contains("compilation bailout:"
 						+ " Exception handler can be reached by both normal and exceptional control flow"));
+		// TODO note that "compilation bailout: exception handler covers itself"
+		// is possible
 	}
 
 	/**
@@ -313,44 +378,17 @@ public class JitTest {
 	 * @return JVM output
 	 */
 	private static String run(final byte[] classBytes) throws Exception {
-		return run(classBytes, false);
+		return Jit.run(classBytes, false, "Main");
 	}
 
-	private static String run(final byte[] classBytes,
-			final boolean printCompilation) throws Exception {
-		final File workDir = new File("target/generated-tests");
-		if (!workDir.isDirectory()) {
-			Assert.assertTrue(workDir.mkdir());
-		}
-		try (FileOutputStream fos = new FileOutputStream(
-				new File(workDir, "/Main.class"))) {
-			fos.write(classBytes);
-		}
-		final File logFile = new File(workDir, "/log.txt");
-		final List<String> command = new ArrayList<>();
-		command.add(System.getProperty("java.home") + File.separator + "bin"
-				+ File.separator + "java");
-
-		if (printCompilation) {
-			command.add("-XX:+PrintCompilation");
-		}
-
-		// TODO for compilation of method it should be invoked
-		command.add("-Xcomp");
-
-		// TODO requires Java 11 ?
-		command.add("-Xlog:monitormismatch=info");
-
-		command.add("-cp");
-		command.add(workDir.getAbsolutePath());
-		// "-cp", System.getProperty("java.class.path") + ":/tmp", //
-
-		command.add("Main");
-		new ProcessBuilder().command(command).inheritIO() //
-				.redirectOutput(logFile) //
-				.start() //
-				.waitFor();
-		return filesReadString(logFile);
+	@Test
+	public void testKotlin() throws Exception {
+		byte[] classBytes = TargetLoader
+				.getClassDataAsBytes(KotlinSynchronizedTarget.class);
+		classBytes = Jit.instrument(classBytes);
+		String output = Jit.run(classBytes, false,
+				KotlinSynchronizedTarget.class.getName());
+		Assert.assertEquals("", output);
 	}
 
 	/**
@@ -392,27 +430,4 @@ public class JitTest {
 		return classWriter;
 	}
 
-	private static String filesReadString(File file) throws Exception {
-		try (FileInputStream fis = new FileInputStream(file)) {
-			return new String(InputStreams.readFully(fis),
-					StandardCharsets.UTF_8);
-		}
-	}
-
-	/**
-	 * @return instrumented classBytes
-	 */
-	private static byte[] instrument(final byte[] classBytes)
-			throws IOException {
-		return new Instrumenter(new IExecutionDataAccessorGenerator() {
-			@Override
-			public int generateDataAccessor(final long classId,
-					final String className, final int probeCount,
-					final MethodVisitor mv) {
-				InstrSupport.push(mv, probeCount);
-				mv.visitIntInsn(Opcodes.NEWARRAY, Opcodes.T_BOOLEAN);
-				return 1;
-			}
-		}).instrument(classBytes, null);
-	}
 }

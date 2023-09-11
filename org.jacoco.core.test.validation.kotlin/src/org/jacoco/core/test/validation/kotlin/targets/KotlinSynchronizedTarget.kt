@@ -1,18 +1,16 @@
 package org.jacoco.core.test.validation.kotlin.targets
 
+import org.jacoco.core.test.validation.targets.Stubs
+
 object KotlinSynchronizedTarget {
-
-    fun xxx(arg: Any?): Boolean {
-        synchronized(Any()) {
-        }
-
-        synchronized(Any()) {
-            return arg == null
-        }
-    }
 
     @JvmStatic
     fun main(args: Array<String>) {
+        synchronized(Any()) {
+            if (Stubs.f()) {
+                Stubs.nop()
+            }
+        }
     }
 
 }

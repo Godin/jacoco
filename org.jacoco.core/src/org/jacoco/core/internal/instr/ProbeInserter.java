@@ -12,8 +12,6 @@
  *******************************************************************************/
 package org.jacoco.core.internal.instr;
 
-import org.jacoco.core.internal.flow.FrameSnapshot;
-import org.jacoco.core.internal.flow.IFrame;
 import org.objectweb.asm.AnnotationVisitor;
 import org.objectweb.asm.Label;
 import org.objectweb.asm.MethodVisitor;
@@ -81,38 +79,10 @@ class ProbeInserter extends MethodVisitor implements IProbeInserter {
 	}
 
 	public void insertProbe(final int id) {
-		insertProbe(id, null);
-	}
-
-	/**
-	 * -1 = old implementation
-	 * 0 = new in adapter
-	 * 1 = new here
-	 */
-	public static int IMPL = -1;
-
-	public void insertProbe(final int id, IFrame frame) {
-		final Label start = new Label();
-		final Label end = new Label();
-		final Label handler = new Label();
-		final Label after = new Label();
-		if (frame != null && IMPL == 1) {
-			mv.visitTryCatchBlock(start, end, handler, null);
-			mv.visitLabel(start);
+		if (id < 0) {
+			return;
 		}
-		internalInsertProbe(id, frame);
-		if (frame != null && IMPL == 1) {
-			mv.visitLabel(end);
-			mv.visitJumpInsn(Opcodes.GOTO, after); // +3 bytes
-			mv.visitLabel(handler);
-			((FrameSnapshot) frame).push(this);
-			mv.visitInsn(Opcodes.ATHROW); // +1 byte
-			mv.visitLabel(after);
-			frame.accept(this);
-		}
-	}
 
-	private void internalInsertProbe(final int id, final IFrame frame) {
 		// For a probe we set the corresponding position in the boolean[] array
 		// to true.
 

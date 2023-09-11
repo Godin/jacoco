@@ -896,14 +896,17 @@ public class MethodAnalyzerTest implements IProbeIdGenerator {
 		method.visitVarInsn(ALOAD, /* argument */ 0);
 		Label label = new Label();
 		method.visitJumpInsn(IFNONNULL, label);
+		// probe[?] = visitJumpInsnWithProbe
 		method.visitInsn(Opcodes.NOP);
 		method.visitLabel(label);
+		// probe[?]
 		// below instructions will be considered covered
 		method.visitInsn(Opcodes.NOP);
 		method.visitInsn(Opcodes.MONITOREXIT);
 		Label l1 = new Label();
 		method.visitLabel(l1);
 		method.visitLineNumber(1001, l0);
+		// probe[2]
 		method.visitInsn(Opcodes.RETURN);
 	}
 
@@ -913,6 +916,12 @@ public class MethodAnalyzerTest implements IProbeIdGenerator {
 		probes[2] = true;
 		runMethodAnalzer();
 		assertEquals(3, nextProbeId);
+		// FIXME figure out why skip of probe insertion changes value below
+		// likely because modification in MethodProbesAdapter
+		// has impact not only on MethodInstrumenter
+		// but also on MethodAnalyzer
+		// MethodProbesVisitor should be able to receive events for skipped probes
+		// and MethodInstrumenter should be able to distinguish them
 		assertLine(1000, 4, 2, 2, 0);
 		assertLine(1001, 0, 1, 0, 0);
 	}
