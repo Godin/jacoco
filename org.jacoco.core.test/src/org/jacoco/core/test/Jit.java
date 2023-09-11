@@ -56,6 +56,9 @@ public final class Jit {
 		// TODO requires Java 11 ?
 		command.add("-Xlog:monitormismatch=info");
 
+		command.add("-XX:+UnlockDiagnosticVMOptions");
+		command.add("-XX:+PrintInlining");
+
 		command.add("-cp");
 		// command.add(workDir.getAbsolutePath());
 		command.add(workDir.getAbsolutePath() + ":"
