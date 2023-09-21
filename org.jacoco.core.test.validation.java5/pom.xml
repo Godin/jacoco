@@ -30,8 +30,4 @@
       <artifactId>org.jacoco.core.test</artifactId>
     </dependency>
   </dependencies>
-
-  <properties>
-    <bytecode.version>6</bytecode.version>
-  </properties>
 </project>

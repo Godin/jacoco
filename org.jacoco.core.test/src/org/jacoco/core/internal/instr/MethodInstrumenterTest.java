@@ -46,18 +46,10 @@ public class MethodInstrumenterTest {
 			public void insertProbe(int id) {
 				actual.getVisitor().visitLdcInsn("Probe " + id);
 			}
-
-			public void insertProbe(int id, IFrame frame) {
-				insertProbe(id);
-			}
 		};
 		instrumenter = new MethodInstrumenter(actual.getVisitor(),
 				probeInserter);
 		frame = new IFrame() {
-			public void push(MethodVisitor mv) {
-				throw new UnsupportedOperationException();
-			}
-
 			public void accept(MethodVisitor mv) {
 				mv.visitFrame(Opcodes.F_FULL, 0, null, 0, null);
 			}

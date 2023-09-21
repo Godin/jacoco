@@ -14,7 +14,6 @@ package org.jacoco.core.internal.flow;
 
 import org.jacoco.core.internal.analysis.Instruction;
 import org.objectweb.asm.Label;
-import org.objectweb.asm.Opcodes;
 
 /**
  * Data container that is attached to {@link Label#info} objects to store flow
@@ -33,8 +32,6 @@ public final class LabelInfo {
 	private boolean multiTarget = false;
 
 	private boolean successor = false;
-
-	private int successorOf = Opcodes.NOP;
 
 	private boolean methodInvocationLine = false;
 
@@ -109,16 +106,6 @@ public final class LabelInfo {
 	public static boolean isSuccessor(final Label label) {
 		final LabelInfo info = get(label);
 		return info == null ? false : info.successor;
-	}
-
-	public static void setSuccessorOf(final Label label, final int opcode) {
-		final LabelInfo info = create(label);
-		info.successorOf = opcode;
-	}
-
-	public static boolean isSuccessorOf(final Label label, final int opcode) {
-		final LabelInfo info = get(label);
-		return info == null ? false : info.successorOf == opcode;
 	}
 
 	/**

@@ -54,8 +54,6 @@ public final class LabelFlowAnalyzer extends MethodVisitor {
 	 */
 	boolean first = true;
 
-	int predecessor = Opcodes.NOP;
-
 	/**
 	 * Label instance of the last line start.
 	 */
@@ -77,14 +75,25 @@ public final class LabelFlowAnalyzer extends MethodVisitor {
 		// also is the start of the method, no probe will be added.
 		LabelInfo.setTarget(start);
 		// The above needed for example for
+		//
 		// if (...) { return; }
 		// try {
-		//   throwException();
+		// throwException();
 		// } catch (Exception e) {}
+		//
+		// But note that
+		//
+		// if (...) { return; }
+		// throwException();
+		//
+		// anyway doesn't work - see https://github.com/jacoco/jacoco/pull/321
 
 		// TODO
-		//   Is it useful? see also e4a474ce30af55463d114b5c18c9b59eadbef00b
-		//   Removal however doesn't help to solve issue.
+		// Is it useful? see also e4a474ce30af55463d114b5c18c9b59eadbef00b
+		// Seems no, because HotSpot doesn't allow normal and exceptional path
+		// to the handler, so handler is never successor of previous instruction
+		// and probe won't be inserted.
+		// Removal however doesn't help to solve issue.
 		// Mark exception handler as possible target of the block
 		LabelInfo.setTarget(handler);
 	}
@@ -96,7 +105,6 @@ public final class LabelFlowAnalyzer extends MethodVisitor {
 			throw new AssertionError("Subroutines not supported.");
 		}
 		successor = opcode != Opcodes.GOTO;
-		predecessor = opcode;
 		first = false;
 	}
 
@@ -108,7 +116,6 @@ public final class LabelFlowAnalyzer extends MethodVisitor {
 		if (successor) {
 			LabelInfo.setSuccessor(label);
 		}
-		LabelInfo.setSuccessorOf(label, predecessor);
 	}
 
 	@Override
@@ -120,14 +127,12 @@ public final class LabelFlowAnalyzer extends MethodVisitor {
 	public void visitTableSwitchInsn(final int min, final int max,
 			final Label dflt, final Label... labels) {
 		visitSwitchInsn(dflt, labels);
-		predecessor = Opcodes.TABLESWITCH;
 	}
 
 	@Override
 	public void visitLookupSwitchInsn(final Label dflt, final int[] keys,
 			final Label[] labels) {
 		visitSwitchInsn(dflt, labels);
-		predecessor = Opcodes.LOOKUPSWITCH;
 	}
 
 	private void visitSwitchInsn(final Label dflt, final Label[] labels) {
@@ -161,11 +166,9 @@ public final class LabelFlowAnalyzer extends MethodVisitor {
 		case Opcodes.RETURN:
 		case Opcodes.ATHROW:
 			successor = false;
-			predecessor = opcode;
 			break;
 		default:
 			successor = true;
-			predecessor = opcode;
 			break;
 		}
 		first = false;
@@ -174,21 +177,18 @@ public final class LabelFlowAnalyzer extends MethodVisitor {
 	@Override
 	public void visitIntInsn(final int opcode, final int operand) {
 		successor = true;
-		predecessor = opcode;
 		first = false;
 	}
 
 	@Override
 	public void visitVarInsn(final int opcode, final int var) {
 		successor = true;
-		predecessor = opcode;
 		first = false;
 	}
 
 	@Override
 	public void visitTypeInsn(final int opcode, final String type) {
 		successor = true;
-		predecessor = opcode;
 		first = false;
 	}
 
@@ -196,7 +196,6 @@ public final class LabelFlowAnalyzer extends MethodVisitor {
 	public void visitFieldInsn(final int opcode, final String owner,
 			final String name, final String desc) {
 		successor = true;
-		predecessor = opcode;
 		first = false;
 	}
 
@@ -204,7 +203,6 @@ public final class LabelFlowAnalyzer extends MethodVisitor {
 	public void visitMethodInsn(final int opcode, final String owner,
 			final String name, final String desc, final boolean itf) {
 		successor = true;
-		predecessor = opcode;
 		first = false;
 		markMethodInvocationLine();
 	}
@@ -213,7 +211,6 @@ public final class LabelFlowAnalyzer extends MethodVisitor {
 	public void visitInvokeDynamicInsn(final String name, final String desc,
 			final Handle bsm, final Object... bsmArgs) {
 		successor = true;
-		predecessor = Opcodes.INVOKEDYNAMIC;
 		first = false;
 		markMethodInvocationLine();
 	}
@@ -227,21 +224,18 @@ public final class LabelFlowAnalyzer extends MethodVisitor {
 	@Override
 	public void visitLdcInsn(final Object cst) {
 		successor = true;
-		predecessor = Opcodes.LDC;
 		first = false;
 	}
 
 	@Override
 	public void visitIincInsn(final int var, final int increment) {
 		successor = true;
-		predecessor = Opcodes.IINC;
 		first = false;
 	}
 
 	@Override
 	public void visitMultiANewArrayInsn(final String desc, final int dims) {
 		successor = true;
-		predecessor = Opcodes.MULTIANEWARRAY;
 		first = false;
 	}
 

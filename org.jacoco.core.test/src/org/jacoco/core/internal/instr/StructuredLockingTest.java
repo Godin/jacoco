@@ -23,6 +23,10 @@ import org.objectweb.asm.Label;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 
+/**
+ * @deprecated
+ */
+@Deprecated
 public class StructuredLockingTest {
 
 	@org.junit.Ignore
@@ -214,11 +218,13 @@ public class StructuredLockingTest {
 
 				// even with exception handler JIT reports
 				// "monitor stack height merge conflict"
-				methodVisitor.visitTryCatchBlock(probeStart, probeCatch, probeCatch, null);
+				methodVisitor.visitTryCatchBlock(probeStart, probeCatch,
+						probeCatch, null);
 				methodVisitor.visitLabel(probeStart);
 				simulateProbe(methodVisitor); // 4 - 7 bytes
 				// next GOTO can't be replaced by ACONST_NULL
-				// "Exception handler can be reached by both normal and exceptional control flow"
+				// "Exception handler can be reached by both normal and
+				// exceptional control flow"
 				// https://issuetracker.google.com/issues/296916426
 				// methodVisitor.visitInsn(Opcodes.ACONST_NULL);
 				methodVisitor.visitJumpInsn(Opcodes.GOTO, probeEnd); // 3 bytes

@@ -14,23 +14,6 @@ package org.jacoco.core.test.validation.java5;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
-import static org.objectweb.asm.Opcodes.ACC_PUBLIC;
-import static org.objectweb.asm.Opcodes.ACC_STATIC;
-import static org.objectweb.asm.Opcodes.ALOAD;
-import static org.objectweb.asm.Opcodes.ASTORE;
-import static org.objectweb.asm.Opcodes.ATHROW;
-import static org.objectweb.asm.Opcodes.DUP;
-import static org.objectweb.asm.Opcodes.GETSTATIC;
-import static org.objectweb.asm.Opcodes.GOTO;
-import static org.objectweb.asm.Opcodes.ICONST_0;
-import static org.objectweb.asm.Opcodes.IF_ICMPGE;
-import static org.objectweb.asm.Opcodes.ILOAD;
-import static org.objectweb.asm.Opcodes.INVOKESTATIC;
-import static org.objectweb.asm.Opcodes.ISTORE;
-import static org.objectweb.asm.Opcodes.MONITORENTER;
-import static org.objectweb.asm.Opcodes.MONITOREXIT;
-import static org.objectweb.asm.Opcodes.RETURN;
-import static org.objectweb.asm.Opcodes.V1_7;
 
 import java.util.Collections;
 import java.util.HashSet;
@@ -38,16 +21,12 @@ import java.util.List;
 import java.util.Set;
 
 import org.jacoco.core.instr.Instrumenter;
-import org.jacoco.core.instr.MethodRecorder;
 import org.jacoco.core.internal.instr.InstrSupport;
 import org.jacoco.core.runtime.IRuntime;
 import org.jacoco.core.runtime.SystemPropertiesRuntime;
 import org.jacoco.core.test.TargetLoader;
 import org.jacoco.core.test.validation.java5.targets.StructuredLockingTarget;
 import org.junit.Test;
-import org.objectweb.asm.ClassWriter;
-import org.objectweb.asm.Label;
-import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.tree.AbstractInsnNode;
 import org.objectweb.asm.tree.ClassNode;
@@ -60,8 +39,6 @@ import org.objectweb.asm.tree.analysis.BasicInterpreter;
 import org.objectweb.asm.tree.analysis.BasicValue;
 import org.objectweb.asm.tree.analysis.Frame;
 import org.objectweb.asm.tree.analysis.Interpreter;
-import org.objectweb.asm.util.Textifier;
-import org.objectweb.asm.util.TraceMethodVisitor;
 
 /**
  * Tests that the invariants specified in <a href=
@@ -83,14 +60,6 @@ public class StructuredLockingTest {
 				.getClassDataAsBytes(StructuredLockingTarget.class));
 	}
 
-	public void test(byte[] source) throws Exception {
-		ClassNode cn = new ClassNode();
-		InstrSupport.classReaderFor(source).accept(cn, 0);
-		for (MethodNode mn : cn.methods) {
-			assertStructuredLocking(cn.name, mn);
-		}
-	}
-
 	private void assertStructuredLocking(byte[] source) throws Exception {
 		IRuntime runtime = new SystemPropertiesRuntime();
 		Instrumenter instrumenter = new Instrumenter(runtime);
@@ -105,11 +74,6 @@ public class StructuredLockingTest {
 
 	private void assertStructuredLocking(String owner, MethodNode mn)
 			throws Exception {
-
-		MethodRecorder rec = new MethodRecorder();
-		mn.accept(rec.getVisitor());
-		System.out.println(rec.toString());
-
 		Analyzer<BasicValue> analyzer = new Analyzer<BasicValue>(
 				new BasicInterpreter()) {
 
@@ -151,11 +115,6 @@ public class StructuredLockingTest {
 		// Only instructions protected by a catch-all handler can hold locks:
 		for (int i = 0; i < frames.length; i++) {
 			AbstractInsnNode insn = mn.instructions.get(i);
-			switch (insn.getOpcode()) {
-				case ALOAD:
-				case MONITOREXIT:
-					continue;
-			}
 			if (insn.getOpcode() > 0) {
 				boolean catchAll = false;
 				List<TryCatchBlockNode> handlers = analyzer.getHandlers(i);
@@ -166,7 +125,7 @@ public class StructuredLockingTest {
 				}
 				if (!catchAll) {
 					((LockFrame) frames[i])
-							.assertNoLock("No handlers for insn " + i + " with lock");
+							.assertNoLock("No handlers for insn with lock");
 				}
 			}
 		}
