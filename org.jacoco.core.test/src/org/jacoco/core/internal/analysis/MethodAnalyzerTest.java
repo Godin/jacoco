@@ -25,9 +25,8 @@ import org.jacoco.core.internal.analysis.filter.Filters;
 import org.jacoco.core.internal.analysis.filter.IFilter;
 import org.jacoco.core.internal.analysis.filter.IFilterContext;
 import org.jacoco.core.internal.analysis.filter.IFilterOutput;
-import org.jacoco.core.internal.flow.IProbeIdGenerator;
-import org.jacoco.core.internal.flow.LabelFlowAnalyzer;
-import org.jacoco.core.internal.flow.MethodProbesAdapter;
+import org.jacoco.core.internal.flow.*;
+import org.jacoco.core.internal.instr.MethodInstrumenterMonitorsTest;
 import org.junit.Before;
 import org.junit.Test;
 import org.objectweb.asm.Label;
@@ -36,6 +35,8 @@ import org.objectweb.asm.tree.AbstractInsnNode;
 import org.objectweb.asm.tree.MethodNode;
 import org.objectweb.asm.tree.TryCatchBlockNode;
 import org.objectweb.asm.util.CheckMethodAdapter;
+import org.objectweb.asm.util.Textifier;
+import org.objectweb.asm.util.TraceMethodVisitor;
 
 /**
  * Unit tests for {@link MethodAnalyzer}.
@@ -46,15 +47,15 @@ public class MethodAnalyzerTest implements IProbeIdGenerator {
 
 	private boolean[] probes;
 
-	private MethodNode method;
+	private MethodInstrumenterMonitorsTest.MethodBuilder method = new MethodInstrumenterMonitorsTest.MethodBuilder();
 
 	private IMethodCoverage result;
 
 	@Before
 	public void setup() {
 		nextProbeId = 0;
-		method = new MethodNode();
-		method.tryCatchBlocks = new ArrayList<TryCatchBlockNode>();
+//		method = new MethodNode();
+//		method.tryCatchBlocks = new ArrayList<TryCatchBlockNode>();
 		probes = new boolean[32];
 	}
 
@@ -73,6 +74,7 @@ public class MethodAnalyzerTest implements IProbeIdGenerator {
 		final Label l1 = new Label();
 		method.visitLabel(l1);
 		method.visitLineNumber(1002, l1);
+		method.expected.p.text.add("// InsnWithProbe 0\n");
 		method.visitInsn(Opcodes.RETURN);
 	}
 
@@ -150,10 +152,12 @@ public class MethodAnalyzerTest implements IProbeIdGenerator {
 		method.visitLabel(l2);
 		method.visitLineNumber(1002, l2);
 		method.visitLdcInsn("a");
+		method.expected.p.text.add("// InsnWithProbe 0\n");
 		method.visitInsn(Opcodes.ARETURN);
 		method.visitLabel(l1);
 		method.visitLineNumber(1003, l1);
 		method.visitLdcInsn("b");
+		method.expected.p.text.add("// InsnWithProbe 1\n");
 		method.visitInsn(Opcodes.ARETURN);
 	}
 
@@ -221,13 +225,17 @@ public class MethodAnalyzerTest implements IProbeIdGenerator {
 		method.visitLabel(l0);
 		method.visitLineNumber(1001, l0);
 		method.visitVarInsn(Opcodes.ILOAD, 1);
+		method.expected.p.text.add("// JumpInsnWithProbe 0\n");
 		method.visitJumpInsn(Opcodes.IFNE, l1);
+		method.expected.p.text.add("// Probe 1\n");
 		method.visitLabel(l2);
 		method.visitLineNumber(1002, l2);
 		method.visitMethodInsn(Opcodes.INVOKESTATIC, "Foo", "foo", "()V",
 				false);
+		method.expected.p.text.add("// Probe 2\n");
 		method.visitLabel(l1);
 		method.visitLineNumber(1003, l1);
+		method.expected.p.text.add("// InsnWithProbe 3\n");
 		method.visitInsn(Opcodes.RETURN);
 	}
 
@@ -295,13 +303,16 @@ public class MethodAnalyzerTest implements IProbeIdGenerator {
 		method.visitLineNumber(1001, l0);
 		method.visitVarInsn(Opcodes.ILOAD, 1);
 		Label l1 = new Label();
+		method.expected.p.text.add("// JumpInsnWithProbe 0\n");
 		method.visitJumpInsn(Opcodes.IFEQ, l1);
 		final Label l2 = new Label();
 		method.visitLabel(l2);
 		method.visitLineNumber(1002, l2);
 		method.visitInsn(Opcodes.NOP);
+		method.expected.p.text.add("// Probe 1\n");
 		method.visitLabel(l1);
 		method.visitLineNumber(1003, l1);
+		method.expected.p.text.add("// InsnWithProbe 2\n");
 		method.visitInsn(Opcodes.RETURN);
 	}
 
@@ -370,6 +381,7 @@ public class MethodAnalyzerTest implements IProbeIdGenerator {
 		final Label l2 = new Label();
 		method.visitLabel(l2);
 		method.visitLineNumber(1002, l2);
+		method.expected.p.text.add("// InsnWithProbe 0\n");
 		method.visitInsn(Opcodes.RETURN);
 		method.visitLabel(l1);
 		method.visitLineNumber(1003, l1);
@@ -413,10 +425,12 @@ public class MethodAnalyzerTest implements IProbeIdGenerator {
 		method.visitVarInsn(Opcodes.ALOAD, 0);
 		method.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "Foo", "test", "()Z",
 				false);
+		method.expected.p.text.add("// JumpInsnWithProbe 0\n");
 		method.visitJumpInsn(Opcodes.IFEQ, l1);
 		final Label l2 = new Label();
 		method.visitLabel(l2);
 		method.visitLineNumber(1002, l2);
+		method.expected.p.text.add("// InsnWithProbe 1\n");
 		method.visitInsn(Opcodes.RETURN);
 	}
 
@@ -723,12 +737,15 @@ public class MethodAnalyzerTest implements IProbeIdGenerator {
 		method.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "java/lang/Throwable",
 				"printStackTrace", "()V", false);
 		method.visitLabel(l2);
+		method.expected.p.text.add("// JumpInsnWithProbe 0\n");
 		method.visitJumpInsn(Opcodes.GOTO, l4);
 		method.visitLabel(l3);
 		method.visitLineNumber(1002, l3);
 		method.visitVarInsn(Opcodes.ASTORE, 1);
+		method.expected.p.text.add("// Probe 1\n");
 		method.visitLabel(l4);
 		method.visitLineNumber(1003, l4);
+		method.expected.p.text.add("// InsnWithProbe 2\n");
 		method.visitInsn(Opcodes.RETURN);
 	}
 
@@ -789,17 +806,21 @@ public class MethodAnalyzerTest implements IProbeIdGenerator {
 
 		method.visitJumpInsn(Opcodes.IFEQ, l1);
 		// probe[0]
+		method.expected.p.text.add("// InsnWithProbe 0\n");
 		method.visitInsn(Opcodes.RETURN);
 		method.visitLabel(l1);
 		// probe[1]
+		method.expected.p.text.add("// InsnWithProbe 1\n");
 		method.visitInsn(Opcodes.RETURN);
 
 		method.visitLabel(l2);
 		method.visitJumpInsn(Opcodes.IFEQ, l3);
 		// probe[2]
+		method.expected.p.text.add("// InsnWithProbe 2\n");
 		method.visitInsn(Opcodes.RETURN);
 		method.visitLabel(l3);
 		// probe[3]
+		method.expected.p.text.add("// InsnWithProbe 3\n");
 		method.visitInsn(Opcodes.RETURN);
 	}
 
@@ -868,6 +889,7 @@ public class MethodAnalyzerTest implements IProbeIdGenerator {
 		final Label l2 = new Label();
 		method.visitLabel(l2);
 		method.visitLineNumber(1001, l2);
+		method.expected.p.text.add("// InsnWithProbe 0\n");
 		method.visitInsn(Opcodes.RETURN);
 	}
 
@@ -888,15 +910,44 @@ public class MethodAnalyzerTest implements IProbeIdGenerator {
 	}
 
 	private void runMethodAnalzer(IFilter filter) {
+		MethodNode method = this.method.original;
 		LabelFlowAnalyzer.markLabels(method);
 		InstructionsBuilder builder = new InstructionsBuilder(probes);
+
+		final Textifier textifier = new Textifier();
 		final MethodAnalyzer analyzer = new MethodAnalyzer(builder);
+		final TraceMethodVisitor traceMethodVisitor = new TraceMethodVisitor(analyzer, textifier);
+		final MethodProbesVisitor tracer = new MethodProbesVisitor(traceMethodVisitor) {
+			@Override
+			public void visitProbe(int probeId) {
+				textifier.text.add("// Probe " + probeId + "\n");
+				analyzer.visitProbe(probeId);
+			}
+
+			@Override
+			public void visitJumpInsnWithProbe(int opcode, Label label, int probeId, IFrame frame) {
+				textifier.text.add("// JumpInsnWithProbe " + probeId + "\n");
+				mv.visitJumpInsn(opcode, label);
+				analyzer.visitJumpInsnWithProbe(opcode, label, probeId, frame);
+			}
+
+			@Override
+			public void visitInsnWithProbe(int opcode, int probeId) {
+				textifier.text.add("// InsnWithProbe " + probeId + "\n");
+				mv.visitInsn(opcode);
+				analyzer.visitInsnWithProbe(opcode, probeId);
+			}
+		};
 
 		final MethodProbesAdapter probesAdapter = new MethodProbesAdapter(
-				analyzer, this);
+				tracer, this);
 		// note that CheckMethodAdapter verifies that this test does not violate
 		// contracts of ASM API
 		analyzer.accept(method, new CheckMethodAdapter(probesAdapter));
+
+		String actual = MethodInstrumenterMonitorsTest.toString(traceMethodVisitor);
+		String expected = MethodInstrumenterMonitorsTest.toString(this.method.expected);
+		assertEquals(expected, actual);
 
 		MethodCoverageImpl mc = new MethodCoverageImpl("doit", "V()", null);
 		MethodCoverageCalculator mcc = new MethodCoverageCalculator(

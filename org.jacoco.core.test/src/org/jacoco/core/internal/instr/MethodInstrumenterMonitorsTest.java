@@ -479,15 +479,15 @@ public class MethodInstrumenterMonitorsTest {
 		return toString(traceMethodVisitor);
 	}
 
-	private static String toString(final TraceMethodVisitor m) {
+	public static String toString(final TraceMethodVisitor m) {
 		final StringWriter buffer = new StringWriter();
 		m.p.print(new PrintWriter(buffer));
 		return buffer.toString();
 	}
 
-	private static class MethodBuilder extends MethodVisitor {
-		private final MethodNode original;
-		private final TraceMethodVisitor expected;
+	public static class MethodBuilder extends MethodVisitor {
+		public final MethodNode original;
+		public final TraceMethodVisitor expected;
 		private final Map<Label, String> labels = new HashMap<Label, String>();
 
 		public MethodBuilder() {
