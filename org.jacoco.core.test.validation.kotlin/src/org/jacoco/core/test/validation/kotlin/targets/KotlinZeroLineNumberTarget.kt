@@ -25,7 +25,7 @@ object KotlinZeroLineNumberTarget {
 
     @JvmStatic
     fun main(args: Array<String>) = runBlocking {
-        emptyFlow<Unit>().flatMapLatest { emptyFlow<Unit>() }
+//        emptyFlow<Unit>().flatMapLatest { emptyFlow<Unit>() }
 //        flowOf("test").filterIsInstance<String>()
     }
 

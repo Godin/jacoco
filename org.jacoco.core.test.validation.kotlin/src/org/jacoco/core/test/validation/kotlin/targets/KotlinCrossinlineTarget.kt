@@ -19,7 +19,7 @@ package org.jacoco.core.test.validation.kotlin.targets
  */
 object KotlinCrossinlineTarget {
 
-    inline fun test(crossinline lambda: () -> Unit): () -> Unit {
+    inline fun testCrossinline(crossinline lambda: () -> Unit): () -> Unit {
         println("body of inline function") // assertNotCovered()
         return {
             println("constructed") // assertFullyCovered()
@@ -27,11 +27,19 @@ object KotlinCrossinlineTarget {
         }
     }
 
+    inline fun testNoinline(noinline lambda: () -> Unit) {
+        lambda() // assertNotCovered()
+    }
+
     @JvmStatic
     fun main(args: Array<String>) {
-        test {
-            println("inside") // assertEmpty()
+        testCrossinline {
+            println("inside crossinline") // assertEmpty()
         }()
+
+        testNoinline {
+            println("inside noinline") // assertFullyCovered()
+        }
     }
 
 }
