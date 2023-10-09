@@ -25,8 +25,12 @@ import java.util.Collections;
 import org.jacoco.core.analysis.Analyzer;
 import org.jacoco.core.analysis.CoverageBuilder;
 import org.jacoco.core.analysis.IBundleCoverage;
+import org.jacoco.core.analysis.IClassCoverage;
 import org.jacoco.core.analysis.ICounter;
 import org.jacoco.core.analysis.ILine;
+import org.jacoco.core.analysis.IMethodCoverage;
+import org.jacoco.core.analysis.IPackageCoverage;
+import org.jacoco.core.analysis.ISourceFileCoverage;
 import org.jacoco.core.data.ExecutionData;
 import org.jacoco.core.data.ExecutionDataStore;
 import org.jacoco.core.data.SessionInfo;
@@ -96,6 +100,33 @@ public abstract class ValidationTestBase {
 		}
 		source = Source.load(target, builder.getBundle("Test"));
 		writeReport(builder.getBundle("Test"), store.getContents());
+
+		for (IPackageCoverage aPackage : builder.getBundle("Test")
+				.getPackages()) {
+			System.out.println("processing package " + aPackage.getName());
+			for (IClassCoverage aClass : aPackage.getClasses()) {
+				System.out.println("processing class " + aClass.getName());
+				for (IMethodCoverage aMethod : aClass.getMethods()) {
+					System.out
+							.println("processing method " + aMethod.getName());
+					if (aMethod.getFirstLine() == 0) {
+						throw new IllegalStateException(
+								"zero first line in Method");
+					}
+				}
+				if (aClass.getFirstLine() == 0) {
+					throw new IllegalStateException("zero first line in Class");
+				}
+			}
+			for (ISourceFileCoverage aSourceFile : aPackage.getSourceFiles()) {
+				System.out
+						.println("processing source " + aSourceFile.getName());
+				if (aSourceFile.getFirstLine() == 0) {
+					throw new IllegalStateException(
+							"zero first line in SourceFile");
+				}
+			}
+		}
 	}
 
 	private void analyze(final Analyzer analyzer, final ExecutionData data)
@@ -109,6 +140,9 @@ public abstract class ValidationTestBase {
 			final Collection<ExecutionData> data) throws IOException {
 		final File destination = new File(
 				"target/reports/" + getClass().getSimpleName());
+		// destination.mkdirs();
+		// final IReportVisitor visitor = new XMLFormatter().createVisitor(
+		// new FileOutputStream(new File(destination, "report.xml")));
 		final IReportVisitor visitor = new HTMLFormatter()
 				.createVisitor(new FileMultiReportOutput(destination));
 		visitor.visitInfo(Collections.<SessionInfo> emptyList(), data);
