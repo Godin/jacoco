@@ -31,8 +31,13 @@ object KotlinCrossinlineTarget {
         lambda() // assertNotCovered()
     }
 
+    inline fun testInline(b: Boolean) = if (b) "true" else "false"
+
     @JvmStatic
     fun main(args: Array<String>) {
+        println(testInline(true))
+        println(testInline(false))
+
         testCrossinline {
             println("inside crossinline") // assertEmpty()
         }()
