@@ -96,6 +96,7 @@ public abstract class ValidationTestBase {
 		final CoverageBuilder builder = new CoverageBuilder();
 		final Analyzer analyzer = new Analyzer(store, builder);
 		for (ExecutionData data : store.getContents()) {
+			System.out.println("have data for " + data.getName());
 			analyze(analyzer, data);
 		}
 		source = Source.load(target, builder.getBundle("Test"));
