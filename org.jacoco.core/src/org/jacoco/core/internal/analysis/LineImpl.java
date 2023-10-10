@@ -12,6 +12,8 @@
  *******************************************************************************/
 package org.jacoco.core.internal.analysis;
 
+import java.util.BitSet;
+
 import org.jacoco.core.analysis.ICounter;
 import org.jacoco.core.analysis.ILine;
 
@@ -55,10 +57,10 @@ public abstract class LineImpl implements ILine {
 		final int ic = instructions.getCoveredCount();
 		final int bm = branches.getMissedCount();
 		final int bc = branches.getCoveredCount();
-		if (im <= SINGLETON_INS_LIMIT && ic <= SINGLETON_INS_LIMIT
-				&& bm <= SINGLETON_BRA_LIMIT && bc <= SINGLETON_BRA_LIMIT) {
-			return SINGLETONS[im][ic][bm][bc];
-		}
+		// if (im <= SINGLETON_INS_LIMIT && ic <= SINGLETON_INS_LIMIT
+		// && bm <= SINGLETON_BRA_LIMIT && bc <= SINGLETON_BRA_LIMIT) {
+		// return SINGLETONS[im][ic][bm][bc];
+		// }
 		return new Var(instructions, branches);
 	}
 
@@ -73,6 +75,13 @@ public abstract class LineImpl implements ILine {
 		@Override
 		public LineImpl increment(final ICounter instructions,
 				final ICounter branches) {
+			this.instructions = this.instructions.increment(instructions);
+			this.branches = this.branches.increment(branches);
+			return this;
+		}
+
+		public LineImpl increment(final ICounter instructions,
+				final ICounter branches, final BitSet branchCoverage) {
 			this.instructions = this.instructions.increment(instructions);
 			this.branches = this.branches.increment(branches);
 			return this;
@@ -92,6 +101,13 @@ public abstract class LineImpl implements ILine {
 		public LineImpl increment(final ICounter instructions,
 				final ICounter branches) {
 			return getInstance(this.instructions.increment(instructions),
+					this.branches.increment(branches));
+		}
+
+		@Override
+		public LineImpl increment(final ICounter instructions,
+				final ICounter branches, final BitSet branchCoverage) {
+			return new Var(this.instructions.increment(instructions),
 					this.branches.increment(branches));
 		}
 	}
@@ -119,6 +135,9 @@ public abstract class LineImpl implements ILine {
 	 */
 	public abstract LineImpl increment(final ICounter instructions,
 			final ICounter branches);
+
+	public abstract LineImpl increment(final ICounter instructions,
+			final ICounter branches, final BitSet branchCoverage);
 
 	// === ILine implementation ===
 

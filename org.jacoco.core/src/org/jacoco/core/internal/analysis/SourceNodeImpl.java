@@ -12,6 +12,8 @@
  *******************************************************************************/
 package org.jacoco.core.internal.analysis;
 
+import java.util.BitSet;
+
 import org.jacoco.core.analysis.CoverageNodeImpl;
 import org.jacoco.core.analysis.ICounter;
 import org.jacoco.core.analysis.ILine;
@@ -95,7 +97,7 @@ public class SourceNodeImpl extends CoverageNodeImpl implements ISourceNode {
 			for (int i = firstLine; i <= lastLine; i++) {
 				final ILine line = child.getLine(i);
 				incrementLine(line.getInstructionCounter(),
-						line.getBranchCounter(), i);
+						line.getBranchCounter(), i, null);
 			}
 		}
 	}
@@ -113,21 +115,33 @@ public class SourceNodeImpl extends CoverageNodeImpl implements ISourceNode {
 	 *            optional line number or {@link ISourceNode#UNKNOWN_LINE}
 	 */
 	public void increment(final ICounter instructions, final ICounter branches,
-			final int line) {
+			final int line, final BitSet branchCoverage) {
 		if (line != UNKNOWN_LINE) {
-			incrementLine(instructions, branches, line);
+			incrementLine(instructions, branches, line, branchCoverage);
 		}
 		instructionCounter = instructionCounter.increment(instructions);
 		branchCounter = branchCounter.increment(branches);
 	}
 
+	/**
+	 * @deprecated use {@link #increment(ICounter, ICounter, int, BitSet)}
+	 *             instead
+	 */
+	@Deprecated
+	public void increment(final ICounter instructions, final ICounter branches,
+			final int line) {
+		increment(instructions, branches, line, null);
+	}
+
 	private void incrementLine(final ICounter instructions,
-			final ICounter branches, final int line) {
+			final ICounter branches, final int line,
+			final BitSet branchCoverage) {
 		ensureCapacity(line, line);
 		final LineImpl l = getLine(line);
 		final int oldTotal = l.getInstructionCounter().getTotalCount();
 		final int oldCovered = l.getInstructionCounter().getCoveredCount();
-		lines[line - offset] = l.increment(instructions, branches);
+		lines[line - offset] = l.increment(instructions, branches,
+				branchCoverage);
 
 		// Increment line counter:
 		if (instructions.getTotalCount() > 0) {

@@ -112,6 +112,7 @@ final class SourceHighlighter {
 			return span(pre, lineId, style, Styles.BRANCH_FULLY_COVERED,
 					"All %2$d branches covered.", branches);
 		case ICounter.PARTLY_COVERED:
+			// TODO
 			return span(pre, lineId, style, Styles.BRANCH_PARTLY_COVERED,
 					"%1$d of %2$d branches missed.", branches);
 		default:

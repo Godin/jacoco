@@ -12,13 +12,8 @@
  *******************************************************************************/
 package org.jacoco.core.internal.analysis;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.Map.Entry;
-import java.util.Set;
 
 import org.jacoco.core.analysis.ISourceNode;
 import org.jacoco.core.internal.analysis.filter.IFilterOutput;
@@ -75,7 +70,8 @@ class MethodCoverageCalculator implements IFilterOutput {
 			if (!ignored.contains(entry.getKey())) {
 				final Instruction instruction = entry.getValue();
 				coverage.increment(instruction.getInstructionCounter(),
-						instruction.getBranchCounter(), instruction.getLine());
+						instruction.getBranchCounter(), instruction.getLine(),
+						instruction.getCoveredBranches());
 			}
 		}
 
