@@ -42,7 +42,7 @@ public final class KotlinInlineFilter implements IFilter {
 
 		if (firstGeneratedLineNumber == -1) {
 			firstGeneratedLineNumber = getFirstGeneratedLineNumber(
-					context.getSourceFileName(),
+					context.getSourceFileName(), context.getClassName(),
 					context.getSourceDebugExtension());
 		}
 
@@ -58,7 +58,7 @@ public final class KotlinInlineFilter implements IFilter {
 	}
 
 	private static int getFirstGeneratedLineNumber(final String sourceFileName,
-			final String smap) {
+			final String currentClassName, final String smap) {
 		try {
 			final BufferedReader br = new BufferedReader(
 					new StringReader(smap));
@@ -75,15 +75,14 @@ public final class KotlinInlineFilter implements IFilter {
 			String line;
 			while (!"*L".equals(line = br.readLine())) {
 				// AbsoluteFileName
-				br.readLine();
+				final String className = br.readLine();
 
 				final Matcher m = FILE_INFO_PATTERN.matcher(line);
 				if (!m.matches()) {
 					throw new IllegalStateException(
 							"Unexpected SMAP line: " + line);
 				}
-				final String fileName = m.group(2);
-				if (fileName.equals(sourceFileName)) {
+				if (className.equals(currentClassName)) {
 					sourceFileIds.set(Integer.parseInt(m.group(1)));
 				}
 			}
