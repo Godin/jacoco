@@ -40,6 +40,12 @@ public final class KotlinInlineFilter implements IFilter {
 			return;
 		}
 
+		if (context.getClassName().contains("$$inlined")) {
+			System.out.println("Ignoring " + context.getClassName());
+			output.ignore(methodNode.instructions.getFirst(), methodNode.instructions.getLast());
+			return;
+		}
+
 		if (firstGeneratedLineNumber == -1) {
 			firstGeneratedLineNumber = getFirstGeneratedLineNumber(
 					context.getSourceFileName(),

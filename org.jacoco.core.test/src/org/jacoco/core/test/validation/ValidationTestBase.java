@@ -21,8 +21,10 @@ import java.util.Arrays;
 
 import org.jacoco.core.analysis.Analyzer;
 import org.jacoco.core.analysis.CoverageBuilder;
+import org.jacoco.core.analysis.IBundleCoverage;
 import org.jacoco.core.analysis.ICounter;
 import org.jacoco.core.analysis.ILine;
+import org.jacoco.core.analysis.IPackageCoverage;
 import org.jacoco.core.data.ExecutionData;
 import org.jacoco.core.data.ExecutionDataStore;
 import org.jacoco.core.internal.analysis.CounterImpl;
@@ -42,7 +44,6 @@ public abstract class ValidationTestBase {
 	protected static final boolean isJDKCompiler = Compiler.DETECT.isJDK();
 
 	private static final String[] STATUS_NAME = new String[4];
-
 	{
 		STATUS_NAME[ICounter.EMPTY] = "EMPTY";
 		STATUS_NAME[ICounter.NOT_COVERED] = "NOT_COVERED";
@@ -51,6 +52,8 @@ public abstract class ValidationTestBase {
 	}
 
 	private final Class<?> target;
+
+	private IBundleCoverage bundleCoverage;
 
 	private Source source;
 
@@ -84,7 +87,8 @@ public abstract class ValidationTestBase {
 		for (ExecutionData data : store.getContents()) {
 			analyze(analyzer, data);
 		}
-		source = Source.load(target, builder.getBundle("Test"));
+		bundleCoverage = builder.getBundle("Test");
+		source = Source.load(target, bundleCoverage);
 	}
 
 	private void analyze(final Analyzer analyzer, final ExecutionData data)
@@ -111,6 +115,14 @@ public abstract class ValidationTestBase {
 						line.toString());
 			}
 		}
+	}
+
+	@Test
+	public void coverage_data_should_contain_only_one_source_file() {
+		assertEquals(1, bundleCoverage.getPackages().size());
+		final IPackageCoverage packageCoverage = bundleCoverage.getPackages()
+				.iterator().next();
+		assertEquals(1, packageCoverage.getSourceFiles().size());
 	}
 
 	/**
