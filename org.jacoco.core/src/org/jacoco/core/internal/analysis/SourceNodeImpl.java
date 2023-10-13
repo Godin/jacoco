@@ -12,10 +12,7 @@
  *******************************************************************************/
 package org.jacoco.core.internal.analysis;
 
-import org.jacoco.core.analysis.CoverageNodeImpl;
-import org.jacoco.core.analysis.ICounter;
-import org.jacoco.core.analysis.ILine;
-import org.jacoco.core.analysis.ISourceNode;
+import org.jacoco.core.analysis.*;
 
 /**
  * Implementation of {@link ISourceNode}.
@@ -39,6 +36,81 @@ public class SourceNodeImpl extends CoverageNodeImpl implements ISourceNode {
 		super(elementType, name);
 		lines = null;
 		offset = UNKNOWN_LINE;
+	}
+
+	/**
+	 * FIXME complexity counter
+	 */
+	public void applyFragment(final IClassCoverage fragment) {
+		if (fragment.getFirstLine() == ISourceNode.UNKNOWN_LINE) {
+			// TODO this happens because MethodCoverageCalculator processes
+			// same SMAP in every method
+			return;
+		}
+		for (int line = fragment.getFirstLine(); line <= fragment
+				.getLastLine(); line++) {
+			if (/* TODO because we also apply fragments on fragments */getElementType() == ElementType.METHOD) {
+				if (!(getFirstLine() <= line && line <= getLastLine())) {
+					continue;
+				}
+			}
+			final int s1 = getLine(line).getStatus();
+			final int s2 = fragment.getLine(line).getStatus();
+			if (s1 == ICounter.EMPTY && s2 == ICounter.EMPTY) {
+				continue;
+			}
+			final CounterImpl counter = (s1 > ICounter.NOT_COVERED)
+					|| (s2 > ICounter.NOT_COVERED) ? CounterImpl.COUNTER_0_1
+							: CounterImpl.COUNTER_1_0;
+			setLine(line, counter);
+
+			if (getElementType() == ElementType.METHOD) {
+				if (counter.covered > 0) {
+					methodCounter = CounterImpl.COUNTER_0_1;
+				}
+			}
+		}
+	}
+
+	/**
+	 * TODO part of implementation for incrementing line counter was taken from
+	 * {@link #incrementLine(ICounter, ICounter, int)}
+	 *
+	 * FIXME complexity counter
+	 */
+	private void setLine(final int line, final CounterImpl instructions) {
+		final LineImpl l = getLine(line);
+		final int oldTotal = l.getInstructionCounter().getTotalCount();
+		final int oldCovered = l.getInstructionCounter().getCoveredCount();
+
+		instructionCounter = instructionCounter
+				.increment(-l.instructions.missed, -l.instructions.covered);
+		branchCounter = branchCounter.increment(-l.branches.missed,
+				-l.branches.covered);
+		instructionCounter = instructionCounter.increment(instructions);
+
+		ensureCapacity(line, line);
+		lines[line - offset] = LineImpl.getInstance(instructions,
+				CounterImpl.COUNTER_0_0);
+
+		// Increment line counter:
+		if (instructions.getTotalCount() > 0) {
+			if (instructions.getCoveredCount() == 0) {
+				if (oldTotal == 0) {
+					lineCounter = lineCounter
+							.increment(CounterImpl.COUNTER_1_0);
+				}
+			} else {
+				if (oldTotal == 0) {
+					lineCounter = lineCounter
+							.increment(CounterImpl.COUNTER_0_1);
+				} else {
+					if (oldCovered == 0) {
+						lineCounter = lineCounter.increment(-1, +1);
+					}
+				}
+			}
+		}
 	}
 
 	/**

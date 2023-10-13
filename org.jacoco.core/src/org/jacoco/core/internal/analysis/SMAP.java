@@ -10,56 +10,50 @@
  *    Evgeny Mandrikov - initial API and implementation
  *
  *******************************************************************************/
-package org.jacoco.core.internal.analysis.filter;
+package org.jacoco.core.internal.analysis;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.StringReader;
-import java.util.BitSet;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.objectweb.asm.tree.AbstractInsnNode;
-import org.objectweb.asm.tree.LineNumberNode;
-import org.objectweb.asm.tree.MethodNode;
-
 /**
- * Filters out instructions that were inlined by Kotlin compiler.
+ * TODO reuse in
+ * {@link org.jacoco.core.internal.analysis.filter.KotlinInlineFilter}
  */
-public final class KotlinInlineFilter implements IFilter {
+public final class SMAP {
 
-	private int firstGeneratedLineNumber = -1;
+	static final boolean DEBUG = false;
 
-	public void filter(final MethodNode methodNode,
-			final IFilterContext context, final IFilterOutput output) {
-		if (context.getSourceDebugExtension() == null) {
-			return;
-		}
+	public static final class Interval {
+		public final String className;
+		final String sourceFile;
+		public final int inputStartLine;
+		final int repeatCount;
+		public final int outputStartLine;
 
-		if (!KotlinGeneratedFilter.isKotlinClass(context)) {
-			return;
-		}
-
-		if (firstGeneratedLineNumber == -1) {
-			firstGeneratedLineNumber = getFirstGeneratedLineNumber(
-					context.getClassName(), context.getSourceFileName(),
-					context.getSourceDebugExtension());
-		}
-
-		int line = 0;
-		for (final AbstractInsnNode i : methodNode.instructions) {
-			if (AbstractInsnNode.LINE == i.getType()) {
-				line = ((LineNumberNode) i).line;
-			}
-			if (line >= firstGeneratedLineNumber) {
-				output.ignore(i, i);
-			}
+		private Interval(final String className, final String sourceFile,
+				final int inputStartLine, final int repeatCount,
+				final int outputStartLine) {
+			this.className = className;
+			this.sourceFile = sourceFile;
+			this.inputStartLine = inputStartLine;
+			this.repeatCount = repeatCount;
+			this.outputStartLine = outputStartLine;
 		}
 	}
 
-	private static int getFirstGeneratedLineNumber(
-			final String currentClassName, final String sourceFileName,
-			final String smap) {
+	private final List<Interval> intervals = new ArrayList<Interval>();
+
+	public List<Interval> getIntervals() {
+		return intervals;
+	}
+
+	public SMAP(final String sourceFileName, final String className, final String smap) {
 		try {
 			final BufferedReader br = new BufferedReader(
 					new StringReader(smap));
@@ -72,25 +66,26 @@ public final class KotlinInlineFilter implements IFilter {
 			expectLine(br, "*S Kotlin");
 			// FileSection
 			expectLine(br, "*F");
-			final BitSet sourceFileIds = new BitSet();
+			final HashMap<Integer, String> sourceFiles = new HashMap<Integer, String>();
+			final HashMap<Integer, String> classNames = new HashMap<Integer, String>();
 			String line;
 			while (!"*L".equals(line = br.readLine())) {
-				// See
-				// https://github.com/JetBrains/kotlin/blob/1.9.0/compiler/backend/src/org/jetbrains/kotlin/codegen/inline/SMAP.kt#L99-L100
-				// https://github.com/JetBrains/kotlin/blob/1.9.0/compiler/backend/src/org/jetbrains/kotlin/codegen/SourceInfo.kt#L38-L41
-				final String className = br.readLine();
-
+				// https://github.com/JetBrains/kotlin/blob/1.9.0/compiler/backend/src/org/jetbrains/kotlin/codegen/SourceInfo.kt#L41
+				final String absoluteFileName = br.readLine();
 				final Matcher m = FILE_INFO_PATTERN.matcher(line);
 				if (!m.matches()) {
 					throw new IllegalStateException(
 							"Unexpected SMAP line: " + line);
 				}
-				if (currentClassName.equals(className)) {
-					sourceFileIds.set(Integer.parseInt(m.group(1)));
-				}
+				final int id = Integer.parseInt(m.group(1));
+				final String fileName = m.group(2);
+				sourceFiles.put(id, fileName);
+				classNames.put(id, absoluteFileName);
+			}
+			if (sourceFiles.isEmpty()) {
+				throw new IllegalStateException("Unexpected SMAP FileSection");
 			}
 			// LineSection
-			int min = Integer.MAX_VALUE;
 			while (true) {
 				line = br.readLine();
 				if (line.equals("*E") || line.equals("*S KotlinDebug")) {
@@ -104,14 +99,20 @@ public final class KotlinInlineFilter implements IFilter {
 				final int inputStartLine = Integer.parseInt(m.group(1));
 				final int lineFileID = Integer
 						.parseInt(m.group(2).substring(1));
+				final String repeatCountOptional = m.group(3);
+				final int repeatCount = repeatCountOptional != null
+						? Integer.parseInt(m.group(3).substring(1))
+						: 1;
 				final int outputStartLine = Integer.parseInt(m.group(4));
-				if (sourceFileIds.get(lineFileID)
-						&& inputStartLine == outputStartLine) {
+				final String intervalClassName = classNames.get(lineFileID);
+				if (intervalClassName.equals(className)
+						&& outputStartLine == 1) {
 					continue;
 				}
-				min = Math.min(outputStartLine, min);
+				intervals.add(new Interval(classNames.get(lineFileID),
+						sourceFiles.get(lineFileID), inputStartLine,
+						repeatCount, outputStartLine));
 			}
-			return min;
 		} catch (final IOException e) {
 			// Must not happen with StringReader
 			throw new AssertionError(e);

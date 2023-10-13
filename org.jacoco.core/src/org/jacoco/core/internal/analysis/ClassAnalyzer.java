@@ -15,6 +15,7 @@ package org.jacoco.core.internal.analysis;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.jacoco.core.analysis.IClassCoverage;
 import org.jacoco.core.internal.analysis.filter.Filters;
 import org.jacoco.core.internal.analysis.filter.IFilter;
 import org.jacoco.core.internal.analysis.filter.IFilterContext;
@@ -121,6 +122,14 @@ public class ClassAnalyzer extends ClassProbesVisitor
 		final MethodCoverageImpl mc = new MethodCoverageImpl(name, desc,
 				signature);
 		mcc.calculate(mc);
+
+		if (getSourceDebugExtension() != null) {
+			for (IClassCoverage fragment : mcc.calculateFragments(
+					getSourceDebugExtension(), getSourceFileName(),
+					getClassName())) {
+				coverage.addFragment(fragment);
+			}
+		}
 
 		if (mc.containsCode()) {
 			// Only consider methods that actually contain code

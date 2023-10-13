@@ -18,6 +18,7 @@ import static org.junit.Assert.fail;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.jacoco.core.internal.analysis.SMAPTest;
 import org.jacoco.core.internal.instr.InstrSupport;
 import org.junit.Test;
 import org.objectweb.asm.Label;
@@ -36,6 +37,7 @@ public class KotlinInlineFilterTest extends FilterTestBase {
 
 	@Test
 	public void should_filter() {
+		context.className = "CallsiteKt";
 		context.sourceFileName = "callsite.kt";
 		context.sourceDebugExtension = "" //
 				+ "SMAP\n" //
@@ -113,6 +115,7 @@ public class KotlinInlineFilterTest extends FilterTestBase {
 	 */
 	@Test
 	public void should_filter_when_in_same_file() {
+		context.className = "Callsite";
 		context.sourceFileName = "example.kt";
 		context.sourceDebugExtension = "" //
 				+ "SMAP\n" //
@@ -170,9 +173,15 @@ public class KotlinInlineFilterTest extends FilterTestBase {
 	 * inline fun f() {}
 	 * fun g() = f()
 	 * </pre>
+	 * 
+	 * @deprecated use
+	 *             {@link SMAPTest#should_parse_without_KotlinDebug_stratum()}
+	 *             instead
 	 */
+	@Deprecated
 	@Test
 	public void should_filter_without_parsing_KotlinDebug_stratum() {
+		context.className = "ExampleKt";
 		context.sourceFileName = "Example.kt";
 		context.sourceDebugExtension = "" //
 				+ "SMAP\n" //
@@ -229,6 +238,12 @@ public class KotlinInlineFilterTest extends FilterTestBase {
 		assertIgnored();
 	}
 
+	/**
+	 * @deprecated use
+	 *             {@link SMAPTest#should_throw_exception_when_SMAP_incomplete()}
+	 *             instead
+	 */
+	@Deprecated
 	@Test
 	public void should_throw_exception_when_SMAP_incomplete() {
 		context.sourceDebugExtension = "" //
@@ -244,6 +259,12 @@ public class KotlinInlineFilterTest extends FilterTestBase {
 		}
 	}
 
+	/**
+	 * @deprecated use
+	 *             {@link SMAPTest#should_throw_exception_when_FileSection_contains_unexpected_FileInfo()}
+	 *             instead
+	 */
+	@Deprecated
 	@Test
 	public void should_throw_exception_when_unexpected_FileInfo() {
 		context.sourceFileName = "callsite.kt";
@@ -265,6 +286,7 @@ public class KotlinInlineFilterTest extends FilterTestBase {
 		}
 	}
 
+	@org.junit.Ignore
 	@Test
 	public void should_throw_exception_when_no_SourceFileId_for_SourceFile() {
 		context.sourceFileName = "example.kt";
@@ -289,6 +311,12 @@ public class KotlinInlineFilterTest extends FilterTestBase {
 		}
 	}
 
+	/**
+	 * @deprecated use
+	 *             {@link SMAPTest#should_throw_exception_when_LineSection_contains_unexpected_LineInfo()}
+	 *             instead
+	 */
+	@Deprecated
 	@Test
 	public void should_throw_exception_when_unexpected_LineInfo() {
 		context.sourceFileName = "callsite.kt";

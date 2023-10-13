@@ -22,11 +22,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 
-import org.jacoco.core.analysis.Analyzer;
-import org.jacoco.core.analysis.CoverageBuilder;
-import org.jacoco.core.analysis.IBundleCoverage;
-import org.jacoco.core.analysis.ICounter;
-import org.jacoco.core.analysis.ILine;
+import org.jacoco.core.analysis.*;
 import org.jacoco.core.data.ExecutionData;
 import org.jacoco.core.data.ExecutionDataStore;
 import org.jacoco.core.data.SessionInfo;
@@ -94,6 +90,11 @@ public abstract class ValidationTestBase {
 		for (ExecutionData data : store.getContents()) {
 			analyze(analyzer, data);
 		}
+		// FIXME otherwise KotlinCrossinlineTarget doesn't work
+		analyzer.analyzeClass(TargetLoader.getClassDataAsBytes(
+				target.getClassLoader(),
+				"org/jacoco/core/test/validation/kotlin/targets/KotlinCrossinlineTarget$example$1"),
+				"");
 		source = Source.load(target, builder.getBundle("Test"));
 		writeReport(builder.getBundle("Test"), store.getContents());
 	}

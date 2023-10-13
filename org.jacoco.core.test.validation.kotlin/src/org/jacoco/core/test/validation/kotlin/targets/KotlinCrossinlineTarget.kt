@@ -13,34 +13,24 @@
 package org.jacoco.core.test.validation.kotlin.targets
 
 import org.jacoco.core.test.validation.targets.Stubs.nop
-import org.jacoco.core.test.validation.targets.Stubs.t
 
 /**
- * Test target for `inline` functions.
+ * Test target for `crossinline`.
  */
-fun main(args: Array<String>) {
-    KotlinInlineTarget.main(args)
-}
+object KotlinCrossinlineTarget {
 
-inline fun inlined_top_level() { // assertEmpty()
-    nop() // assertFullyCovered()
-} // assertFullyCovered()
-
-object KotlinInlineTarget {
-
-    inline fun inlined() { // assertEmpty()
-        nop() // assertFullyCovered()
-    } // assertFullyCovered()
+    inline fun example(crossinline lambda: () -> Unit): () -> Unit { // assertEmpty()
+        return { // assertFullyCovered()
+            lambda() // assertFullyCovered()
+        } // assertFullyCovered()
+    } // assertEmpty()
 
     @JvmStatic
     fun main(args: Array<String>) {
 
-        inlined_top_level() // assertFullyCovered()
-
-        inlined() // assertFullyCovered()
-
-        /* Following inlined method for some reasons doesn't appear in SMAP: */
-        assert(t()) // assertPartlyCovered(2, 2)
+        example { // assertFullyCovered()
+            nop() // assertFullyCovered()
+        }() // assertFullyCovered()
 
     }
 

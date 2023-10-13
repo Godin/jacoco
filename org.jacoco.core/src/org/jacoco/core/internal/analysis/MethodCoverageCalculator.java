@@ -12,14 +12,10 @@
  *******************************************************************************/
 package org.jacoco.core.internal.analysis;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.Map.Entry;
-import java.util.Set;
 
+import org.jacoco.core.analysis.IClassCoverage;
 import org.jacoco.core.analysis.ISourceNode;
 import org.jacoco.core.internal.analysis.filter.IFilterOutput;
 import org.objectweb.asm.tree.AbstractInsnNode;
@@ -56,6 +52,45 @@ class MethodCoverageCalculator implements IFilterOutput {
 		this.ignored = new HashSet<AbstractInsnNode>();
 		this.merged = new HashMap<AbstractInsnNode, AbstractInsnNode>();
 		this.replacements = new HashMap<AbstractInsnNode, Set<AbstractInsnNode>>();
+	}
+
+	public Collection<IClassCoverage> calculateFragments(
+			final String sourceDebugExtension, final String sourceFileName,
+			final String className) {
+		final Map<String, IClassCoverage> fragments = new HashMap<String, IClassCoverage>();
+		// FIXME parsing SMAP for each method is suboptimal
+		// FIXME parsing SMAP works only for Kotlin
+		final SMAP smap = new SMAP(sourceFileName, className,
+				sourceDebugExtension);
+		for (SMAP.Interval interval : smap.getIntervals()) {
+			ClassCoverageImpl fragment = (ClassCoverageImpl) fragments
+					.get(interval.className);
+			if (fragment == null) {
+				fragment = new ClassCoverageImpl(interval.className, 0, false);
+				fragment.setSourceFileName(interval.sourceFile);
+				fragments.put(interval.className, fragment);
+			}
+			// FIXME going over all instructions for each interval is suboptimal
+			boolean match = false;
+			for (Instruction instruction : instructions.values()) {
+				if (interval.outputStartLine <= instruction.getLine()
+						&& instruction.getLine() <= interval.outputStartLine
+								+ interval.repeatCount - 1) {
+					match = true;
+					int originalLine = interval.inputStartLine
+							+ instruction.getLine() - interval.outputStartLine;
+					fragment.increment(instruction.getInstructionCounter(),
+							CounterImpl.COUNTER_0_0, originalLine);
+				}
+			}
+			if (SMAP.DEBUG)
+				// TODO have a look at match=false cases
+				System.out.println(fragment.getName() + " "
+						+ fragment.containsCode() + " " + match + " "
+						+ interval.outputStartLine + " "
+						+ interval.inputStartLine + " " + interval.repeatCount);
+		}
+		return fragments.values();
 	}
 
 	/**
@@ -174,5 +209,4 @@ class MethodCoverageCalculator implements IFilterOutput {
 			final Set<AbstractInsnNode> newTargets) {
 		replacements.put(source, newTargets);
 	}
-
 }

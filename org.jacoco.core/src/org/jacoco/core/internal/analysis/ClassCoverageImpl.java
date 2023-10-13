@@ -32,6 +32,8 @@ public class ClassCoverageImpl extends SourceNodeImpl
 	private String[] interfaces;
 	private String sourceFileName;
 
+	private final Collection<IClassCoverage> fragments;
+
 	/**
 	 * Creates a class coverage data object with the given parameters.
 	 *
@@ -49,6 +51,7 @@ public class ClassCoverageImpl extends SourceNodeImpl
 		this.id = id;
 		this.noMatch = noMatch;
 		this.methods = new ArrayList<IMethodCoverage>();
+		this.fragments = new ArrayList<IClassCoverage>();
 	}
 
 	/**
@@ -66,6 +69,14 @@ public class ClassCoverageImpl extends SourceNodeImpl
 		} else {
 			this.classCounter = CounterImpl.COUNTER_1_0;
 		}
+	}
+
+	public void addFragment(final IClassCoverage fragment) {
+		this.fragments.add(fragment);
+	}
+
+	public Collection<IClassCoverage> getFragments() {
+		return fragments;
 	}
 
 	/**
@@ -142,6 +153,19 @@ public class ClassCoverageImpl extends SourceNodeImpl
 
 	public Collection<IMethodCoverage> getMethods() {
 		return methods;
+	}
+
+	@Override
+	public void applyFragment(IClassCoverage fragment) {
+		super.applyFragment(fragment);
+		for (final IMethodCoverage methodCoverage : methods) {
+			methodCounter = methodCounter.increment(
+					-methodCoverage.getMethodCounter().getMissedCount(),
+					-methodCoverage.getMethodCounter().getCoveredCount());
+			((MethodCoverageImpl) methodCoverage).applyFragment(fragment);
+			methodCounter = methodCounter
+					.increment(methodCoverage.getMethodCounter());
+		}
 	}
 
 }

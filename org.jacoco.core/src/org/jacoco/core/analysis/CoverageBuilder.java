@@ -12,13 +12,10 @@
  *******************************************************************************/
 package org.jacoco.core.analysis;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 import org.jacoco.core.internal.analysis.BundleCoverageImpl;
+import org.jacoco.core.internal.analysis.ClassCoverageImpl;
 import org.jacoco.core.internal.analysis.SourceFileCoverageImpl;
 
 /**
@@ -98,6 +95,8 @@ public class CoverageBuilder implements ICoverageVisitor {
 
 	// === ICoverageVisitor ===
 
+	private final Map<String, IClassCoverage> fragments = new HashMap<String, IClassCoverage>();
+
 	public void visitCoverage(final IClassCoverage coverage) {
 		final String name = coverage.getName();
 		final IClassCoverage dup = classes.put(name, coverage);
@@ -107,6 +106,25 @@ public class CoverageBuilder implements ICoverageVisitor {
 						"Can't add different class with same name: " + name);
 			}
 		} else {
+			// TODO modifications here require explanations
+			for (final IClassCoverage fragment : ((ClassCoverageImpl) coverage)
+					.getFragments()) {
+				final IClassCoverage existingFragment = fragments
+						.get(fragment.getName());
+				if (existingFragment == null) {
+					fragments.put(fragment.getName(), fragment);
+				} else {
+					((ClassCoverageImpl) existingFragment)
+							.applyFragment(fragment);
+				}
+			}
+
+			final IClassCoverage fragment = fragments.get(coverage.getName());
+			if (fragment != null) {
+				((ClassCoverageImpl) coverage).applyFragment(fragment);
+				fragments.remove(coverage.getName());
+			}
+
 			final String source = coverage.getSourceFileName();
 			if (source != null) {
 				final SourceFileCoverageImpl sourceFile = getSourceFile(source,
