@@ -95,7 +95,17 @@ public abstract class ValidationTestBase {
 				target.getClassLoader(),
 				"org/jacoco/core/test/validation/kotlin/targets/KotlinCrossinlineTarget$example$1"),
 				"");
-		source = Source.load(target, builder.getBundle("Test"));
+		analyzer.analyzeClass(TargetLoader.getClassDataAsBytes(
+				target.getClassLoader(),
+				"org/jacoco/core/test/validation/kotlin/targets/KotlinInlineStubsKt"),
+			"");
+		try {
+			Class<?> aClass = target.getClassLoader().loadClass("org.jacoco.core.test.validation.kotlin.targets.KotlinInlineStubsKt");
+			source = Source.load(aClass, builder.getBundle("Test"));
+		} catch (ClassNotFoundException e) {
+			throw new RuntimeException(e);
+		}
+//		source = Source.load(target, builder.getBundle("Test"));
 		writeReport(builder.getBundle("Test"), store.getContents());
 	}
 
