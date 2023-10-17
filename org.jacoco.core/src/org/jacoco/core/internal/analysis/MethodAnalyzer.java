@@ -19,6 +19,7 @@ import org.objectweb.asm.Handle;
 import org.objectweb.asm.Label;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.tree.AbstractInsnNode;
+import org.objectweb.asm.tree.JumpInsnNode;
 import org.objectweb.asm.tree.MethodNode;
 import org.objectweb.asm.tree.TryCatchBlockNode;
 
@@ -152,7 +153,7 @@ public class MethodAnalyzer extends MethodProbesVisitor {
 
 	@Override
 	public void visitProbe(final int probeId) {
-		builder.addProbe(probeId, 0);
+		builder.addProbe(probeId, 0, null);
 		builder.noSuccessor();
 	}
 
@@ -160,13 +161,13 @@ public class MethodAnalyzer extends MethodProbesVisitor {
 	public void visitJumpInsnWithProbe(final int opcode, final Label label,
 			final int probeId, final IFrame frame) {
 		builder.addInstruction(currentNode);
-		builder.addProbe(probeId, 1);
+		builder.addProbe(probeId, 1, ((JumpInsnNode) currentNode).label);
 	}
 
 	@Override
 	public void visitInsnWithProbe(final int opcode, final int probeId) {
 		builder.addInstruction(currentNode);
-		builder.addProbe(probeId, 0);
+		builder.addProbe(probeId, 0, currentNode);
 	}
 
 	@Override

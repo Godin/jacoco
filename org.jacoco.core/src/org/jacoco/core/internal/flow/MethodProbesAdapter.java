@@ -114,7 +114,10 @@ public final class MethodProbesAdapter extends MethodVisitor {
 
 	@Override
 	public void visitJumpInsn(final int opcode, final Label label) {
-		if (LabelInfo.isMultiTarget(label)) {
+		if (LabelInfo.isMultiTarget(label)
+		// FIXME breaks exec-file compatibility
+		// || LabelInfo.isMethodInvocationLine(label) //
+		) {
 			probesVisitor.visitJumpInsnWithProbe(opcode, label,
 					idGenerator.nextId(), frame(jumpPopCount(opcode)));
 		} else {

@@ -65,6 +65,8 @@ public class Instruction {
 
 	private int predecessorBranch;
 
+	private boolean implicitlyCovered;
+
 	/**
 	 * New instruction at the given line.
 	 *
@@ -155,6 +157,9 @@ public class Instruction {
 		result.branches = this.branches;
 		result.coveredBranches.or(this.coveredBranches);
 		result.coveredBranches.or(other.coveredBranches);
+		// TODO
+		// result.implicitlyCovered = this.implicitlyCovered ||
+		// other.implicitlyCovered;
 		return result;
 	}
 
@@ -187,6 +192,12 @@ public class Instruction {
 	 * @return the instruction coverage counter
 	 */
 	public ICounter getInstructionCounter() {
+		if (coveredBranches.isEmpty() && implicitlyCovered) {
+			// FIXME dirty workaround for lines that have only one instruction
+			// dirty because instructions counter will be jumping up and down
+			// return CounterImpl.getInstance(1, 1);
+			return CounterImpl.getInstance(0, 1);
+		}
 		return coveredBranches.isEmpty() ? CounterImpl.COUNTER_1_0
 				: CounterImpl.COUNTER_0_1;
 	}
@@ -203,6 +214,10 @@ public class Instruction {
 		}
 		final int covered = coveredBranches.cardinality();
 		return CounterImpl.getInstance(branches - covered, covered);
+	}
+
+	public void markImplicitlyCovered() {
+		implicitlyCovered = true;
 	}
 
 }

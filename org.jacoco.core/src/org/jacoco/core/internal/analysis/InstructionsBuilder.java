@@ -21,6 +21,10 @@ import org.jacoco.core.analysis.ISourceNode;
 import org.jacoco.core.internal.flow.LabelInfo;
 import org.objectweb.asm.Label;
 import org.objectweb.asm.tree.AbstractInsnNode;
+import org.objectweb.asm.tree.InsnNode;
+import org.objectweb.asm.tree.LabelNode;
+
+import jdk.internal.org.objectweb.asm.Opcodes;
 
 /**
  * Stateful builder for the {@link Instruction}s of a method. All instructions
@@ -92,6 +96,8 @@ class InstructionsBuilder {
 	void addLabel(final Label label) {
 		currentLabel.add(label);
 		if (!LabelInfo.isSuccessor(label)) {
+			// TODO unconditional jump?
+			assert !nextInstructionImplicitlyExecuted;
 			noSuccessor();
 		}
 	}
@@ -101,6 +107,7 @@ class InstructionsBuilder {
 	 * previous instruction unless specified otherwise.
 	 */
 	void addInstruction(final AbstractInsnNode node) {
+		// System.out.println(node);
 		final Instruction insn = new Instruction(currentLine);
 		final int labelCount = currentLabel.size();
 		if (labelCount > 0) {
@@ -114,6 +121,11 @@ class InstructionsBuilder {
 		}
 		currentInsn = insn;
 		instructions.put(node, insn);
+
+		if (nextInstructionImplicitlyExecuted) {
+			insn.markImplicitlyCovered();
+			nextInstructionImplicitlyExecuted = false;
+		}
 	}
 
 	/**
@@ -122,6 +134,10 @@ class InstructionsBuilder {
 	 * when a probe was inserted before.
 	 */
 	void noSuccessor() {
+		// TODO do we need assertion?
+		// assert !nextInstructionImplicitlyExecuted;
+		// seems no, because following line breaks the whole idea
+		// nextInstructionImplicitlyExecuted = false;
 		currentInsn = null;
 	}
 
@@ -137,6 +153,8 @@ class InstructionsBuilder {
 		jumps.add(new Jump(currentInsn, target, branch));
 	}
 
+	private boolean nextInstructionImplicitlyExecuted;
+
 	/**
 	 * Adds a new probe for the last instruction.
 	 *
@@ -144,11 +162,32 @@ class InstructionsBuilder {
 	 *            index in the probe array
 	 * @param branch
 	 *            unique branch number for the last instruction
+	 * @deprecated use {@link #addProbe(int, int, AbstractInsnNode)} instead
 	 */
+	@Deprecated
 	void addProbe(final int probeId, final int branch) {
+		addProbe(probeId, branch, new InsnNode(Opcodes.NOP));
+	}
+
+	/**
+	 * TODO add javadoc
+	 */
+	void addProbe(final int probeId, final int branch,
+			final AbstractInsnNode target) {
+		// System.out.println("Probe " + probeId);
 		final boolean executed = probes != null && probes[probeId];
 		currentInsn.addBranch(executed, branch);
+		if (target == null) {
+			nextInstructionImplicitlyExecuted = executed;
+		} else {
+			nextInstructionImplicitlyExecuted = false;
+			if (target.getType() == AbstractInsnNode.LABEL && executed) {
+				jumpAfterExecutedProbe.add((LabelNode) target);
+			}
+		}
 	}
+
+	private final ArrayList<LabelNode> jumpAfterExecutedProbe = new ArrayList<LabelNode>();
 
 	/**
 	 * Returns the status for all instructions of this method. This method must
@@ -161,6 +200,12 @@ class InstructionsBuilder {
 		// Wire jumps:
 		for (final Jump j : jumps) {
 			j.wire();
+		}
+
+		// TODO check if same information can be propagated thru Jump?
+		// addJump is not called from visitJumpInsnWithProbe
+		for (final LabelNode j : jumpAfterExecutedProbe) {
+			LabelInfo.getInstruction(j.getLabel()).markImplicitlyCovered();
 		}
 
 		return instructions;

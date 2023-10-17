@@ -352,13 +352,16 @@ public class MethodAnalyzerTest implements IProbeIdGenerator {
 		method.visitLineNumber(1001, l0);
 		method.visitVarInsn(Opcodes.ILOAD, 1);
 		Label l1 = new Label();
+		// JumpInsnWithProbe 0
 		method.visitJumpInsn(Opcodes.IFEQ, l1);
 		final Label l2 = new Label();
 		method.visitLabel(l2);
 		method.visitLineNumber(1002, l2);
 		method.visitInsn(Opcodes.NOP);
+		// Probe 1
 		method.visitLabel(l1);
 		method.visitLineNumber(1003, l1);
+		// InsnWithProbe 2
 		method.visitInsn(Opcodes.RETURN);
 	}
 
