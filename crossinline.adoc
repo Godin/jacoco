@@ -1,0 +1,352 @@
+= crossinline
+
+.`KotlinCrossinlineTarget.kt`
+----
+object KotlinCrossinlineTarget {
+
+    inline fun example(crossinline lambda: () -> Unit): () -> Unit {
+        return {
+            lambda()
+        }
+    }
+
+    @JvmStatic
+    fun main(args: Array<String>) {
+        example {
+            nop()
+        }()
+    }
+
+}
+----
+
+.Stack trace
+----
+java.lang.RuntimeException
+	at KotlinCrossinlineTarget$main$$inlined$example$1.invoke(KotlinCrossinlineTarget.kt:44)
+	at KotlinCrossinlineTarget$main$$inlined$example$1.invoke(KotlinCrossinlineTarget.kt:25)
+	at KotlinCrossinlineTarget.main(KotlinCrossinlineTarget.kt:33)
+----
+
+.`KotlinCrossinlineTarget.class`
+----
+  public static final org.jacoco.core.test.validation.kotlin.targets.KotlinCrossinlineTarget INSTANCE;
+    descriptor: Lorg/jacoco/core/test/validation/kotlin/targets/KotlinCrossinlineTarget;
+    flags: (0x0019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL
+    RuntimeInvisibleAnnotations:
+      0: #14()
+        org.jetbrains.annotations.NotNull
+
+  private org.jacoco.core.test.validation.kotlin.targets.KotlinCrossinlineTarget();
+    descriptor: ()V
+    flags: (0x0002) ACC_PRIVATE
+    Code:
+      stack=1, locals=1, args_size=1
+         0: aload_0
+         1: invokespecial #8                  // Method java/lang/Object."<init>":()V
+         4: return
+      LineNumberTable:
+        line 20: 0
+      LocalVariableTable:
+        Start  Length  Slot  Name   Signature
+            0       5     0  this   Lorg/jacoco/core/test/validation/kotlin/targets/KotlinCrossinlineTarget;
+
+  public final kotlin.jvm.functions.Function0<kotlin.Unit> example(kotlin.jvm.functions.Function0<kotlin.Unit>);
+    descriptor: (Lkotlin/jvm/functions/Function0;)Lkotlin/jvm/functions/Function0;
+    flags: (0x0011) ACC_PUBLIC, ACC_FINAL
+    Code:
+      stack=3, locals=3, args_size=2
+         0: aload_1
+         1: ldc           #16                 // String lambda
+         3: invokestatic  #22                 // Method kotlin/jvm/internal/Intrinsics.checkNotNullParameter:(Ljava/lang/Object;Ljava/lang/String;)V
+         6: iconst_0
+         7: istore_2
+         8: new           #24                 // class org/jacoco/core/test/validation/kotlin/targets/KotlinCrossinlineTarget$example$1
+        11: dup
+        12: aload_1
+        13: invokespecial #27                 // Method org/jacoco/core/test/validation/kotlin/targets/KotlinCrossinlineTarget$example$1."<init>":(Lkotlin/jvm/functions/Function0;)V
+        16: checkcast     #29                 // class kotlin/jvm/functions/Function0
+        19: areturn
+      LineNumberTable:
+        line 23: 8
+      LocalVariableTable:
+        Start  Length  Slot  Name   Signature
+            8      12     2 $i$f$example   I
+            0      20     0  this   Lorg/jacoco/core/test/validation/kotlin/targets/KotlinCrossinlineTarget;
+            0      20     1 lambda   Lkotlin/jvm/functions/Function0;
+    Signature: #13                          // (Lkotlin/jvm/functions/Function0<Lkotlin/Unit;>;)Lkotlin/jvm/functions/Function0<Lkotlin/Unit;>;
+    RuntimeInvisibleAnnotations:
+      0: #14()
+        org.jetbrains.annotations.NotNull
+    RuntimeInvisibleParameterAnnotations:
+      parameter 0:
+        0: #14()
+          org.jetbrains.annotations.NotNull
+
+  public static final void main(java.lang.String[]);
+    descriptor: ([Ljava/lang/String;)V
+    flags: (0x0019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL
+    Code:
+      stack=2, locals=3, args_size=1
+         0: aload_0
+         1: ldc           #37                 // String args
+         3: invokestatic  #22                 // Method kotlin/jvm/internal/Intrinsics.checkNotNullParameter:(Ljava/lang/Object;Ljava/lang/String;)V
+         6: getstatic     #40                 // Field INSTANCE:Lorg/jacoco/core/test/validation/kotlin/targets/KotlinCrossinlineTarget;
+         9: astore_1
+        10: iconst_0
+        11: istore_2
+        12: new           #42                 // class org/jacoco/core/test/validation/kotlin/targets/KotlinCrossinlineTarget$main$$inlined$example$1
+        15: dup
+        16: invokespecial #43                 // Method org/jacoco/core/test/validation/kotlin/targets/KotlinCrossinlineTarget$main$$inlined$example$1."<init>":()V
+        19: checkcast     #29                 // class kotlin/jvm/functions/Function0
+        22: invokeinterface #47,  1           // InterfaceMethod kotlin/jvm/functions/Function0.invoke:()Ljava/lang/Object;
+        27: pop
+        28: return
+      LineNumberTable:
+        line 31: 6
+        line 39: 12
+        line 31: 22
+        line 35: 28
+      LocalVariableTable:
+        Start  Length  Slot  Name   Signature
+           12      10     2 $i$f$example   I
+           10      12     1 this_$iv   Lorg/jacoco/core/test/validation/kotlin/targets/KotlinCrossinlineTarget;
+            0      29     0  args   [Ljava/lang/String;
+    RuntimeVisibleAnnotations:
+      0: #35()
+        kotlin.jvm.JvmStatic
+    RuntimeInvisibleParameterAnnotations:
+      parameter 0:
+        0: #14()
+          org.jetbrains.annotations.NotNull
+
+  static {};
+    descriptor: ()V
+    flags: (0x0008) ACC_STATIC
+    Code:
+      stack=2, locals=0, args_size=0
+         0: new           #2                  // class org/jacoco/core/test/validation/kotlin/targets/KotlinCrossinlineTarget
+         3: dup
+         4: invokespecial #51                 // Method "<init>":()V
+         7: putstatic     #40                 // Field INSTANCE:Lorg/jacoco/core/test/validation/kotlin/targets/KotlinCrossinlineTarget;
+        10: return
+}
+InnerClasses:
+  public static final #24;                // class org/jacoco/core/test/validation/kotlin/targets/KotlinCrossinlineTarget$example$1
+SourceFile: "KotlinCrossinlineTarget.kt"
+SourceDebugExtension:
+  SMAP
+  KotlinCrossinlineTarget.kt
+  Kotlin
+  *S Kotlin
+  *F
+  + 1 KotlinCrossinlineTarget.kt
+  org/jacoco/core/test/validation/kotlin/targets/KotlinCrossinlineTarget
+  *L
+  1#1,38:1
+  23#1:39
+  *S KotlinDebug
+  *F
+  + 1 KotlinCrossinlineTarget.kt
+  org/jacoco/core/test/validation/kotlin/targets/KotlinCrossinlineTarget
+  *L
+  31#1:39
+  *E
+----
+
+.`KotlinCrossinlineTarget$main$$inlined$example$1.class`
+----
+  public org.jacoco.core.test.validation.kotlin.targets.KotlinCrossinlineTarget$main$$inlined$example$1();
+    descriptor: ()V
+    flags: (0x0001) ACC_PUBLIC
+    Code:
+      stack=2, locals=1, args_size=1
+         0: aload_0
+         1: iconst_0
+         2: invokespecial #17                 // Method kotlin/jvm/internal/Lambda."<init>":(I)V
+         5: return
+      LocalVariableTable:
+        Start  Length  Slot  Name   Signature
+            0       6     0  this   Lorg/jacoco/core/test/validation/kotlin/targets/KotlinCrossinlineTarget$main$$inlined$example$1;
+
+  public final void invoke();
+    descriptor: ()V
+    flags: (0x0011) ACC_PUBLIC, ACC_FINAL
+    Code:
+      stack=1, locals=2, args_size=1
+         0: iconst_0
+         1: istore_1
+         2: invokestatic  #25                 // Method org/jacoco/core/test/validation/targets/Stubs.nop:()V
+         5: nop
+         6: return
+      LineNumberTable:
+        line 24: 0
+        line 39: 2
+        line 40: 5
+        line 25: 6
+      LocalVariableTable:
+        Start  Length  Slot  Name   Signature
+            2       4     1 $i$a$-example-KotlinCrossinlineTarget$main$1   I
+            0       7     0  this   Lorg/jacoco/core/test/validation/kotlin/targets/KotlinCrossinlineTarget$main$$inlined$example$1;
+
+  public java.lang.Object invoke();
+    descriptor: ()Ljava/lang/Object;
+    flags: (0x1041) ACC_PUBLIC, ACC_BRIDGE, ACC_SYNTHETIC
+    Code:
+      stack=1, locals=1, args_size=1
+         0: aload_0
+         1: invokevirtual #30                 // Method invoke:()V
+         4: getstatic     #36                 // Field kotlin/Unit.INSTANCE:Lkotlin/Unit;
+         7: areturn
+      LineNumberTable:
+        line 23: 0
+      LocalVariableTable:
+        Start  Length  Slot  Name   Signature
+            0       8     0  this   Lorg/jacoco/core/test/validation/kotlin/targets/KotlinCrossinlineTarget$main$$inlined$example$1;
+}
+InnerClasses:
+  public static final #2;                 // class org/jacoco/core/test/validation/kotlin/targets/KotlinCrossinlineTarget$main$$inlined$example$1
+EnclosingMethod: #9.#53                 // org.jacoco.core.test.validation.kotlin.targets.KotlinCrossinlineTarget.main
+Signature: #3                           // Lkotlin/jvm/internal/Lambda;Lkotlin/jvm/functions/Function0<Lkotlin/Unit;>;
+SourceFile: "KotlinCrossinlineTarget.kt"
+SourceDebugExtension:
+  SMAP
+  KotlinCrossinlineTarget.kt
+  Kotlin
+  *S Kotlin
+  *F
+  + 1 KotlinCrossinlineTarget.kt
+  org/jacoco/core/test/validation/kotlin/targets/KotlinCrossinlineTarget$example$1
+  + 2 KotlinCrossinlineTarget.kt
+  org/jacoco/core/test/validation/kotlin/targets/KotlinCrossinlineTarget
+  *L
+  1#1,38:1
+  32#2,2:39
+  *E
+----
+
+.`KotlinCrossinlineTarget$example$1.class`
+----
+  public static final org.jacoco.core.test.validation.kotlin.targets.KotlinCrossinlineTarget INSTANCE;
+    descriptor: Lorg/jacoco/core/test/validation/kotlin/targets/KotlinCrossinlineTarget;
+    flags: (0x0019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL
+    RuntimeInvisibleAnnotations:
+      0: #14()
+        org.jetbrains.annotations.NotNull
+
+  private org.jacoco.core.test.validation.kotlin.targets.KotlinCrossinlineTarget();
+    descriptor: ()V
+    flags: (0x0002) ACC_PRIVATE
+    Code:
+      stack=1, locals=1, args_size=1
+         0: aload_0
+         1: invokespecial #8                  // Method java/lang/Object."<init>":()V
+         4: return
+      LineNumberTable:
+        line 20: 0
+      LocalVariableTable:
+        Start  Length  Slot  Name   Signature
+            0       5     0  this   Lorg/jacoco/core/test/validation/kotlin/targets/KotlinCrossinlineTarget;
+
+  public final kotlin.jvm.functions.Function0<kotlin.Unit> example(kotlin.jvm.functions.Function0<kotlin.Unit>);
+    descriptor: (Lkotlin/jvm/functions/Function0;)Lkotlin/jvm/functions/Function0;
+    flags: (0x0011) ACC_PUBLIC, ACC_FINAL
+    Code:
+      stack=3, locals=3, args_size=2
+         0: aload_1
+         1: ldc           #16                 // String lambda
+         3: invokestatic  #22                 // Method kotlin/jvm/internal/Intrinsics.checkNotNullParameter:(Ljava/lang/Object;Ljava/lang/String;)V
+         6: iconst_0
+         7: istore_2
+         8: new           #24                 // class org/jacoco/core/test/validation/kotlin/targets/KotlinCrossinlineTarget$example$1
+        11: dup
+        12: aload_1
+        13: invokespecial #27                 // Method org/jacoco/core/test/validation/kotlin/targets/KotlinCrossinlineTarget$example$1."<init>":(Lkotlin/jvm/functions/Function0;)V
+        16: checkcast     #29                 // class kotlin/jvm/functions/Function0
+        19: areturn
+      LineNumberTable:
+        line 23: 8
+      LocalVariableTable:
+        Start  Length  Slot  Name   Signature
+            8      12     2 $i$f$example   I
+            0      20     0  this   Lorg/jacoco/core/test/validation/kotlin/targets/KotlinCrossinlineTarget;
+            0      20     1 lambda   Lkotlin/jvm/functions/Function0;
+    Signature: #13                          // (Lkotlin/jvm/functions/Function0<Lkotlin/Unit;>;)Lkotlin/jvm/functions/Function0<Lkotlin/Unit;>;
+    RuntimeInvisibleAnnotations:
+      0: #14()
+        org.jetbrains.annotations.NotNull
+    RuntimeInvisibleParameterAnnotations:
+      parameter 0:
+        0: #14()
+          org.jetbrains.annotations.NotNull
+
+  public static final void main(java.lang.String[]);
+    descriptor: ([Ljava/lang/String;)V
+    flags: (0x0019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL
+    Code:
+      stack=2, locals=3, args_size=1
+         0: aload_0
+         1: ldc           #37                 // String args
+         3: invokestatic  #22                 // Method kotlin/jvm/internal/Intrinsics.checkNotNullParameter:(Ljava/lang/Object;Ljava/lang/String;)V
+         6: getstatic     #40                 // Field INSTANCE:Lorg/jacoco/core/test/validation/kotlin/targets/KotlinCrossinlineTarget;
+         9: astore_1
+        10: iconst_0
+        11: istore_2
+        12: new           #42                 // class org/jacoco/core/test/validation/kotlin/targets/KotlinCrossinlineTarget$main$$inlined$example$1
+        15: dup
+        16: invokespecial #43                 // Method org/jacoco/core/test/validation/kotlin/targets/KotlinCrossinlineTarget$main$$inlined$example$1."<init>":()V
+        19: checkcast     #29                 // class kotlin/jvm/functions/Function0
+        22: invokeinterface #47,  1           // InterfaceMethod kotlin/jvm/functions/Function0.invoke:()Ljava/lang/Object;
+        27: pop
+        28: return
+      LineNumberTable:
+        line 31: 6
+        line 39: 12
+        line 31: 22
+        line 35: 28
+      LocalVariableTable:
+        Start  Length  Slot  Name   Signature
+           12      10     2 $i$f$example   I
+           10      12     1 this_$iv   Lorg/jacoco/core/test/validation/kotlin/targets/KotlinCrossinlineTarget;
+            0      29     0  args   [Ljava/lang/String;
+    RuntimeVisibleAnnotations:
+      0: #35()
+        kotlin.jvm.JvmStatic
+    RuntimeInvisibleParameterAnnotations:
+      parameter 0:
+        0: #14()
+          org.jetbrains.annotations.NotNull
+
+  static {};
+    descriptor: ()V
+    flags: (0x0008) ACC_STATIC
+    Code:
+      stack=2, locals=0, args_size=0
+         0: new           #2                  // class org/jacoco/core/test/validation/kotlin/targets/KotlinCrossinlineTarget
+         3: dup
+         4: invokespecial #51                 // Method "<init>":()V
+         7: putstatic     #40                 // Field INSTANCE:Lorg/jacoco/core/test/validation/kotlin/targets/KotlinCrossinlineTarget;
+        10: return
+}
+InnerClasses:
+  public static final #24;                // class org/jacoco/core/test/validation/kotlin/targets/KotlinCrossinlineTarget$example$1
+SourceFile: "KotlinCrossinlineTarget.kt"
+SourceDebugExtension:
+  SMAP
+  KotlinCrossinlineTarget.kt
+  Kotlin
+  *S Kotlin
+  *F
+  + 1 KotlinCrossinlineTarget.kt
+  org/jacoco/core/test/validation/kotlin/targets/KotlinCrossinlineTarget
+  *L
+  1#1,38:1
+  23#1:39
+  *S KotlinDebug
+  *F
+  + 1 KotlinCrossinlineTarget.kt
+  org/jacoco/core/test/validation/kotlin/targets/KotlinCrossinlineTarget
+  *L
+  31#1:39
+  *E
+----
