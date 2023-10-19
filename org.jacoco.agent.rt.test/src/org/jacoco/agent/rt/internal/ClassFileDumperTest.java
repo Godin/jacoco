@@ -66,6 +66,7 @@ public class ClassFileDumperTest {
 	private void assertContents(File location, String filename)
 			throws IOException {
 		InputStream in = new FileInputStream(new File(location, filename));
+		// TODO InputStreams.readFully(in); in.close();
 		ByteArrayOutputStream buffer = new ByteArrayOutputStream();
 		int b;
 		while ((b = in.read()) != -1) {

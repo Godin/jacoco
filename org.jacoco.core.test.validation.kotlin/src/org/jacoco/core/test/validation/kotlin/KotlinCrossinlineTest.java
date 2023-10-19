@@ -13,15 +13,15 @@
 package org.jacoco.core.test.validation.kotlin;
 
 import org.jacoco.core.test.validation.ValidationTestBase;
-import org.jacoco.core.test.validation.kotlin.targets.KotlinInlineTargetKt;
+import org.jacoco.core.test.validation.kotlin.targets.KotlinCrossinlineTarget;
 
 /**
- * Test of <code>inline</code> functions.
+ * Test of code coverage in {@link KotlinCrossinlineTarget}.
  */
-public class KotlinInlineTest extends ValidationTestBase {
+public class KotlinCrossinlineTest extends ValidationTestBase {
 
-	public KotlinInlineTest() {
-		super(KotlinInlineTargetKt.class);
+	public KotlinCrossinlineTest() {
+		super(KotlinCrossinlineTarget.class);
 	}
 
 	@Override

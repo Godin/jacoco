@@ -1,0 +1,57 @@
+plugins {
+    id 'org.jetbrains.kotlin.jvm' version '1.9.10'
+    id 'jacoco'
+}
+
+repositories {
+    mavenLocal()
+    mavenCentral()
+}
+
+dependencies {
+    testImplementation(platform("org.junit:junit-bom:5.10.0"))
+    testImplementation("org.junit.jupiter:junit-jupiter")
+}
+
+test {
+    useJUnitPlatform()
+}
+
+jacoco {
+    toolVersion = '0.8.12-SNAPSHOT'
+}
+
+task report {
+    doLast {
+        // See
+        // https://docs.gradle.org/current/userguide/ant.html
+        // https://jacoco.org/jacoco/trunk/doc/ant.html
+        ant.taskdef(
+                    resource: 'org/jacoco/ant/antlib.xml',
+                    classpath: project.configurations.jacocoAnt.asPath,
+                    uri: 'jacoco'
+        )
+        ant.'jacoco:report'() {
+            html(destdir: 'build/report')
+            executiondata() {
+                fileset(file: 'build/jacoco/test.exec')
+            }
+            structure(name: 'Example') {
+                Group(name: 'combined') {
+                    classfiles() { fileset(dir: 'build/classes/kotlin/') }
+                    sourcefiles() { fileset(dir: 'src/main/kotlin/') }
+                }
+                Group(name: 'separate') {
+                    Group(name: 'main') {
+                        classfiles() { fileset(dir: 'build/classes/kotlin/main') }
+                        sourcefiles() { fileset(dir: 'src/main/kotlin/') }
+                    }
+                    Group(name: 'test') {
+                        classfiles() { fileset(dir: 'build/classes/kotlin/test') }
+                        sourcefiles() { fileset(dir: 'src/test/kotlin/') }
+                    }
+                }
+            }
+        }
+    }
+}

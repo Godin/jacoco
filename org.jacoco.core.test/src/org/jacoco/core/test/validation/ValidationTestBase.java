@@ -17,19 +17,17 @@ import static org.junit.Assert.assertTrue;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 
-import org.jacoco.core.analysis.Analyzer;
-import org.jacoco.core.analysis.CoverageBuilder;
-import org.jacoco.core.analysis.IBundleCoverage;
-import org.jacoco.core.analysis.ICounter;
-import org.jacoco.core.analysis.ILine;
+import org.jacoco.core.analysis.*;
 import org.jacoco.core.data.ExecutionData;
 import org.jacoco.core.data.ExecutionDataStore;
 import org.jacoco.core.data.SessionInfo;
+import org.jacoco.core.internal.InputStreams;
 import org.jacoco.core.internal.analysis.CounterImpl;
 import org.jacoco.core.test.InstrumentingLoader;
 import org.jacoco.core.test.TargetLoader;
@@ -91,6 +89,29 @@ public abstract class ValidationTestBase {
 	private void analyze(final ExecutionDataStore store) throws IOException {
 		final CoverageBuilder builder = new CoverageBuilder();
 		final Analyzer analyzer = new Analyzer(store, builder);
+		// FIXME order matters:
+		// KotlinCrossinlineTarget$$inlined$example$1 must be first
+		for (ExecutionData data : store.getContents()) {
+			if (!data.getName().equals(
+					"org/jacoco/core/test/validation/kotlin/targets/KotlinCrossinlineTarget")) {
+				continue;
+			}
+			analyze(analyzer, data);
+		}
+		for (ExecutionData data : store.getContents()) {
+			if (!data.getName().equals(
+					"org/jacoco/core/test/validation/kotlin/targets/KotlinCrossinlineTarget$main$$inlined$example$1")) {
+				continue;
+			}
+			analyze(analyzer, data);
+		}
+		final InputStream classData = TargetLoader.getClassData(
+				target.getClassLoader(),
+				"org/jacoco/core/test/validation/kotlin/targets/KotlinCrossinlineTarget$example$1");
+		if (classData != null) {
+			analyzer.analyzeClass(InputStreams.readFully(classData), "");
+		}
+
 		for (ExecutionData data : store.getContents()) {
 			analyze(analyzer, data);
 		}

@@ -1,0 +1,15 @@
+Unfortunately even Ant task can't get data from tests:
+
+----
+[ant:jacoco:report] Loading execution data file /Users/evgeny.mandrikov/projects/jacoco/jacoco/example/build/jacoco/test.exec
+[ant:jacoco:report] Got org/example/ExampleKt within org/example/ExampleKt
+[ant:jacoco:report] Got org/example/ExampleKt within org/example/ExampleKt
+[ant:jacoco:report] Got org/example/ExampleKt within org/example/ExampleKt
+[ant:jacoco:report] Writing bundle 'main' with 1 classes
+[ant:jacoco:report] Got org/example/ExampleKt within org/example/ExampleTests
+[ant:jacoco:report] Got org/example/ExampleKt within org/example/ExampleTests
+[ant:jacoco:report] Writing bundle 'test' with 1 classes
+----
+
+* https://github.com/Kotlin/kotlinx-kover/blob/v0.7.3/kover-gradle-plugin/src/main/kotlin/kotlinx/kover/gradle/plugin/tools/jacoco/JacocoAnt.kt#L48-L55
+* https://github.com/gradle/gradle/blob/v8.4.0/subprojects/jacoco/src/main/java/org/gradle/internal/jacoco/AbstractAntJacocoReport.java#L66-L82

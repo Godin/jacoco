@@ -12,6 +12,8 @@
  *******************************************************************************/
 package org.jacoco.core.test;
 
+import org.jacoco.core.internal.InputStreams;
+
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -67,6 +69,9 @@ public class TargetLoader extends ClassLoader {
 		return readBytes(getClassData(clazz));
 	}
 
+	/**
+	 * TODO replace by {@link InputStreams#readFully(InputStream)} ?
+	 */
 	private static byte[] readBytes(InputStream in) throws IOException {
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
 		byte[] buffer = new byte[0x100];

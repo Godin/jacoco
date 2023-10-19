@@ -42,6 +42,12 @@ public class KotlinGeneratedFilter implements IFilter {
 		}
 
 		if (hasLineNumber(methodNode)) {
+			for (final AbstractInsnNode i : methodNode.instructions) {
+				if (AbstractInsnNode.LINE == i.getType()) {
+					break;
+				}
+				output.ignore(i, i);
+			}
 			return;
 		}
 

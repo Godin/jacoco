@@ -13,21 +13,26 @@
 package org.jacoco.core.test.validation.kotlin;
 
 import org.jacoco.core.test.validation.ValidationTestBase;
-import org.jacoco.core.test.validation.kotlin.targets.KotlinInlineTargetKt;
+import org.jacoco.core.test.validation.kotlin.targets.KotlinWipTarget;
 
 /**
- * Test of <code>inline</code> functions.
+ * Test of code coverage in {@link KotlinWipTarget}.
  */
-public class KotlinInlineTest extends ValidationTestBase {
+public class KotlinWipTest extends ValidationTestBase {
 
-	public KotlinInlineTest() {
-		super(KotlinInlineTargetKt.class);
+	public KotlinWipTest() {
+		super(KotlinWipTarget.class);
 	}
 
 	@Override
 	public void all_missed_instructions_should_have_line_number() {
-		// missed instructions without line number in inline function
+		// instructions without line number in inline functions
 		super.all_missed_instructions_should_have_line_number();
+	}
+
+	@Override
+	public void all_branches_should_have_line_number() {
+		super.all_branches_should_have_line_number();
 	}
 
 }

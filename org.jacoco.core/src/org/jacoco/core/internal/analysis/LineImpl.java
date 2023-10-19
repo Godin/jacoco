@@ -49,7 +49,7 @@ public abstract class LineImpl implements ILine {
 	 */
 	public static final LineImpl EMPTY = SINGLETONS[0][0][0][0];
 
-	private static LineImpl getInstance(final CounterImpl instructions,
+	public static LineImpl getInstance(final CounterImpl instructions,
 			final CounterImpl branches) {
 		final int im = instructions.getMissedCount();
 		final int ic = instructions.getCoveredCount();

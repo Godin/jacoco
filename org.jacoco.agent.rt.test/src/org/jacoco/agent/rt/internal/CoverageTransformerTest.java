@@ -245,6 +245,7 @@ public class CoverageTransformerTest {
 		final String resource = "/" + clazz.getName().replace('.', '/')
 				+ ".class";
 		final InputStream in = clazz.getResourceAsStream(resource);
+		// TODO InputStreams.readFully(in); in.close();
 		final ByteArrayOutputStream out = new ByteArrayOutputStream();
 		byte[] buffer = new byte[0x100];
 		int len;
