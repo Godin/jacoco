@@ -231,7 +231,6 @@
                 </group>
               </groups>
               <overview>javadoc/overview.html</overview>
-              <stylesheetfile>javadoc/stylesheet.css</stylesheetfile>
             </configuration>
           </execution>
         </executions>

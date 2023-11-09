@@ -769,25 +769,60 @@
       </activation>
       <build>
         <plugins>
+          <!--
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-javadoc-plugin</artifactId>
+            <configuration>
+              <javadocExecutable>${env.JAVA_HOME}/bin</javadocExecutable>
+            </configuration>
+          </plugin>
+          -->
+          <!--
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-surefire-plugin</artifactId>
+            <configuration>
+              <jdkToolchain>
+                <version>${jdk.version}</version>
+              </jdkToolchain>
+            </configuration>
+          </plugin>
+          -->
           <!-- See http://maven.apache.org/guides/mini/guide-using-toolchains.html -->
           <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-toolchains-plugin</artifactId>
             <executions>
               <execution>
+                <id>set</id>
                 <phase>validate</phase>
                 <goals>
                   <goal>toolchain</goal>
                 </goals>
+                <configuration>
+                  <toolchains>
+                    <jdk>
+                      <version>${jdk.version}</version>
+                    </jdk>
+                  </toolchains>
+                </configuration>
+              </execution>
+              <execution>
+                <id>unset</id>
+                <phase>prepare-package</phase>
+                <goals>
+                  <goal>toolchain</goal>
+                </goals>
+                <configuration>
+                  <toolchains>
+                    <jdk>
+                      <version>17</version>
+                    </jdk>
+                  </toolchains>
+                </configuration>
               </execution>
             </executions>
-            <configuration>
-              <toolchains>
-                <jdk>
-                  <version>${jdk.version}</version>
-                </jdk>
-              </toolchains>
-            </configuration>
           </plugin>
         </plugins>
       </build>
