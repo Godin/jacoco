@@ -23,7 +23,16 @@ public class RecordPatternsTarget {
 	private record Point(int x, int y) {
 	}
 
+	private static void test() {
+		if (true) { // assertEmpty()
+			nop(); // assertFullyCovered()
+		} else {
+			nop(); // assertEmpty()
+		}
+	}
+
 	private static void instanceofOperator(Object o) {
+		/* try replace int by byte on JDK 23 */
 		if (o instanceof Point(int x, int y)) { // assertInstanceof()
 			nop(x + y); // assertFullyCovered()
 		} // assertEmpty()
@@ -37,6 +46,8 @@ public class RecordPatternsTarget {
 	}
 
 	public static void main(String[] args) {
+		test();
+
 		instanceofOperator(new Point(1, 2));
 		instanceofOperator(new Object());
 

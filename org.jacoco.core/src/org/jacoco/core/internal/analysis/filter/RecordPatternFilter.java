@@ -25,6 +25,11 @@ final class RecordPatternFilter implements IFilter {
 	public void filter(final MethodNode methodNode,
 			final IFilterContext context, final IFilterOutput output) {
 		final Matcher matcher = new Matcher();
+		for (AbstractInsnNode i : methodNode.instructions) {
+			if (i.getOpcode() == Opcodes.ICONST_1) {
+				matcher.match2(i, output);
+			}
+		}
 		for (final TryCatchBlockNode t : methodNode.tryCatchBlocks) {
 			if ("java/lang/Throwable".equals(t.type)) {
 				matcher.match(t.handler, output);
@@ -33,6 +38,14 @@ final class RecordPatternFilter implements IFilter {
 	}
 
 	private static class Matcher extends AbstractMatcher {
+		void match2(final AbstractInsnNode start, final IFilterOutput output) {
+			cursor = start;
+			nextIs(Opcodes.IFEQ);
+			if (cursor != null) {
+				output.ignore(start, cursor);
+			}
+		}
+
 		void match(final AbstractInsnNode start, final IFilterOutput output) {
 			cursor = start;
 			nextIsVar(Opcodes.ASTORE, "cause");
