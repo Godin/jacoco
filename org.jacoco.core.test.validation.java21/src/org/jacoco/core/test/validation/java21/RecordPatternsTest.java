@@ -26,12 +26,22 @@ public class RecordPatternsTest extends ValidationTestBase {
 		super(RecordPatternsTarget.class);
 	}
 
-	public void assertSwitchStatementLastCase(final Line line) {
-		if (isJDKCompiler) {
-			assertFullyCovered(line);
+	public void assertInstanceof(final Line line) {
+		if (JavaVersion.current().isBefore("23")) {
+			assertFullyCovered(line, 0, 2);
 		} else {
+			assertFullyCovered(line, 2, 4);
+		}
+	}
+
+	public void assertSwitchStatementLastCase(final Line line) {
+		if (!isJDKCompiler) {
 			// https://github.com/eclipse-jdt/eclipse.jdt.core/issues/773
 			assertPartlyCovered(line);
+		} else if (JavaVersion.current().isBefore("23")) {
+			assertFullyCovered(line);
+		} else {
+			assertPartlyCovered(line, 2, 2);
 		}
 	}
 
