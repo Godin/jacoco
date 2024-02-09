@@ -45,7 +45,24 @@ public class RecordPatternsTarget {
 		} // assertEmpty()
 	}
 
+	record R(int c) {
+	}
+
+	private static void switchStatement2(Object o) {
+		switch (o) { // assertFullyCovered(0, 2)
+			case R(int c) when c > 0 -> nop(); // assertFullyCovered(0, 2)
+			case R(int c) when c == 0 -> nop(); // assertFullyCovered(0, 2)
+			case R(int c) -> nop(); // assertFullyCovered()
+			default -> nop(); // assertFullyCovered(0, 3)
+		}
+	}
+
 	public static void main(String[] args) {
+		switchStatement2(new R(1));
+		switchStatement2(new R(0));
+		switchStatement2(new R(-1));
+		switchStatement2(new Object());
+
 		test();
 
 		instanceofOperator(new Point(1, 2));
