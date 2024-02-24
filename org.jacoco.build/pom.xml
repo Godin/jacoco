@@ -410,7 +410,7 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-site-plugin</artifactId>
-          <version>3.3</version>
+          <version>3.12.1</version>
         </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
@@ -463,6 +463,36 @@
     </pluginManagement>
 
     <plugins>
+      <plugin>
+        <groupId>org.simplify4u.plugins</groupId>
+        <artifactId>pgpverify-maven-plugin</artifactId>
+        <version>1.17.0</version>
+        <configuration>
+        </configuration>
+        <executions>
+          <execution>
+            <goals>
+              <goal>check</goal>
+            </goals>
+            <configuration>
+              <keysMapLocations>
+                <keysMapLocation>${project.basedir}/../dependencies.txt</keysMapLocation>
+                <keysMapLocation>${project.basedir}/../pgp-keys-map.list</keysMapLocation>
+                <keysMapLocation>${project.basedir}/../unsigned.txt</keysMapLocation>
+                <keysMapLocation>${project.basedir}/../allow.txt</keysMapLocation>
+              </keysMapLocations>
+              <verifyProvidedDependencies>true</verifyProvidedDependencies>
+              <verifyPlugins>true</verifyPlugins>
+              <!-- mvn dependency:resolve-plugins -->
+              <verifyPluginDependencies>true</verifyPluginDependencies>
+              <!-- TODO quiet suppresses even more? -->
+              <suppressSignatureOkLogging>true</suppressSignatureOkLogging>
+              <quiet>true</quiet>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-surefire-plugin</artifactId>
