@@ -36,6 +36,7 @@
     <!-- when bytecode.version not specified -->
     <kotlin.compiler.jvmTarget>1.6</kotlin.compiler.jvmTarget>
     <groovy.targetBytecode>1.8</groovy.targetBytecode>
+    <scala.targetBytecode>8</scala.targetBytecode>
   </properties>
 
   <profiles>
@@ -145,6 +146,7 @@
       <properties>
         <kotlin.compiler.jvmTarget>1.8</kotlin.compiler.jvmTarget>
         <groovy.targetBytecode>1.8</groovy.targetBytecode>
+        <scala.targetBytecode>8</scala.targetBytecode>
       </properties>
       <modules>
         <module>../org.jacoco.core.test.validation.kotlin</module>
@@ -166,6 +168,7 @@
       <properties>
         <kotlin.compiler.jvmTarget>9</kotlin.compiler.jvmTarget>
         <groovy.targetBytecode>9</groovy.targetBytecode>
+        <scala.targetBytecode>9</scala.targetBytecode>
       </properties>
       <modules>
         <module>../org.jacoco.core.test.validation.kotlin</module>
@@ -186,6 +189,7 @@
       <properties>
         <kotlin.compiler.jvmTarget>10</kotlin.compiler.jvmTarget>
         <groovy.targetBytecode>10</groovy.targetBytecode>
+        <scala.targetBytecode>10</scala.targetBytecode>
       </properties>
       <modules>
         <module>../org.jacoco.core.test.validation.kotlin</module>
@@ -206,6 +210,7 @@
       <properties>
         <kotlin.compiler.jvmTarget>11</kotlin.compiler.jvmTarget>
         <groovy.targetBytecode>11</groovy.targetBytecode>
+        <scala.targetBytecode>11</scala.targetBytecode>
       </properties>
       <modules>
         <module>../org.jacoco.core.test.validation.kotlin</module>
@@ -227,6 +232,7 @@
       <properties>
         <kotlin.compiler.jvmTarget>12</kotlin.compiler.jvmTarget>
         <groovy.targetBytecode>12</groovy.targetBytecode>
+        <scala.targetBytecode>12</scala.targetBytecode>
       </properties>
       <modules>
         <module>../org.jacoco.core.test.validation.kotlin</module>
@@ -248,6 +254,7 @@
       <properties>
         <kotlin.compiler.jvmTarget>13</kotlin.compiler.jvmTarget>
         <groovy.targetBytecode>13</groovy.targetBytecode>
+        <scala.targetBytecode>13</scala.targetBytecode>
         <!-- see respective profile in org.jacoco.build about this override -->
         <maven.compiler.source>13</maven.compiler.source>
         <maven.compiler.target>13</maven.compiler.target>
@@ -272,6 +279,7 @@
       <properties>
         <kotlin.compiler.jvmTarget>14</kotlin.compiler.jvmTarget>
         <groovy.targetBytecode>14</groovy.targetBytecode>
+        <scala.targetBytecode>14</scala.targetBytecode>
         <!-- see respective profile in org.jacoco.build about this override -->
         <maven.compiler.source>14</maven.compiler.source>
         <maven.compiler.target>14</maven.compiler.target>
@@ -297,6 +305,7 @@
       <properties>
         <kotlin.compiler.jvmTarget>15</kotlin.compiler.jvmTarget>
         <groovy.targetBytecode>15</groovy.targetBytecode>
+        <scala.targetBytecode>15</scala.targetBytecode>
         <!-- see respective profile in org.jacoco.build about this override -->
         <maven.compiler.source>15</maven.compiler.source>
         <maven.compiler.target>15</maven.compiler.target>
@@ -322,6 +331,7 @@
       <properties>
         <kotlin.compiler.jvmTarget>16</kotlin.compiler.jvmTarget>
         <groovy.targetBytecode>16</groovy.targetBytecode>
+        <scala.targetBytecode>16</scala.targetBytecode>
         <!-- see respective profile in org.jacoco.build about this override -->
         <maven.compiler.source>16</maven.compiler.source>
         <maven.compiler.target>16</maven.compiler.target>
@@ -349,6 +359,7 @@
         <!-- Kotlin 1.5.0 doesn't support compilation into 17 -->
         <kotlin.compiler.jvmTarget>16</kotlin.compiler.jvmTarget>
         <groovy.targetBytecode>17</groovy.targetBytecode>
+        <scala.targetBytecode>17</scala.targetBytecode>
         <!-- see respective profile in org.jacoco.build about this override -->
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
@@ -377,6 +388,7 @@
         <kotlin.compiler.jvmTarget>16</kotlin.compiler.jvmTarget>
         <!-- Groovy 3.0.20 does not support compilation into 18 -->
         <groovy.targetBytecode>16</groovy.targetBytecode>
+        <scala.targetBytecode>18</scala.targetBytecode>
         <!-- see respective profile in org.jacoco.build about this override -->
         <maven.compiler.source>18</maven.compiler.source>
         <maven.compiler.target>18</maven.compiler.target>
@@ -405,6 +417,7 @@
         <kotlin.compiler.jvmTarget>16</kotlin.compiler.jvmTarget>
         <!-- Groovy 3.0.20 does not support compilation into 19 -->
         <groovy.targetBytecode>16</groovy.targetBytecode>
+        <scala.targetBytecode>19</scala.targetBytecode>
         <!-- see respective profile in org.jacoco.build about this override -->
         <maven.compiler.source>19</maven.compiler.source>
         <maven.compiler.target>19</maven.compiler.target>
@@ -433,6 +446,7 @@
         <kotlin.compiler.jvmTarget>16</kotlin.compiler.jvmTarget>
         <!-- Groovy 3.0.20 does not support compilation into 20 -->
         <groovy.targetBytecode>16</groovy.targetBytecode>
+        <scala.targetBytecode>20</scala.targetBytecode>
         <!-- see respective profile in org.jacoco.build about this override -->
         <maven.compiler.source>20</maven.compiler.source>
         <maven.compiler.target>20</maven.compiler.target>
@@ -461,6 +475,7 @@
         <kotlin.compiler.jvmTarget>16</kotlin.compiler.jvmTarget>
         <!-- Groovy 3.0.20 does not support compilation into 21 -->
         <groovy.targetBytecode>16</groovy.targetBytecode>
+        <scala.targetBytecode>21</scala.targetBytecode>
         <!-- see respective profile in org.jacoco.build about this override -->
         <maven.compiler.source>21</maven.compiler.source>
         <maven.compiler.target>21</maven.compiler.target>
@@ -490,6 +505,8 @@
         <kotlin.compiler.jvmTarget>16</kotlin.compiler.jvmTarget>
         <!-- Groovy 3.0.20 does not support compilation into 22 -->
         <groovy.targetBytecode>16</groovy.targetBytecode>
+        <!-- Scala 2.13.12 does not support compilation into 22 -->
+        <scala.targetBytecode>21</scala.targetBytecode>
         <!-- see respective profile in org.jacoco.build about this override -->
         <maven.compiler.source>22</maven.compiler.source>
         <maven.compiler.target>22</maven.compiler.target>
@@ -521,6 +538,8 @@
         <kotlin.compiler.jvmTarget>16</kotlin.compiler.jvmTarget>
         <!-- Groovy 3.0.20 does not support compilation into 23 -->
         <groovy.targetBytecode>16</groovy.targetBytecode>
+        <!-- Scala 2.13.12 does not support compilation into 23 -->
+        <scala.targetBytecode>21</scala.targetBytecode>
         <!-- see respective profile in org.jacoco.build about this override -->
         <maven.compiler.source>23</maven.compiler.source>
         <maven.compiler.target>23</maven.compiler.target>
