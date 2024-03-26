@@ -361,15 +361,7 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-plugin-plugin</artifactId>
-          <version>3.6.0</version>
-          <dependencies>
-            <dependency>
-              <!-- Workaround to be able to compile into Java 13 bytecode -->
-              <groupId>org.ow2.asm</groupId>
-              <artifactId>asm</artifactId>
-              <version>7.1</version>
-            </dependency>
-          </dependencies>
+          <version>3.7.1</version>
         </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
@@ -794,95 +786,11 @@
     </profile>
 
     <!--
-    Following profiles enable compilation into bytecode version 13
-    when requested "bytecode.version" greater than 13,
-    because this is maximum that can be processed by maven-plugin-plugin.
+    Following profiles enable compilation into bytecode version 19
+    when requested "bytecode.version" greater than 19,
+    because this is maximum that can be processed by maven-shade-plugin 3.5.0
     This is overridden for tests.
     -->
-    <profile>
-      <id>java14-bytecode</id>
-      <activation>
-        <property>
-          <name>bytecode.version</name>
-          <value>14</value>
-        </property>
-      </activation>
-      <properties>
-        <maven.compiler.source>13</maven.compiler.source>
-        <maven.compiler.target>13</maven.compiler.target>
-      </properties>
-    </profile>
-
-    <profile>
-      <id>java15-bytecode</id>
-      <activation>
-        <property>
-          <name>bytecode.version</name>
-          <value>15</value>
-        </property>
-      </activation>
-      <properties>
-        <maven.compiler.source>13</maven.compiler.source>
-        <maven.compiler.target>13</maven.compiler.target>
-      </properties>
-    </profile>
-
-    <profile>
-      <id>java16-bytecode</id>
-      <activation>
-        <property>
-          <name>bytecode.version</name>
-          <value>16</value>
-        </property>
-      </activation>
-      <properties>
-        <maven.compiler.source>13</maven.compiler.source>
-        <maven.compiler.target>13</maven.compiler.target>
-      </properties>
-    </profile>
-
-    <profile>
-      <id>java17-bytecode</id>
-      <activation>
-        <property>
-          <name>bytecode.version</name>
-          <value>17</value>
-        </property>
-      </activation>
-      <properties>
-        <maven.compiler.source>13</maven.compiler.source>
-        <maven.compiler.target>13</maven.compiler.target>
-      </properties>
-    </profile>
-
-    <profile>
-      <id>java18-bytecode</id>
-      <activation>
-        <property>
-          <name>bytecode.version</name>
-          <value>18</value>
-        </property>
-      </activation>
-      <properties>
-        <maven.compiler.source>13</maven.compiler.source>
-        <maven.compiler.target>13</maven.compiler.target>
-      </properties>
-    </profile>
-
-    <profile>
-      <id>java19-bytecode</id>
-      <activation>
-        <property>
-          <name>bytecode.version</name>
-          <value>19</value>
-        </property>
-      </activation>
-      <properties>
-        <maven.compiler.source>13</maven.compiler.source>
-        <maven.compiler.target>13</maven.compiler.target>
-      </properties>
-    </profile>
-
     <profile>
       <id>java20-bytecode</id>
       <activation>
@@ -892,8 +800,8 @@
         </property>
       </activation>
       <properties>
-        <maven.compiler.source>13</maven.compiler.source>
-        <maven.compiler.target>13</maven.compiler.target>
+        <maven.compiler.source>19</maven.compiler.source>
+        <maven.compiler.target>19</maven.compiler.target>
       </properties>
     </profile>
 
@@ -906,8 +814,9 @@
         </property>
       </activation>
       <properties>
-        <maven.compiler.source>13</maven.compiler.source>
-        <maven.compiler.target>13</maven.compiler.target>
+        <!-- FIXME fails in GitHub Actions, because jacoco-maven-plugin/pom.xml uses JDK 17 of Maven -->
+        <maven.compiler.source>19</maven.compiler.source>
+        <maven.compiler.target>19</maven.compiler.target>
       </properties>
     </profile>
 
@@ -920,8 +829,8 @@
         </property>
       </activation>
       <properties>
-        <maven.compiler.source>13</maven.compiler.source>
-        <maven.compiler.target>13</maven.compiler.target>
+        <maven.compiler.source>19</maven.compiler.source>
+        <maven.compiler.target>19</maven.compiler.target>
       </properties>
     </profile>
 
@@ -934,8 +843,8 @@
         </property>
       </activation>
       <properties>
-        <maven.compiler.source>13</maven.compiler.source>
-        <maven.compiler.target>13</maven.compiler.target>
+        <maven.compiler.source>19</maven.compiler.source>
+        <maven.compiler.target>19</maven.compiler.target>
       </properties>
     </profile>
 
