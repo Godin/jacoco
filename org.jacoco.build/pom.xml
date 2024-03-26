@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-   Copyright (c) 2009, 2023 Mountainminds GmbH & Co. KG and Contributors
+   Copyright (c) 2009, 2024 Mountainminds GmbH & Co. KG and Contributors
    This program and the accompanying materials are made available under
    the terms of the Eclipse Public License 2.0 which is available at
    http://www.eclipse.org/legal/epl-2.0
@@ -129,7 +129,7 @@
 
     <maven.build.timestamp.format>yyyyMMddhhmm</maven.build.timestamp.format>
     <jacoco.home.url>http://www.jacoco.org/jacoco</jacoco.home.url>
-    <copyright.years>${project.inceptionYear}, 2023</copyright.years>
+    <copyright.years>${project.inceptionYear}, 2024</copyright.years>
 
     <bytecode.version>1.5</bytecode.version>
     <maven.compiler.source>${bytecode.version}</maven.compiler.source>
@@ -139,7 +139,7 @@
     <argLine>${jvm.args}</argLine>
 
     <!-- Dependencies versions -->
-    <asm.version>9.6</asm.version>
+    <asm.version>9.7</asm.version>
     <ant.version>1.9.16</ant.version>
     <args4j.version>2.0.28</args4j.version>
     <junit.version>4.13.1</junit.version>
@@ -410,7 +410,7 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-site-plugin</artifactId>
-          <version>3.3</version>
+          <version>3.12.1</version>
         </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
@@ -608,7 +608,7 @@
                   <include name="**/*.scala"/>
                   <not>
                     <and>
-                      <contains text="Copyright (c) 2009, 2023 Mountainminds GmbH &amp; Co. KG and Contributors"/>
+                      <contains text="Copyright (c) 2009, 2024 Mountainminds GmbH &amp; Co. KG and Contributors"/>
                       <contains text="This program and the accompanying materials are made available under"/>
                       <contains text="the terms of the Eclipse Public License 2.0 which is available at"/>
                       <contains text="http://www.eclipse.org/legal/epl-2.0"/>
@@ -959,7 +959,7 @@
               <dependency>
                 <groupId>org.eclipse.jdt</groupId>
                 <artifactId>ecj</artifactId>
-                <version>3.36.0</version>
+                <version>3.37.0</version>
               </dependency>
               <dependency>
                 <groupId>org.codehaus.plexus</groupId>
