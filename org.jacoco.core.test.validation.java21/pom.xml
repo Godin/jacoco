@@ -36,6 +36,14 @@
     </dependency>
   </dependencies>
 
+  <!-- FIXME
+       org.eclipse.jdt.core.compiler.compliance
+       org.eclipse.jdt.core.compiler.source
+       org.eclipse.jdt.core.compiler.codegen.targetPlatform
+       play role, but not when XML config used?
+       they are not specified in XML config
+       enough to comment-out "compiler.source
+  -->
   <build>
     <plugins>
       <plugin>

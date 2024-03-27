@@ -22,7 +22,7 @@ public class SwitchPatternMatchingTarget {
 
 	private static void example(Object o) {
 		switch (o) { // assertFullyCovered(1, 2)
-		case String s when s.length() == 0 -> // assertFullyCovered(0, 2)
+		case String s   when s.length() == 0 -> // assertFullyCovered(0, 2)
 			nop(s); // assertFullyCovered()
 		case String s -> // assertFullyCovered()
 			nop(s); // assertFullyCovered()
