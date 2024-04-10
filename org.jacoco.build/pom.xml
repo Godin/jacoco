@@ -712,9 +712,15 @@
             <Automatic-Module-Name>${project.artifactId}</Automatic-Module-Name>
             <Bundle-Version>${qualified.bundle.version}</Bundle-Version>
             <Bundle-Name>${project.description}</Bundle-Name>
+            <!-- TODO
+                 attempt to solve https://github.com/jacoco/jacoco/issues/1599#issuecomment-2033737996
+                 org.jacoco.core.runtime has ASM in API
+                 EclEmma 3.1.8 with JaCoCo 0.8.11
+            -->
             <Export-Package>
               !about.html,
               *.internal*;x-internal:=true;version="${version;===;${Bundle-Version}}",
+              org.jacoco.core.runtime;version="${version;===;${Bundle-Version}}";uses:="",
               *;version="${version;===;${Bundle-Version}}"
             </Export-Package>
             <Import-Package>
