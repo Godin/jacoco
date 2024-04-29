@@ -31,6 +31,7 @@ object KotlinSafeCallOperatorTarget {
     }
 
     private fun e2(c: Container?) {
+        /* FIXME? */
         nop(c?.item?.s ?: "") // assertFullyCovered(0, 4)
     }
 
