@@ -47,6 +47,7 @@ public final class Filters implements IFilter {
 				new KotlinWhenStringFilter(),
 				new KotlinUnsafeCastOperatorFilter(),
 				new KotlinNotNullOperatorFilter(),
+				new KotlinSafeCallOperatorFilter(),
 				new KotlinDefaultArgumentsFilter(), new KotlinInlineFilter(),
 				new KotlinCoroutineFilter(), new KotlinDefaultMethodsFilter());
 	}
