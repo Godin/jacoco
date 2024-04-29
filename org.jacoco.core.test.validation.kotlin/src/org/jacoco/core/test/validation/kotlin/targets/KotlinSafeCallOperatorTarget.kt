@@ -12,19 +12,35 @@
  *******************************************************************************/
 package org.jacoco.core.test.validation.kotlin.targets
 
+import org.jacoco.core.test.validation.targets.Stubs.nop
+
 /**
  * Test target for safe call operator.
  */
 object KotlinSafeCallOperatorTarget {
 
-    private fun example(x: String?): Int? {
-        return x?.length // assertFullyCovered(0, 2)
+    data class Item(val s: String)
+    data class Container(val i: Item)
+
+    private fun example(c: Container?) {
+        nop(c?.i?.s) // assertFullyCovered(0, 4)
+    }
+
+    private fun example2(c: Container?) {
+        nop(c?.i?.s ?: "") // assertFullyCovered(0, 6)
+    }
+
+    private fun example3(a: Container?, b: Container?) {
+        nop(a?.i?.s ?: b?.i?.s ?: "")
     }
 
     @JvmStatic
     fun main(args: Array<String>) {
-        example("")
+        example(Container(Item("")))
         example(null)
+
+        example2(Container(Item("")))
+        example2(null)
     }
 
 }
