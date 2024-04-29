@@ -22,7 +22,9 @@ import org.objectweb.asm.tree.LabelNode;
 import org.objectweb.asm.tree.MethodNode;
 
 /**
- * TODO
+ * TODO see
+ * https://github.com/JetBrains/kotlin/commit/9325660f06ebb7d8ef201cf9e4dea49a71d8b77c
+ * https://github.com/JetBrains/kotlin/blob/f835be79fa3013f7fdaf7fea0a28a476422afd05/compiler/backend/src/org/jetbrains/kotlin/codegen/optimization/temporaryVals/TemporaryVariablesEliminationTransformer.kt#L333
  */
 final class KotlinSafeCallOperatorFilter implements IFilter {
 
