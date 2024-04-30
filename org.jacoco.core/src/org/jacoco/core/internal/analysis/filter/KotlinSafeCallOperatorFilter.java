@@ -15,6 +15,7 @@ package org.jacoco.core.internal.analysis.filter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.tree.AbstractInsnNode;
@@ -34,47 +35,33 @@ final class KotlinSafeCallOperatorFilter implements IFilter {
 		if (!KotlinGeneratedFilter.isKotlinClass(context)) {
 			return;
 		}
-		final HashMap<AbstractInsnNode, ArrayList<AbstractInsnNode>> map = new HashMap<AbstractInsnNode, ArrayList<AbstractInsnNode>>();
+		final HashMap<AbstractInsnNode, ArrayList<JumpInsnNode>> map = new HashMap<AbstractInsnNode, ArrayList<JumpInsnNode>>();
 		for (final AbstractInsnNode i : methodNode.instructions) {
-			if (i.getOpcode() == Opcodes.IFNONNULL
-					&& i.getPrevious().getOpcode() == Opcodes.DUP
-					&& i.getNext().getType() == AbstractInsnNode.LABEL) {
-				// FIXME unfortunately merge of IFNONULL with IFNULL
-				// will cause PartlyCovered(0, 2) in case of
-				// c?.i?.s ?: ""
-				// example(Container(Item("")))
-				final LabelNode label = (LabelNode) i.getNext();
-				ArrayList<AbstractInsnNode> list = map.get(label);
-				list.add(i);
-			}
 			if (i.getOpcode() == Opcodes.IFNULL
 					&& i.getPrevious().getOpcode() == Opcodes.DUP) {
 				final LabelNode label = ((JumpInsnNode) i).label;
-				ArrayList<AbstractInsnNode> list = map.get(label);
+				ArrayList<JumpInsnNode> list = map.get(label);
 				if (list == null) {
-					list = new ArrayList<AbstractInsnNode>();
+					list = new ArrayList<JumpInsnNode>();
 					map.put(label, list);
 				}
-				list.add(i);
+				list.add((JumpInsnNode) i);
 			}
 		}
-		for (final ArrayList<AbstractInsnNode> list : map.values()) {
-			if (list.size() > 1) {
-				final AbstractInsnNode m = list.get(0);
-				final JumpInsnNode lastJump = (JumpInsnNode) list
-						.get(list.size() - 1);
-				if (true || lastJump.getOpcode() == Opcodes.IFNONNULL) {
-					HashSet<AbstractInsnNode> set = new HashSet<AbstractInsnNode>();
-					set.add(AbstractMatcher.skipNonOpcodes(lastJump.getNext()));
-					set.add(AbstractMatcher.skipNonOpcodes(lastJump.label));
-					for (int i = 0; i < list.size(); i++) {
-						output.replaceBranches(list.get(i), set);
-					}
-				} else {
-					for (int i = 1; i < list.size(); i++) {
-						output.merge(m, list.get(i));
-					}
-				}
+		for (final ArrayList<JumpInsnNode> list : map.values()) {
+			if (list.size() == 1) {
+				continue;
+			}
+			JumpInsnNode lastJump = list.get(list.size() - 1);
+			if (lastJump.label.getPrevious().getOpcode() == Opcodes.IFNONNULL) {
+				lastJump = (JumpInsnNode) lastJump.label.getPrevious();
+				list.add(lastJump);
+			}
+			final HashSet<AbstractInsnNode> set = new HashSet<AbstractInsnNode>();
+			set.add(AbstractMatcher.skipNonOpcodes(lastJump.getNext()));
+			set.add(AbstractMatcher.skipNonOpcodes(lastJump.label));
+			for (final AbstractInsnNode i : list) {
+				output.replaceBranches(i, set);
 			}
 		}
 	}
