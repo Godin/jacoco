@@ -19,31 +19,31 @@ import org.jacoco.core.test.validation.targets.Stubs.nop
  */
 object KotlinSafeCallOperatorTarget {
 
-    data class Item(val s: String)
-    data class Container(val i: Item)
+    private data class A(val b: B)
+    private data class B(val c: String)
 
-    private fun example(c: Container?) {
-        nop(c?.i?.s) // assertFullyCovered(0, 4)
+    private fun example(a: A?) {
+        nop(a?.b?.c) // assertFullyCovered(0, 4)
     }
 
-    private fun example2(c: Container?) {
-        nop(c?.i?.s ?: "") // assertFullyCovered(0, 6)
+    private fun example2(a: A?) {
+        nop(a?.b?.c ?: "") // assertFullyCovered(0, 6)
     }
 
-    private fun example3(a: Container?, b: Container?) {
-        nop(a?.i?.s ?: b?.i?.s ?: "")
+    private fun example3(a1: A?, a2: A?) {
+        nop(a1?.b?.c ?: a2?.b?.c ?: "")
     }
 
-    private fun example4(a: Container?, b: Container?, c: Container?) {
-        nop(a?.i?.s ?: b?.i?.s ?: c?.i?.s ?: "")
+    private fun example4(a1: A?, a2: A?, a3: A?) {
+        nop(a1?.b?.c ?: a2?.b?.c ?: a3?.b?.c ?: "")
     }
 
     @JvmStatic
     fun main(args: Array<String>) {
-        example(Container(Item("")))
+        example(A(B("")))
         example(null)
 
-        example2(Container(Item("")))
+        example2(A(B("")))
         example2(null)
     }
 
