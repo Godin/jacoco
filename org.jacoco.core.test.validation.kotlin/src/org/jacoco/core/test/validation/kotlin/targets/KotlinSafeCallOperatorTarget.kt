@@ -34,6 +34,10 @@ object KotlinSafeCallOperatorTarget {
         nop(a?.i?.s ?: b?.i?.s ?: "")
     }
 
+    private fun example4(a: Container?, b: Container?, c: Container?) {
+        nop(a?.i?.s ?: b?.i?.s ?: c?.i?.s ?: "")
+    }
+
     @JvmStatic
     fun main(args: Array<String>) {
         example(Container(Item("")))
