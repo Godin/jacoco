@@ -47,8 +47,7 @@ final class KotlinSafeCallOperatorFilter implements IFilter {
 				ArrayList<AbstractInsnNode> list = map.get(label);
 				list.add(i);
 			}
-			if ((i.getOpcode() == Opcodes.IFNULL
-					|| i.getOpcode() == Opcodes.IFNONNULL)
+			if (i.getOpcode() == Opcodes.IFNULL
 					&& i.getPrevious().getOpcode() == Opcodes.DUP) {
 				final LabelNode label = ((JumpInsnNode) i).label;
 				ArrayList<AbstractInsnNode> list = map.get(label);
@@ -62,7 +61,8 @@ final class KotlinSafeCallOperatorFilter implements IFilter {
 		for (final ArrayList<AbstractInsnNode> list : map.values()) {
 			if (list.size() > 1) {
 				final AbstractInsnNode m = list.get(0);
-				final JumpInsnNode lastJump = (JumpInsnNode) list.get(list.size() - 1);
+				final JumpInsnNode lastJump = (JumpInsnNode) list
+						.get(list.size() - 1);
 				if (true || lastJump.getOpcode() == Opcodes.IFNONNULL) {
 					HashSet<AbstractInsnNode> set = new HashSet<AbstractInsnNode>();
 					set.add(AbstractMatcher.skipNonOpcodes(lastJump.getNext()));
