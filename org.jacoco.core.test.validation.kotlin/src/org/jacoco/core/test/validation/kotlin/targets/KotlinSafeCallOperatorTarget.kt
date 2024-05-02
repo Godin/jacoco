@@ -38,6 +38,10 @@ object KotlinSafeCallOperatorTarget {
         nop(a1?.b?.c ?: a2?.b?.c ?: a3?.b?.c ?: "")
     }
 
+    private fun handWritten(a: A?) {
+        val t1 = a; if (t1 == null) { } else { val t2 = t1.b; if (t2 == null) { } else { t2.c } }
+    }
+
     @JvmStatic
     fun main(args: Array<String>) {
         example(A(B("")))
