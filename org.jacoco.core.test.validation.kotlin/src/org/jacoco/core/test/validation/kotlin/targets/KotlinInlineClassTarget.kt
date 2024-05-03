@@ -26,6 +26,8 @@ object KotlinInlineClassTarget {
     @JvmInline
     value class Example(val value: String) : Base { // assertEmpty()
 
+        constructor() : this("") // assertFullyCovered()
+
         init { // assertEmpty()
             nop() // assertFullyCovered()
         } // assertEmpty()
@@ -42,7 +44,7 @@ object KotlinInlineClassTarget {
 
     @JvmStatic
     fun main(args: Array<String>) {
-        val v = Example("")
+        val v = Example()
         v.value
         v.function()
         v.base()
