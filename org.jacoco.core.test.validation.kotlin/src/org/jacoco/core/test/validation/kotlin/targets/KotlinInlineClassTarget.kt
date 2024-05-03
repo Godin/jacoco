@@ -21,6 +21,8 @@ object KotlinInlineClassTarget {
 
     interface Base {
         fun base()
+
+        fun d() = Unit
     }
 
     @JvmInline
@@ -40,7 +42,7 @@ object KotlinInlineClassTarget {
             nop() // assertFullyCovered()
         } // assertFullyCovered()
 
-    }
+    } // assertEmpty()
 
     @JvmStatic
     fun main(args: Array<String>) {
@@ -48,6 +50,7 @@ object KotlinInlineClassTarget {
         v.value
         v.function()
         v.base()
+        v.d()
     }
 
 }
