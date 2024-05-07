@@ -30,9 +30,14 @@ object KotlinInlineClassTarget {
             nop() // assertFullyCovered()
         } // assertEmpty()
 
-        constructor(): this("") // assertFullyCovered()
+        constructor() : this("") { // assertFullyCovered()
+            nop() // assertFullyCovered()
+        } // assertEmpty()
 
-        fun function() { // assertEmpty()
+        val length: Int // assertEmpty()
+            get() = value.length // assertFullyCovered()
+
+        fun f() { // assertEmpty()
             nop() // assertFullyCovered()
         } // assertFullyCovered()
 
@@ -55,7 +60,8 @@ object KotlinInlineClassTarget {
     fun main(args: Array<String>) {
         val i = I1()
         i.value
-        i.function()
+        i.length
+        i.f()
         i.base()
 
         I2("")
