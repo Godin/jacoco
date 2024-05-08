@@ -23,7 +23,8 @@ import org.objectweb.asm.tree.MethodNode;
  * <pre>
  * &#064;kotlin.jvm.JvmInline
  * value class Example(val value: String) : Base {
- *   fun f() { ... }
+ *   fun f1(p: String) { ... }
+ *   fun f2(p: Example) { ... }
  *   override fun base() { ... }
  * }
  * </pre>
@@ -40,7 +41,9 @@ import org.objectweb.asm.tree.MethodNode;
  *
  *   public static String constructor-impl(String value) { ... }
  *
- *   public static void f-impl(String value) { ... }
+ *   public static void f1-impl(String value, String p) { ... }
+ *
+ *   public static void f2-ulP-heY(String value, String p) { ... }
  *
  *   public void base() { base-impl(value); }
  *   public static void base-impl(String value) { ... }
