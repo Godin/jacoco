@@ -37,8 +37,12 @@ object KotlinInlineClassTarget {
         val length: Int // assertEmpty()
             get() = value.length // assertFullyCovered()
 
-        fun f() { // assertEmpty()
-            nop() // assertFullyCovered()
+        fun f1(p: String) { // assertEmpty()
+            nop(p) // assertFullyCovered()
+        } // assertFullyCovered()
+
+        fun f2(p: I1) { // assertEmpty()
+            nop(p) // assertFullyCovered()
         } // assertFullyCovered()
 
         override fun base() { // assertEmpty()
@@ -61,7 +65,8 @@ object KotlinInlineClassTarget {
         val i = I1()
         i.value
         i.length
-        i.f()
+        i.f1("")
+        i.f2(i)
         i.base()
 
         I2("")
