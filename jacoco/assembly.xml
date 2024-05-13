@@ -110,6 +110,8 @@
       <unpackOptions>
         <excludes>
           <exclude>META-INF/</exclude>
+          <!-- https://bugs.openjdk.org/browse/JDK-8324774 -->
+          <exclude>resource-files/fonts/</exclude>
         </excludes>
       </unpackOptions>
       <includes>
