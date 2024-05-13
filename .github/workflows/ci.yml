@@ -13,7 +13,7 @@ jobs:
           - kotlin: 1.7.22
           - kotlin: 1.8.22
           - kotlin: 1.9.22
-          - kotlin: 2.0.0-RC2
+          - kotlin: 2.0.0-RC3
     runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
