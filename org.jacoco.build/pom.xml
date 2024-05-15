@@ -125,6 +125,12 @@
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <!-- FIXME
+         https://maven.apache.org/guides/mini/guide-reproducible-builds.html
+         https://www.mojohaus.org/buildnumber-maven-plugin/create-mojo.html#timestampPropertyName
+         https://github.com/apache/maven-artifact-plugin/pull/30
+         -->
+    <project.build.outputTimestamp>2024-01-01T00:00:00Z</project.build.outputTimestamp>
     <sonatypeOssDistMgmtSnapshotsUrl>https://oss.sonatype.org/content/repositories/snapshots/</sonatypeOssDistMgmtSnapshotsUrl>
 
     <maven.build.timestamp.format>yyyyMMddhhmm</maven.build.timestamp.format>
