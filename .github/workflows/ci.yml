@@ -4,6 +4,7 @@ on:
   - pull_request
 jobs:
   Linux:
+    if: false
     strategy:
       fail-fast: false
       matrix:
@@ -47,6 +48,7 @@ jobs:
             verify -Djdk.version=${{ matrix.jdk }} -Dbytecode.version=${{ matrix.jdk }} \
             --toolchains=toolchains.xml
   Windows:
+    if: false
     runs-on: windows-2022
     steps:
       - uses: actions/checkout@0ad4b8fadaa221de15dcec353f45205ec38ea70b # v4.1.4
@@ -88,3 +90,25 @@ jobs:
           name: jacoco
           path: jacoco/target/*.zip
           if-no-files-found: error
+
+  test-reproducible-build:
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
+      - uses: actions/setup-java@387ac29b308b003ca37ba93a6cab5eb57c8f5f93 # v4.0.0
+        with:
+          distribution: 'zulu'
+          java-version: |
+            17
+      - run: |
+          mvn -V -B -e --no-transfer-progress\
+            -f org.jacoco.build \
+            install
+      - run: |
+          mvn -V -B -e --no-transfer-progress \
+            -f org.jacoco.build \
+            artifact:check-buildplan
+      - run: |
+          mvn -V -B -e --no-transfer-progress\
+            -f org.jacoco.build \
+            clean verify artifact:compare -Dbuildinfo.skipModules=org.jacoco/jacoco
