@@ -682,6 +682,7 @@
                 project.getProperties().setProperty("unqualifiedVersion", unqualifiedVersion);
 
                 qualifier = "${maven.build.timestamp}";
+                qualifier = "20240101";
                 project.getProperties().setProperty("buildQualifier", qualifier);
 
                 qualifiedVersion = unqualifiedVersion + "." + qualifier;
