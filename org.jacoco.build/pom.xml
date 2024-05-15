@@ -555,6 +555,22 @@
           <formats>
             <format>
               <includes>
+                <include>**/*.html</include>
+              </includes>
+              <excludes>
+                <exclude>target/**</exclude>
+                <exclude>licenses/**</exclude>
+                <exclude>about.html</exclude>
+              </excludes>
+              <eclipseWtp>
+                <type>HTML</type>
+                <files>
+                  <file>../org.eclipse.wst.html.core.prefs</file>
+                </files>
+              </eclipseWtp>
+            </format>
+            <format>
+              <includes>
                 <include>**/*.properties</include>
                 <include>**/*.html</include>
                 <include>**/*.css</include>
