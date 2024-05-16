@@ -103,7 +103,7 @@ jobs:
       - name: 'Build'
         run: |
           mvn -V -B -e --no-transfer-progress \
-            package
+            verify
   parallel:
     runs-on: ubuntu-20.04
     steps:
@@ -117,4 +117,4 @@ jobs:
         run: |
           mvn -V -B -e --no-transfer-progress \
             -T 2 \
-            package
+            verify
