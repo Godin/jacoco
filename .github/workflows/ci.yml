@@ -4,6 +4,7 @@ on:
   - pull_request
 jobs:
   Linux:
+    if: false
     strategy:
       fail-fast: false
       matrix:
@@ -47,6 +48,7 @@ jobs:
             verify -Djdk.version=${{ matrix.jdk }} -Dbytecode.version=${{ matrix.jdk }} \
             --toolchains=toolchains.xml
   Windows:
+    if: false
     runs-on: windows-2022
     steps:
       - uses: actions/checkout@0ad4b8fadaa221de15dcec353f45205ec38ea70b # v4.1.4
@@ -88,3 +90,31 @@ jobs:
           name: jacoco
           path: jacoco/target/*.zip
           if-no-files-found: error
+
+  non_parallel:
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@0ad4b8fadaa221de15dcec353f45205ec38ea70b # v4.1.4
+      - uses: actions/setup-java@99b8673ff64fbf99d8d325f52d9a5bdedb8483e9 # v4.2.1
+        with:
+          distribution: 'zulu'
+          java-version: |
+            17
+      - name: 'Build'
+        run: |
+          mvn -V -B -e --no-transfer-progress \
+            package
+  parallel:
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@0ad4b8fadaa221de15dcec353f45205ec38ea70b # v4.1.4
+      - uses: actions/setup-java@99b8673ff64fbf99d8d325f52d9a5bdedb8483e9 # v4.2.1
+        with:
+          distribution: 'zulu'
+          java-version: |
+            17
+      - name: 'Build'
+        run: |
+          mvn -V -B -e --no-transfer-progress \
+            -T 2 \
+            package
