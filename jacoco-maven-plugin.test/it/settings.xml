@@ -11,6 +11,14 @@
       Evgeny Mandrikov - initial API and implementation
 -->
 <settings>
+  <mirrors>
+    <mirror>
+      <!-- otherwise Maven 3.1.1 uses HTTP -->
+      <id>mirror</id>
+      <url>https://repo1.maven.org/maven2</url>
+      <mirrorOf>external:*</mirrorOf>
+    </mirror>
+  </mirrors>
   <profiles>
     <profile>
       <id>it-repo</id>

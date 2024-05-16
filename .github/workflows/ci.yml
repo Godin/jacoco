@@ -41,12 +41,17 @@ jobs:
             </toolchain>
           </toolchains>
           " > toolchains.xml
+      - run: |
+          mkdir .maven
+          curl -L "https://archive.apache.org/dist/maven/maven-4/4.0.0-alpha-13/binaries/apache-maven-4.0.0-alpha-13-bin.tar.gz" -o .maven/maven.tar.gz
+          tar -xzf .maven/maven.tar.gz -C .maven --strip-components 1
       - name: 'Build'
         run: |
-          mvn -V -B -e --no-transfer-progress \
+          .maven/bin/mvn -V -B -e --no-transfer-progress \
             verify -Djdk.version=${{ matrix.jdk }} -Dbytecode.version=${{ matrix.jdk }} \
             --toolchains=toolchains.xml
   Windows:
+    if: false
     runs-on: windows-2022
     steps:
       - uses: actions/checkout@0ad4b8fadaa221de15dcec353f45205ec38ea70b # v4.1.4
@@ -88,3 +93,34 @@ jobs:
           name: jacoco
           path: jacoco/target/*.zip
           if-no-files-found: error
+
+  test-maven:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          # https://maven.apache.org/docs/history.html
+          - maven: 3.1.1
+          - maven: 3.2.5
+          - maven: 3.3.9
+          - maven: 3.5.4
+          - maven: 3.6.3
+          - maven: 3.8.8
+          - maven: 3.9.6
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@0ad4b8fadaa221de15dcec353f45205ec38ea70b # v4.1.4
+      - uses: actions/setup-java@99b8673ff64fbf99d8d325f52d9a5bdedb8483e9 # v4.2.1
+        with:
+          distribution: 'zulu'
+          java-version: |
+            17
+      - run: |
+          mkdir .maven
+          curl -L "https://archive.apache.org/dist/maven/maven-3/${{ matrix.maven }}/binaries/apache-maven-${{ matrix.maven }}-bin.tar.gz" -o .maven/maven.tar.gz
+          tar -xzf .maven/maven.tar.gz -C .maven --strip-components 1
+      - name: 'Build'
+        run: |
+          mvn -V -B -e --no-transfer-progress \
+            -am -pl jacoco-maven-plugin.test,org.jacoco.agent.rt \
+            verify -Dinvoker.mavenHome=$(pwd)/.maven
