@@ -45,6 +45,7 @@ jobs:
         run: |
           mvn -V -B -e --no-transfer-progress \
             verify -Djdk.version=${{ matrix.jdk }} -Dbytecode.version=${{ matrix.jdk }} \
+            -Dinvoker.parallelThreads=2 \
             --toolchains=toolchains.xml
   Windows:
     runs-on: windows-2022
