@@ -95,11 +95,8 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        include:
-          - threads: 1
-          - threads: 2
-          - threads: 3
-          - threads: 4
+        threads: [1, 2, 3, 4]
+        invoker: [1, 2, 3, 4]
     runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@0ad4b8fadaa221de15dcec353f45205ec38ea70b # v4.1.4
@@ -112,4 +109,5 @@ jobs:
         run: |
           mvn -V -B -e --no-transfer-progress \
             -T ${{ matrix.threads }} \
+            -Dinvoker.parallelThreads=${{ matrix.invoker }} \
             verify
