@@ -51,6 +51,13 @@
         <groupId>org.jetbrains.kotlin</groupId>
         <artifactId>kotlin-maven-plugin</artifactId>
         <version>${kotlin.version}</version>
+        <configuration>
+          <!-- https://www.reddit.com/r/Kotlin/comments/1d5smcm/kotlin_beyond_20_whats_coming_to_the_language/ -->
+          <languageVersion>2.1</languageVersion>
+          <args>
+            <arg>-XXLanguage:+ExplicitBackingFields</arg>
+          </args>
+        </configuration>
         <executions>
           <execution>
             <id>compile</id>
