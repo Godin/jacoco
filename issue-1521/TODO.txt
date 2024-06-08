@@ -1,0 +1,9 @@
+https://github.com/jacoco/jacoco/issues/1521
+
+Check if it interferes with
+https://github.com/jacoco/jacoco/pull/1283
+ie if all zero-lines will be ignored
+
+See also
+https://github.com/jacoco/jacoco/issues/1523
+https://github.com/jacoco/jacoco/pull/1525
