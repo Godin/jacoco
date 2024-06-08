@@ -28,7 +28,7 @@
   </setupTask>
   <setupTask
       xsi:type="git:GitCloneTask"
-      id="git.clone"
+      id="git.clone.jacoco"
       remoteURI="jacoco/jacoco">
     <annotation
         source="http://www.eclipse.org/oomph/setup/InducedChoices">
@@ -50,7 +50,7 @@
   <setupTask
       xsi:type="projects:ProjectsImportTask">
     <sourceLocator
-        rootFolder="${git.clone.location}"
+        rootFolder="${git.clone.jacoco.location}"
         locateNestedProjects="true">
       <excludedPath>org.jacoco.core.test.validation.java7</excludedPath>
       <excludedPath>org.jacoco.core.test.validation.java8</excludedPath>
