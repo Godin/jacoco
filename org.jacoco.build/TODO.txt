@@ -1,0 +1,14 @@
+org.jacoco.core.test.validation.java7
+contains errors in
+Eclipse 2023-12
+try older versions
+2023-03 = NOK
+2022-03 = NOK
+2021-03 = NOK
+2020-03 = NOK
+
+change back `git.clone.jacoco` to `git.clone`
+
+move redirection outside of stream
+
+add branding - see oomph itself

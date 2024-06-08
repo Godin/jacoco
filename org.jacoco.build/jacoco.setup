@@ -52,7 +52,9 @@
     <sourceLocator
         rootFolder="${git.clone.jacoco.location}"
         locateNestedProjects="true">
+      <!--
       <excludedPath>org.jacoco.core.test.validation.java7</excludedPath>
+      -->
       <excludedPath>org.jacoco.core.test.validation.java8</excludedPath>
       <excludedPath>org.jacoco.core.test.validation.java14</excludedPath>
       <excludedPath>org.jacoco.core.test.validation.java16</excludedPath>
