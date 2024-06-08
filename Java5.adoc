@@ -1,0 +1,97 @@
+= Java 5
+
+https://github.com/jacoco/jacoco/issues/314
+
+'''
+
+https://en.wikipedia.org/wiki/Java_version_history
+
+> Java SE 5 entered its end-of-public-updates period on April 8, 2008; updates are no longer available to the public as of November 3, 2009. Updates were available to paid Oracle customers until May 2015.
+
+'''
+
+JDK 9 removed compilation into 5
+
+JDK 12 removed compilation into 6
+
+JDK 20 removed compilation into 7
+
+== Gradle
+
+https://docs.gradle.org/8.1/userguide/compatibility.html
+
+> A Java version between 8 and 19 is required to execute Gradle.
+>
+> Java 6 and 7 can still be used for compilation, but are deprecated for use with testing. Testing with Java 6 and 7 will not be supported in Gradle 9.0.
+
+'''
+
+https://docs.gradle.org/3.0/userguide/java_plugin.html#sec:java_cross_compilation
+
+> Java 5 is not supported.
+
+https://docs.gradle.org/3.0/release-notes.html
+
+> Support for compiling and testing on Java 5 has been removed.
+
+'''
+
+https://docs.gradle.org/2.14/userguide/tutorial_java_projects.html#N103C9
+
+> 1.5
+
+== eclipse-tycho
+
+https://github.com/eclipse-tycho/tycho/blob/tycho-4.0.7/RELEASE_NOTES.md#minimum-version-for-running-integrationplugin-tests
+
+> Previously the osgibooter has claimed to be Java 1.5 compatible but as such old JVMs are hard to find/test against already some newer code was slipping in. It was therefore decided to raise the minimum requirement to Java 1.8 what implicitly makes it the lowest bound for running integration/plugin tests with Tycho.
+
+since 4.0.0 in Jul 2023
+
+== maven-surefire-plugin
+
+requires 6 since Dec 2016
+https://github.com/apache/maven-surefire/commit/9964119f3a238223e50b0bd6e813ea8dc03f910d
+
+requires 7 since Nov 2018
+https://github.com/apache/maven-surefire/commit/d23e970cd86ce4896edf5f8ad1f1acd66a9a27c2
+
+requires 8 since Dec 2021
+https://github.com/apache/maven-surefire/commit/76c6233b8b44e8d1b40d758fcab4f7ff48ec1aad
+
+== eclipse-jdt
+
+might require 8 in 4.33
+https://github.com/eclipse-jdt/eclipse.jdt.core/discussions/820#discussioncomment-9422730
+
+https://github.com/eclipse-jdt/eclipse.jdt.core/issues/2536
+
+== Kotlin
+
+https://kotlinlang.org/docs/whatsnew18.html#updated-jvm-compilation-target
+
+> Kotlin 1.8.0 no longer supports JVM targets 1.6 and 1.7.
+
+Dec 2022
+
+== Groovy
+
+https://groovy-lang.org/releasenotes/groovy-3.0.html
+
+> JDK8 is the minimum version
+
+== Scala
+
+https://scala-lang.org/news/2.11.0/
+
+> targets Java 6
+
+Nov 2017 latest release in 2.11.x series
+
+Feb 2024 latest release in 2.12.x series
+
+== Other
+
+* https://newrelic.com/resources/report/2023-state-of-the-java-ecosystem
+* https://www.jetbrains.com/lp/devecosystem-2020/java/
+* https://www.jetbrains.com/lp/devecosystem-2022/java/
