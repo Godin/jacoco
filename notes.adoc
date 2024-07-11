@@ -1,0 +1,1 @@
+https://github.com/JetBrains/intellij-deps-jdi/blob/master/src/main/java/com/jetbrains/jdi/SDE.java
