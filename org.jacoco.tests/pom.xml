@@ -55,7 +55,8 @@
   </dependencyManagement>
 
   <build>
-    <sourceDirectory>src</sourceDirectory>
+    <sourceDirectory>fake</sourceDirectory>
+    <testSourceDirectory>src</testSourceDirectory>
 
     <plugins>
       <plugin>
