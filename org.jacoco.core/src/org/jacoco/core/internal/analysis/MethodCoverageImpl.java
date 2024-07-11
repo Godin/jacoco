@@ -12,6 +12,8 @@
  *******************************************************************************/
 package org.jacoco.core.internal.analysis;
 
+import java.util.BitSet;
+
 import org.jacoco.core.analysis.ICounter;
 import org.jacoco.core.analysis.IMethodCoverage;
 
@@ -40,6 +42,31 @@ public class MethodCoverageImpl extends SourceNodeImpl
 		super(ElementType.METHOD, name);
 		this.desc = desc;
 		this.signature = signature;
+	}
+
+	public void increment(final ICounter instructions, final ICounter branches,
+			final int line, final BitSet coveredBranches) {
+		// FIXME handle UNKNOWN_LINE
+		final LineImpl oldLine = getLine(line);
+		final int oldBranchesTotalCount = oldLine.branches.getTotalCount();
+		final BitSet oldCoveredBranches = oldLine.coveredBranches;
+
+		increment(instructions, branches, line);
+
+		LineImpl newLine = getLine(line);
+		if (newLine.getBranchCounter().getTotalCount() > 1) {
+			// FIXME use singletons
+			newLine = new LineImpl.Var(newLine.instructions, newLine.branches);
+			newLine.coveredBranches = new BitSet();
+			for (int i = 0; i < oldBranchesTotalCount; i++) {
+				newLine.coveredBranches.set(i, oldCoveredBranches.get(i));
+			}
+			for (int i = 0; i < branches.getTotalCount(); i++) {
+				newLine.coveredBranches.set(i + oldBranchesTotalCount,
+						coveredBranches.get(i));
+			}
+			lines[line - getFirstLine()] = newLine;
+		}
 	}
 
 	@Override

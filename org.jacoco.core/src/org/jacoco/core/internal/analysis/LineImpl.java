@@ -12,6 +12,8 @@
  *******************************************************************************/
 package org.jacoco.core.internal.analysis;
 
+import java.util.BitSet;
+
 import org.jacoco.core.analysis.ICounter;
 import org.jacoco.core.analysis.ILine;
 
@@ -65,7 +67,7 @@ public abstract class LineImpl implements ILine {
 	/**
 	 * Mutable version.
 	 */
-	private static final class Var extends LineImpl {
+	static final class Var extends LineImpl {
 		Var(final CounterImpl instructions, final CounterImpl branches) {
 			super(instructions, branches);
 		}
@@ -102,6 +104,8 @@ public abstract class LineImpl implements ILine {
 	/** branch counter */
 	protected CounterImpl branches;
 
+	protected BitSet coveredBranches;
+
 	private LineImpl(final CounterImpl instructions,
 			final CounterImpl branches) {
 		this.instructions = instructions;
@@ -132,6 +136,18 @@ public abstract class LineImpl implements ILine {
 
 	public ICounter getBranchCounter() {
 		return branches;
+	}
+
+	/**
+	 * See
+	 * https://github.com/JetBrains/intellij-community/blob/5a47e55ec0769563a22fe3bbd5b52212673db9c0/plugins/coverage/src/com/intellij/coverage/JavaCoverageEngine.java#L612-L620
+	 *
+	 * TODO use own interface instead of BitSet?
+	 *
+	 * @return covered branches in the order of bytecode traversal
+	 */
+	public BitSet getCoveredBranches() {
+		return coveredBranches;
 	}
 
 	@Override

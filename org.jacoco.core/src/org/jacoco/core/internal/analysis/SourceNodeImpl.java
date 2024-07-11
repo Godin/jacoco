@@ -22,7 +22,7 @@ import org.jacoco.core.analysis.ISourceNode;
  */
 public class SourceNodeImpl extends CoverageNodeImpl implements ISourceNode {
 
-	private LineImpl[] lines;
+	LineImpl[] lines;
 
 	/** first line number in {@link #lines} */
 	private int offset;
