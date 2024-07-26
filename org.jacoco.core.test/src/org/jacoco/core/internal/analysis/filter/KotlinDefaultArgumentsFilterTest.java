@@ -341,7 +341,7 @@ public class KotlinDefaultArgumentsFilterTest extends FilterTestBase {
 		final Label label2 = new Label();
 		m.visitJumpInsn(Opcodes.IFEQ, label2);
 		final Range range2 = new Range(m.instructions.getLast(),
-			m.instructions.getLast());
+				m.instructions.getLast());
 		// default argument
 		m.visitLdcInsn(Integer.valueOf(42));
 		m.visitVarInsn(Opcodes.ISTORE, 225);

@@ -12,8 +12,7 @@
  *******************************************************************************/
 package org.jacoco.core.internal.analysis.filter;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
 
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.Type;
@@ -111,13 +110,18 @@ public final class KotlinDefaultArgumentsFilter implements IFilter {
 				cursor = skipNonOpcodes(methodNode.instructions.getFirst());
 			}
 
-			final Set<AbstractInsnNode> ignore = new HashSet<AbstractInsnNode>();
+			final ArrayList<AbstractInsnNode> ignore = new ArrayList<AbstractInsnNode>();
 			final int maskVar = maskVar(methodNode.desc, constructor);
+			final int lastMaskVar = maskVar - 1
+					+ computeNumberOfMaskArguments(
+							Type.getMethodType(methodNode.desc)
+									.getArgumentTypes().length);
 			while (true) {
 				if (cursor.getOpcode() != Opcodes.ILOAD) {
 					break;
 				}
-				if (((VarInsnNode) cursor).var != maskVar) {
+				final VarInsnNode vi = (VarInsnNode) cursor;
+				if (!(maskVar <= vi.var && vi.var <= lastMaskVar)) {
 					break;
 				}
 				next();
