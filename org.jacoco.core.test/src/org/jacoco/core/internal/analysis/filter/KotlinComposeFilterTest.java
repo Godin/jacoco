@@ -324,6 +324,9 @@ public class KotlinComposeFilterTest extends FilterTestBase {
 		final Range range6 = new Range();
 		final Range range7 = new Range();
 
+		final Range range8;
+		final Range range9;
+
 		Label label0 = new Label();
 		m.visitLabel(label0);
 		range1.fromInclusive = m.instructions.getLast();
@@ -350,6 +353,7 @@ public class KotlinComposeFilterTest extends FilterTestBase {
 		m.visitInsn(IAND);
 		Label label2 = new Label();
 		m.visitJumpInsn(IFEQ, label2);
+		range8 = new Range(m.instructions.getLast(), m.instructions.getLast());
 		m.visitVarInsn(ILOAD, 4);
 		m.visitIntInsn(BIPUSH, 6);
 		m.visitInsn(IOR);
@@ -406,6 +410,7 @@ public class KotlinComposeFilterTest extends FilterTestBase {
 		m.visitInsn(IAND);
 		Label label8 = new Label();
 		m.visitJumpInsn(IFEQ, label8); // TODO filter
+		range9 = new Range(m.instructions.getLast(), m.instructions.getLast());
 		m.visitInsn(ICONST_2);
 		m.visitVarInsn(ISTORE, 0);
 		m.visitLabel(label8);
@@ -560,7 +565,7 @@ public class KotlinComposeFilterTest extends FilterTestBase {
 
 		filter.filter(m, context, output);
 
-		assertIgnored(range1, range2, range3, range4, range5, range6, range7);
+		assertIgnored(range8, range1, range2, range9, range3, range4, range5, range6, range7);
 	}
 
 }
