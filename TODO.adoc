@@ -1,0 +1,24 @@
+= Java 8
+
+// TODO use structure similar to https://openjdk.org/jeps/2
+
+== Motivation
+
+* macOS
+* https://github.com/eclipse-jdt/eclipse.jdt.core/discussions/820
+* maven-surefire-plugin
+
+== Additional Benefits
+
+* javac `--release`
+* `@Override`, lambdas
+* JUnit 5
+* args4j - https://github.com/jacoco/jacoco/issues/1490
+* OverlappingFileLockException - https://github.com/jacoco/jacoco/blob/4f851cae6822289c55aff539786405d2bf473584/org.jacoco.agent.rt.test/src/org/jacoco/agent/rt/internal/output/FileOutputTest.java#L89-L92
+
+== Alternatives
+
+// TODO see for example https://openjdk.org/jeps/400
+
+* Preserve the status quo
+* Stop testing with JDK 5
