@@ -27,7 +27,7 @@ public class WipTarget {
 			if (r == null) { // assertFullyCovered(0, 2)
 				return ""; // assertFullyCovered()
 			} // assertEmpty()
-		} // assertPartlyCovered(3, 3)
+		} // assertEmpty()
 		return "";
 	}
 

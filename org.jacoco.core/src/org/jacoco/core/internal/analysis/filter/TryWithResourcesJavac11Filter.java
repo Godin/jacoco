@@ -32,8 +32,8 @@ public final class TryWithResourcesJavac11Filter implements IFilter {
 		final Matcher matcher = new Matcher();
 		for (TryCatchBlockNode t : methodNode.tryCatchBlocks) {
 			if ("java/lang/Throwable".equals(t.type)) {
-				matcher.match(t.handler, output, true);
-				matcher.match(t.handler, output, false);
+				matcher.match(t.handler, output, true, t.end);
+				matcher.match(t.handler, output, false, t.end);
 			}
 		}
 	}
@@ -66,7 +66,8 @@ public final class TryWithResourcesJavac11Filter implements IFilter {
 		private String expectedOwner;
 
 		void match(final AbstractInsnNode start, final IFilterOutput output,
-				final boolean withNullCheck) {
+				final boolean withNullCheck,
+				final AbstractInsnNode endProtected) {
 			this.withNullCheck = withNullCheck;
 			vars.clear();
 			expectedOwner = null;
@@ -106,6 +107,12 @@ public final class TryWithResourcesJavac11Filter implements IFilter {
 
 			output.ignore(s, cursor);
 			output.ignore(start, end);
+
+			cursor = endProtected;
+			if (!nextIsJavacClose()) {
+				return;
+			}
+			output.ignore(endProtected, cursor);
 		}
 
 		private boolean nextIsJavacClose() {

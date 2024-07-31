@@ -31,6 +31,7 @@ public class WipFilterTest extends FilterTestBase {
 	public void test() {
 		Range range1 = new Range();
 		Range range2 = new Range();
+		Range range3 = new Range();
 		MethodNode m = new MethodNode(InstrSupport.ASM_API_VERSION, 0, "name",
 				"()V", null, null);
 		m.visitCode();
@@ -66,12 +67,14 @@ public class WipFilterTest extends FilterTestBase {
 		m.visitLdcInsn("");
 		m.visitVarInsn(ASTORE, 2);
 		m.visitLabel(label1);
+		range3.fromInclusive = m.instructions.getLast();
 		m.visitLineNumber(28, label1); // FIXME
 		m.visitVarInsn(ALOAD, 1);
 		m.visitJumpInsn(IFNULL, label7);
 		m.visitVarInsn(ALOAD, 1);
 		m.visitMethodInsn(INVOKEINTERFACE, "java/io/Closeable", "close", "()V",
 				true);
+		range3.toInclusive = m.instructions.getLast();
 		m.visitLabel(label7);
 		m.visitLineNumber(26, label7);
 		m.visitFrame(Opcodes.F_APPEND, 2,
@@ -154,7 +157,7 @@ public class WipFilterTest extends FilterTestBase {
 
 		filter.filter(m, context, output);
 
-		assertIgnored(range1, range2);
+		assertIgnored(range1, range2, range3);
 	}
 
 }
