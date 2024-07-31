@@ -173,6 +173,8 @@ public class KotlinInlineFilterTest extends FilterTestBase {
 	 * inline fun f() {}
 	 * fun g() = f()
 	 * </pre>
+	 *
+	 * @deprecated {@link KotlinSMAPTest#should_stop_parsing_at_KotlinDebug_stratum()}
 	 */
 	@Test
 	public void should_filter_without_parsing_KotlinDebug_stratum() {
@@ -354,6 +356,9 @@ public class KotlinInlineFilterTest extends FilterTestBase {
 		assertIgnored();
 	}
 
+	/**
+	 * @deprecated {@link KotlinSMAPTest#should_throw_exception_when_no_OutputFileName()}
+	 */
 	@Test
 	public void should_throw_exception_when_SMAP_incomplete() {
 		context.sourceDebugExtension = "" //
@@ -369,6 +374,9 @@ public class KotlinInlineFilterTest extends FilterTestBase {
 		}
 	}
 
+	/**
+	 * @deprecated {@link KotlinSMAPTest#should_throw_exception_when_FileSection_contains_unexpected_FileInfo()}
+	 */
 	@Test
 	public void should_throw_exception_when_unexpected_FileInfo() {
 		context.sourceFileName = "callsite.kt";
@@ -390,6 +398,9 @@ public class KotlinInlineFilterTest extends FilterTestBase {
 		}
 	}
 
+	/**
+	 * @deprecated {@link KotlinSMAPTest#should_throw_exception_when_LineSection_contains_unexpected_LineInfo()}
+	 */
 	@Test
 	public void should_throw_exception_when_unexpected_LineInfo() {
 		context.className = "Callsite";
