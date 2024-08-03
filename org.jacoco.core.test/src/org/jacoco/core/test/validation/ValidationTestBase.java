@@ -93,6 +93,14 @@ public abstract class ValidationTestBase {
 	private void analyze(final ExecutionDataStore store) throws IOException {
 		final CoverageBuilder builder = new CoverageBuilder();
 		final Analyzer analyzer = new Analyzer(store, builder);
+
+		// final InputStream classData = TargetLoader.getClassData(
+		// target.getClassLoader(),
+		// "org/jacoco/core/test/validation/kotlin/targets/KotlinCrossinlineTarget$example$1");
+		// if (classData != null) {
+		// analyzer.analyzeClass(InputStreams.readFully(classData), "");
+		// }
+
 		for (ExecutionData data : store.getContents()) {
 			analyze(analyzer, data);
 		}
@@ -166,7 +174,7 @@ public abstract class ValidationTestBase {
 	}
 
 	@Test
-	public void all_missed_instructions_should_have_line_number() {
+	public final void all_missed_instructions_should_have_line_number() {
 		CounterImpl c = CounterImpl.COUNTER_0_0;
 		for (Line line : source.getLines()) {
 			c = c.increment(line.getCoverage().getInstructionCounter());
@@ -178,7 +186,7 @@ public abstract class ValidationTestBase {
 	}
 
 	@Test
-	public void all_branches_should_have_line_number() {
+	public final void all_branches_should_have_line_number() {
 		CounterImpl c = CounterImpl.COUNTER_0_0;
 		for (Line line : source.getLines()) {
 			c = c.increment(line.getCoverage().getBranchCounter());

@@ -13,15 +13,15 @@
 package org.jacoco.core.test.validation.kotlin;
 
 import org.jacoco.core.test.validation.ValidationTestBase;
-import org.jacoco.core.test.validation.kotlin.targets.KotlinInlineTargetKt;
+import org.jacoco.core.test.validation.kotlin.targets.KotlinWipTarget;
 
 /**
- * Test of <code>inline</code> functions.
+ * Test of code coverage in {@link KotlinWipTarget}.
  */
-public class KotlinInlineTest extends ValidationTestBase {
+public class KotlinWipTest extends ValidationTestBase {
 
-	public KotlinInlineTest() {
-		super(KotlinInlineTargetKt.class);
+	public KotlinWipTest() {
+		super(KotlinWipTarget.class);
 	}
 
 }

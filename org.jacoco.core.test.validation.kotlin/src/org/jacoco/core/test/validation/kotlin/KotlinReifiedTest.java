@@ -13,15 +13,15 @@
 package org.jacoco.core.test.validation.kotlin;
 
 import org.jacoco.core.test.validation.ValidationTestBase;
-import org.jacoco.core.test.validation.kotlin.targets.KotlinInlineTargetKt;
+import org.jacoco.core.test.validation.kotlin.targets.KotlinReifiedTarget;
 
 /**
- * Test of <code>inline</code> functions.
+ * Test of code coverage in {@link KotlinReifiedTarget}.
  */
-public class KotlinInlineTest extends ValidationTestBase {
+public class KotlinReifiedTest extends ValidationTestBase {
 
-	public KotlinInlineTest() {
-		super(KotlinInlineTargetKt.class);
+	public KotlinReifiedTest() {
+		super(KotlinReifiedTarget.class);
 	}
 
 }

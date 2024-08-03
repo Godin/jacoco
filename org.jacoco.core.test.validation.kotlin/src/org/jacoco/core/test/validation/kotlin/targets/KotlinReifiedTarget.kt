@@ -10,18 +10,20 @@
  *    Evgeny Mandrikov - initial API and implementation
  *
  *******************************************************************************/
-package org.jacoco.core.test.validation.kotlin;
-
-import org.jacoco.core.test.validation.ValidationTestBase;
-import org.jacoco.core.test.validation.kotlin.targets.KotlinInlineTargetKt;
+package org.jacoco.core.test.validation.kotlin.targets
 
 /**
- * Test of <code>inline</code> functions.
+ * TODO
  */
-public class KotlinInlineTest extends ValidationTestBase {
+object KotlinReifiedTarget {
 
-	public KotlinInlineTest() {
-		super(KotlinInlineTargetKt.class);
-	}
+    private inline fun <reified T> example(): String? { // assertEmpty()
+        return T::class.simpleName // assertEmpty()
+    } // assertEmpty()
+
+    @JvmStatic
+    fun main(args: Array<String>) {
+        example<String>()
+    }
 
 }

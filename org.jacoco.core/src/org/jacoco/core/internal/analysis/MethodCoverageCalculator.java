@@ -22,6 +22,7 @@ import java.util.Set;
 
 import org.jacoco.core.analysis.ISourceNode;
 import org.jacoco.core.internal.analysis.filter.IFilterOutput;
+import org.jacoco.core.internal.analysis.filter.KotlinSMAP;
 import org.objectweb.asm.tree.AbstractInsnNode;
 
 /**

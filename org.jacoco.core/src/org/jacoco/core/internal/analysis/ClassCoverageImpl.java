@@ -14,6 +14,7 @@ package org.jacoco.core.internal.analysis;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 
 import org.jacoco.core.analysis.IClassCoverage;
 import org.jacoco.core.analysis.IMethodCoverage;
@@ -31,6 +32,8 @@ public class ClassCoverageImpl extends SourceNodeImpl
 	private String superName;
 	private String[] interfaces;
 	private String sourceFileName;
+
+	private Collection<SourceNodeImpl> fragments = Collections.emptyList();
 
 	/**
 	 * Creates a class coverage data object with the given parameters.
@@ -107,6 +110,34 @@ public class ClassCoverageImpl extends SourceNodeImpl
 	 */
 	public void setSourceFileName(final String sourceFileName) {
 		this.sourceFileName = sourceFileName;
+	}
+
+	/**
+	 * @return fragments stored in this class
+	 */
+	public Collection<SourceNodeImpl> getFragments() {
+		return fragments;
+	}
+
+	public void setFragments(final Collection<SourceNodeImpl> fragments) {
+		this.fragments = fragments;
+	}
+
+	@Override
+	public void applyFragment(final SourceNodeImpl fragment) {
+		// TODO complexityCounter
+		super.applyFragment(fragment);
+		for (final IMethodCoverage methodCoverage : methods) {
+			methodCounter = methodCounter.increment(
+					-methodCoverage.getMethodCounter().getMissedCount(),
+					-methodCoverage.getMethodCounter().getCoveredCount());
+			((MethodCoverageImpl) methodCoverage).applyFragment(fragment);
+			methodCounter = methodCounter
+					.increment(methodCoverage.getMethodCounter());
+		}
+		classCounter = methodCounter.getCoveredCount() > 0
+				? CounterImpl.COUNTER_0_1
+				: CounterImpl.COUNTER_1_0;
 	}
 
 	// === IClassCoverage implementation ===

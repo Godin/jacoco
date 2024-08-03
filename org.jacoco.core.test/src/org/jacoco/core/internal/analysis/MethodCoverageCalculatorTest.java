@@ -20,6 +20,7 @@ import java.util.HashSet;
 import java.util.Map;
 
 import org.jacoco.core.analysis.ISourceNode;
+import org.jacoco.core.internal.analysis.filter.KotlinSMAP;
 import org.junit.Before;
 import org.junit.Test;
 import org.objectweb.asm.Opcodes;

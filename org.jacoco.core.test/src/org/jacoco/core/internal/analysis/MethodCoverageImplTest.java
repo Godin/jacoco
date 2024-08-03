@@ -136,4 +136,48 @@ public class MethodCoverageImplTest {
 		assertEquals(CounterImpl.getInstance(0, 2),
 				node.getComplexityCounter());
 	}
+
+	/**
+	 * {@link MethodCoverageImpl#applyFragment(SourceNodeImpl)}
+	 */
+	@Test
+	public void testApplyFragment() {
+		// uncovered
+		MethodCoverageImpl node = new MethodCoverageImpl("sample", "()V", null);
+		node.increment(CounterImpl.COUNTER_1_0, CounterImpl.COUNTER_0_0, 42);
+		node.incrementMethodCounter();
+		// covered
+		final SourceNodeImpl fragment = new SourceNodeImpl(null, "fragment");
+		fragment.increment(CounterImpl.COUNTER_0_1, CounterImpl.COUNTER_0_0,
+				42);
+		node.applyFragment(fragment);
+
+		assertEquals(CounterImpl.COUNTER_0_1, node.getInstructionCounter());
+		assertEquals(CounterImpl.COUNTER_0_1, node.getLineCounter());
+		assertEquals(CounterImpl.COUNTER_0_0, node.getBranchCounter());
+		// FIXME
+		assertEquals(CounterImpl.COUNTER_1_0, node.getComplexityCounter());
+		assertEquals(CounterImpl.COUNTER_0_1, node.getMethodCounter());
+		final LineImpl line = node.getLine(42);
+		assertEquals(CounterImpl.COUNTER_0_1, line.getInstructionCounter());
+		assertEquals(CounterImpl.COUNTER_0_0, line.getBranchCounter());
+	}
+
+	/**
+	 * {@link MethodCoverageImpl#applyFragment(SourceNodeImpl)}
+	 */
+	@Test
+	public void testApplyFragment2() {
+		// uncovered
+		MethodCoverageImpl node = new MethodCoverageImpl("sample", "()V", null);
+		node.increment(CounterImpl.COUNTER_1_0, CounterImpl.COUNTER_0_0, 42);
+		// covered unrelated
+		final SourceNodeImpl fragment = new SourceNodeImpl(null, "fragment");
+		fragment.increment(CounterImpl.COUNTER_0_1, CounterImpl.COUNTER_0_0,
+				13);
+		node.applyFragment(fragment);
+		// should not change
+		assertEquals(CounterImpl.COUNTER_1_0, node.getInstructionCounter());
+	}
+
 }

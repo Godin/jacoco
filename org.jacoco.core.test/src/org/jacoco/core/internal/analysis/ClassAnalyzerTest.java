@@ -20,7 +20,9 @@ import org.jacoco.core.internal.instr.InstrSupport;
 import org.junit.Before;
 import org.junit.Test;
 import org.objectweb.asm.Attribute;
+import org.objectweb.asm.Label;
 import org.objectweb.asm.Opcodes;
+import org.objectweb.asm.tree.MethodNode;
 
 /**
  * Unit tests for {@link ClassAnalyzer}.
@@ -66,6 +68,37 @@ public class ClassAnalyzerTest {
 		analyzer.visitAttribute(new Attribute("foo") {
 		});
 		assertTrue(analyzer.getClassAttributes().contains("foo"));
+	}
+
+	@Test
+	public void testCalculateFragments() {
+		analyzer.visitSource("Foo.kt", "SMAP\n" //
+				+ "Foo.kt\n" //
+				+ "Kotlin\n" //
+				+ "*S Kotlin\n" //
+				+ "*F\n" //
+				+ "+ 1 Foo.kt\n" //
+				+ "FooKt\n" //
+				+ "*L\n" //
+				+ "1#1,3:1\n" //
+				+ "1#1:4\n" //
+				+ "*E\n");
+		analyzer.visitAnnotation("Lkotlin/Metadata;", false);
+		final MethodNode mn = new MethodNode(0, "foo", "()V", null, null);
+		Label label = new Label();
+		mn.visitLabel(label);
+		mn.visitLineNumber(1, label);
+		mn.visitInsn(Opcodes.RETURN);
+		final MethodProbesVisitor mv = analyzer.visitMethod(0, "foo", "()V",
+				null, null);
+		mv.accept(mn, mv);
+		analyzer.visitEnd();
+
+		final SourceNodeImpl fragment = coverage.getFragments().iterator()
+				.next();
+		assertEquals(fragment.getName(), "FooKt");
+		assertEquals(CounterImpl.COUNTER_1_0,
+				fragment.getLine(1).getInstructionCounter());
 	}
 
 }

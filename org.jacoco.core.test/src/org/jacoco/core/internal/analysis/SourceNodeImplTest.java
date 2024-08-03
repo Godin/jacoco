@@ -223,4 +223,28 @@ public class SourceNodeImplTest {
 		assertEquals(CounterImpl.getInstance(0, 1), node.getLineCounter());
 	}
 
+	/**
+	 * {@link SourceNodeImpl#applyFragment(SourceNodeImpl)}
+	 */
+	@Test
+	public void testApplyFragment() {
+		// uncovered
+		final SourceNodeImpl node = new SourceNodeImpl(ElementType.CLASS,
+				"Foo");
+		node.increment(CounterImpl.COUNTER_1_0, CounterImpl.COUNTER_1_0, 42);
+		// covered
+		final SourceNodeImpl fragment = new SourceNodeImpl(null, "fragment");
+		fragment.increment(CounterImpl.COUNTER_0_1, CounterImpl.COUNTER_0_0,
+				42);
+		node.applyFragment(fragment);
+
+		assertEquals(CounterImpl.COUNTER_0_1, node.getInstructionCounter());
+		assertEquals(CounterImpl.COUNTER_0_1, node.getLineCounter());
+		assertEquals(CounterImpl.COUNTER_0_0, node.getBranchCounter());
+		assertEquals(CounterImpl.COUNTER_0_0, node.getComplexityCounter());
+		final LineImpl line = node.getLine(42);
+		assertEquals(CounterImpl.COUNTER_0_1, line.getInstructionCounter());
+		assertEquals(CounterImpl.COUNTER_0_0, line.getBranchCounter());
+	}
+
 }

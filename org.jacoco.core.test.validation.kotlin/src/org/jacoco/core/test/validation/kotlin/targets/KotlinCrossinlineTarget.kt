@@ -20,17 +20,21 @@ import org.jacoco.core.test.validation.targets.Stubs.nop
 object KotlinCrossinlineTarget {
 
     inline fun example(crossinline lambda: () -> Unit): () -> Unit { // assertEmpty()
-        return { // assertNotCovered()
-            lambda() // assertEmpty()
-        } // assertEmpty()
+        return { // assertFullyCovered()
+            normal { lambda() }
+        } // assertFullyCovered()
     } // assertEmpty()
+
+    fun normal(lambda: () -> Unit) {
+        lambda()
+    }
 
     @JvmStatic
     fun main(args: Array<String>) {
 
         example { // assertFullyCovered()
-            nop() // assertEmpty()
-        }() // assertEmpty()
+            nop() // assertFullyCovered()
+        }() // assertFullyCovered()
 
     }
 
