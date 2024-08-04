@@ -154,19 +154,37 @@ final class ReportSupport {
 			final String bundleName, final MavenProject project,
 			final List<String> includes, final List<String> excludes,
 			final ISourceFileLocator locator) throws IOException {
-		final CoverageBuilder builder = new CoverageBuilder();
+		final CoverageBuilder b = new CoverageBuilder();
+
+		final Analyzer analyzer = new Analyzer(loader.getExecutionDataStore(),
+				b);
+		final FileFilter filter = new FileFilter(includes, excludes);
+
 		final File classesDir = new File(
 				project.getBuild().getOutputDirectory());
-
 		if (classesDir.isDirectory()) {
-			final Analyzer analyzer = new Analyzer(
-					loader.getExecutionDataStore(), builder);
-			final FileFilter filter = new FileFilter(includes, excludes);
 			for (final File file : filter.getFiles(classesDir)) {
 				analyzer.analyzeAll(file);
 			}
 		}
 
+		final List<IClassCoverage> mainClasses = new ArrayList<>(
+				b.getClasses());
+
+		final File testClassesDir = new File(
+				project.getBuild().getTestOutputDirectory());
+		if (testClassesDir.isDirectory()) {
+			for (final File file : filter.getFiles(testClassesDir)) {
+				analyzer.analyzeAll(file);
+			}
+		}
+		// Apply fragments from test classes:
+		b.getClasses();
+
+		final CoverageBuilder builder = new CoverageBuilder();
+		for (final IClassCoverage c : mainClasses) {
+			builder.visitCoverage(c);
+		}
 		final IBundleCoverage bundle = builder.getBundle(bundleName);
 		logBundleInfo(bundle, builder.getNoMatchClasses());
 
