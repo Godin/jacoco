@@ -166,7 +166,7 @@ public abstract class ValidationTestBase {
 	}
 
 	@Test
-	public void all_missed_instructions_should_have_line_number() {
+	public final void all_missed_instructions_should_have_line_number() {
 		CounterImpl c = CounterImpl.COUNTER_0_0;
 		for (Line line : source.getLines()) {
 			c = c.increment(line.getCoverage().getInstructionCounter());
@@ -178,7 +178,7 @@ public abstract class ValidationTestBase {
 	}
 
 	@Test
-	public void all_branches_should_have_line_number() {
+	public final void all_branches_should_have_line_number() {
 		CounterImpl c = CounterImpl.COUNTER_0_0;
 		for (Line line : source.getLines()) {
 			c = c.increment(line.getCoverage().getBranchCounter());
