@@ -42,6 +42,16 @@ public final class SyntheticFilter implements IFilter {
 		}
 
 		if (KotlinGeneratedFilter.isKotlinClass(context)) {
+			// TODO see
+			// https://github.com/Godin/intellij-coverage/blob/ca876d7353aac55fd07a94b71fe8a8cfc50c8f33/instrumentation/src/com/intellij/rt/coverage/instrumentation/filters/methods/KotlinSyntheticAccessMethodFilter.java#L25-L27
+			if (methodNode.name.startsWith("access$")) {
+				output.ignore(methodNode.instructions.getFirst(),
+						methodNode.instructions.getLast());
+			}
+			if (true) {
+				return;
+			}
+
 			if (KotlinDefaultArgumentsFilter
 					.isDefaultArgumentsMethod(methodNode)) {
 				return;
