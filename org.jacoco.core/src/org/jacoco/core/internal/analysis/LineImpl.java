@@ -26,7 +26,7 @@ public abstract class LineImpl implements ILine {
 	private static final int SINGLETON_INS_LIMIT = 8;
 
 	/** Max branch counter value for which singletons are created */
-	private static final int SINGLETON_BRA_LIMIT = 4;
+	private static final int SINGLETON_BRA_LIMIT = 0;
 
 	private static final LineImpl[][][][] SINGLETONS = new LineImpl[SINGLETON_INS_LIMIT
 			+ 1][][][];
@@ -67,7 +67,7 @@ public abstract class LineImpl implements ILine {
 	/**
 	 * Mutable version.
 	 */
-	static final class Var extends LineImpl {
+	private static final class Var extends LineImpl {
 		Var(final CounterImpl instructions, final CounterImpl branches) {
 			super(instructions, branches);
 		}
@@ -104,7 +104,7 @@ public abstract class LineImpl implements ILine {
 	/** branch counter */
 	protected CounterImpl branches;
 
-	protected BitSet coveredBranches;
+	protected int coveredBranches;
 
 	private LineImpl(final CounterImpl instructions,
 			final CounterImpl branches) {
@@ -147,7 +147,21 @@ public abstract class LineImpl implements ILine {
 	 * @return covered branches in the order of bytecode traversal
 	 */
 	public BitSet getCoveredBranches() {
-		return coveredBranches;
+		// FIXME also should return null when not available
+		// ie in classes and when no branches
+		if (getBranchCounter()
+				.getTotalCount() > /* FIXME limited by storage */ 4) {
+			return null;
+		}
+		final BitSet result = new BitSet(branches.getTotalCount());
+		for (int i = 0; i < branches.getTotalCount(); i++) {
+			result.set(i, get(coveredBranches, i));
+		}
+		return result;
+	}
+
+	private static boolean get(final int bitSet, final int i) {
+		return (bitSet & (1 << i)) != 0;
 	}
 
 	@Override

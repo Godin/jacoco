@@ -44,28 +44,27 @@ public class MethodCoverageImpl extends SourceNodeImpl
 		this.signature = signature;
 	}
 
+	private static int set(int bitSet, int i) {
+		return bitSet | (1 << i);
+	}
+
 	public void increment(final ICounter instructions, final ICounter branches,
 			final int line, final BitSet coveredBranches) {
 		// FIXME handle UNKNOWN_LINE
 		final LineImpl oldLine = getLine(line);
 		final int oldBranchesTotalCount = oldLine.branches.getTotalCount();
-		final BitSet oldCoveredBranches = oldLine.coveredBranches;
 
 		increment(instructions, branches, line);
 
 		LineImpl newLine = getLine(line);
 		if (newLine.getBranchCounter().getTotalCount() > 1) {
-			// FIXME use singletons
-			newLine = new LineImpl.Var(newLine.instructions, newLine.branches);
-			newLine.coveredBranches = new BitSet();
-			for (int i = 0; i < oldBranchesTotalCount; i++) {
-				newLine.coveredBranches.set(i, oldCoveredBranches.get(i));
-			}
+			// Known to be mutable
 			for (int i = 0; i < branches.getTotalCount(); i++) {
-				newLine.coveredBranches.set(i + oldBranchesTotalCount,
-						coveredBranches.get(i));
+				if (coveredBranches.get(i)) {
+					newLine.coveredBranches = set(newLine.coveredBranches,
+							i + oldBranchesTotalCount);
+				}
 			}
-			lines[line - getFirstLine()] = newLine;
 		}
 	}
 
