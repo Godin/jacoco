@@ -61,8 +61,8 @@ public class MethodCoverageImpl extends SourceNodeImpl
 			// Known to be mutable
 			for (int i = 0; i < branches.getTotalCount(); i++) {
 				if (coveredBranches.get(i)) {
-					newLine.coveredBranches = set(newLine.coveredBranches,
-							i + oldBranchesTotalCount);
+//					newLine.coveredBranches = set(newLine.coveredBranches,
+//							i + oldBranchesTotalCount);
 				}
 			}
 		}
