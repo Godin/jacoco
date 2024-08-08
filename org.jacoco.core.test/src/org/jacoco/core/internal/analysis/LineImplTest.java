@@ -14,6 +14,7 @@ package org.jacoco.core.internal.analysis;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 import org.jacoco.core.analysis.ICounter;
 import org.junit.Before;
@@ -25,6 +26,14 @@ import org.junit.Test;
 public class LineImplTest {
 
 	private LineImpl line;
+
+	@Test
+	public void testBitSet() {
+		assertEquals(1, LineImpl.set(0, 0));
+		assertEquals(Integer.MIN_VALUE, LineImpl.set(0, 31));
+
+		assertTrue(LineImpl.get(1, 0));
+	}
 
 	@Before
 	public void setup() {

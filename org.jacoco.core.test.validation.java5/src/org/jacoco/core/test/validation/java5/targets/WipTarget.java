@@ -24,7 +24,7 @@ import static org.jacoco.core.test.validation.targets.Stubs.t;
 public class WipTarget {
 
 	public static void main(String[] args) {
-		nop(); // assertCoveredBranches("null")
+		nop(); // assertCoveredBranches("{}")
 
 		if (f()) { // assertCoveredBranches("{1}")
 			nop();

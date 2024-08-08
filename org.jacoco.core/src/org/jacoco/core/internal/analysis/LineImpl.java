@@ -26,7 +26,7 @@ public abstract class LineImpl implements ILine {
 	private static final int SINGLETON_INS_LIMIT = 8;
 
 	/** Max branch counter value for which singletons are created */
-	private static final int SINGLETON_BRA_LIMIT = 4;
+	private static final int SINGLETON_BRA_LIMIT = 0;
 
 	private static final LineImpl[][][][] SINGLETONS = new LineImpl[SINGLETON_INS_LIMIT
 			+ 1][][][];
@@ -67,7 +67,7 @@ public abstract class LineImpl implements ILine {
 	/**
 	 * Mutable version.
 	 */
-	static final class Var extends LineImpl {
+	private static final class Var extends LineImpl {
 		Var(final CounterImpl instructions, final CounterImpl branches) {
 			super(instructions, branches);
 		}
@@ -96,6 +96,12 @@ public abstract class LineImpl implements ILine {
 			return getInstance(this.instructions.increment(instructions),
 					this.branches.increment(branches));
 		}
+
+		@Override
+		public void appendCoveredBranches(int oldBranchesTotalCount,
+				int newBranchesTotalCount, BitSet coveredBranches) {
+			throw new IllegalStateException();
+		}
 	}
 
 	/** instruction counter */
@@ -104,7 +110,7 @@ public abstract class LineImpl implements ILine {
 	/** branch counter */
 	protected CounterImpl branches;
 
-	protected BitSet coveredBranches;
+	protected int coveredBranches;
 
 	private LineImpl(final CounterImpl instructions,
 			final CounterImpl branches) {
@@ -139,15 +145,48 @@ public abstract class LineImpl implements ILine {
 	}
 
 	/**
-	 * See
-	 * https://github.com/JetBrains/intellij-community/blob/5a47e55ec0769563a22fe3bbd5b52212673db9c0/plugins/coverage/src/com/intellij/coverage/JavaCoverageEngine.java#L612-L620
-	 *
-	 * TODO use own interface instead of BitSet?
-	 *
 	 * @return covered branches in the order of bytecode traversal
 	 */
-	public BitSet getCoveredBranches() {
-		return coveredBranches;
+	public final BitSet getCoveredBranches() {
+		// TODO should it return null when not available
+		// ie in classes and when no branches?
+		int totalCount = Math.min(branches.getTotalCount(), 31);
+		final BitSet result = new BitSet(totalCount);
+		for (int i = 0; i < totalCount; i++) {
+			result.set(i, get(coveredBranches, i));
+		}
+		return result;
+	}
+
+	/**
+	 * This method must be called after {@link #increment(ICounter, ICounter)}.
+	 *
+	 * @param oldBranchesTotalCount
+	 *            total count of branches before
+	 *            {@link #increment(ICounter, ICounter)}
+	 * @param newBranchesTotalCount
+	 *            total count of branches after
+	 *            {@link #increment(ICounter, ICounter)}
+	 * @param coveredBranches
+	 *            to append
+	 */
+	public void appendCoveredBranches(final int oldBranchesTotalCount,
+			final int newBranchesTotalCount, final BitSet coveredBranches) {
+		final int size = newBranchesTotalCount - oldBranchesTotalCount;
+		for (int i = 0; i < size; i++) {
+			if (coveredBranches.get(i)) {
+				this.coveredBranches = set(this.coveredBranches,
+						i + oldBranchesTotalCount);
+			}
+		}
+	}
+
+	static int set(final int bitSet, final int index) {
+		return bitSet | (1 << index);
+	}
+
+	static boolean get(final int bitSet, final int index) {
+		return (bitSet & (1 << index)) != 0;
 	}
 
 	@Override

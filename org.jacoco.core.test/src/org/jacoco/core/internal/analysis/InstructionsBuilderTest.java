@@ -187,4 +187,16 @@ public class InstructionsBuilderTest {
 				map.get(i1).getInstructionCounter());
 	}
 
+	@Test
+	public void testOrder() {
+		InsnNode i1 = new InsnNode(Opcodes.NOP);
+		builder.addInstruction(i1);
+		InsnNode i2 = new InsnNode(Opcodes.NOP);
+		builder.addInstruction(i2);
+		// TODO
+		System.out.println(i2);
+		System.out.println(i1);
+		System.out.println(builder.getInstructions().keySet().toString());
+	}
+
 }
