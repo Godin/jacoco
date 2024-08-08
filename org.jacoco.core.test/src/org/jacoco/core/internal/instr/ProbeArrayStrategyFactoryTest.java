@@ -208,6 +208,7 @@ public class ProbeArrayStrategyFactoryTest {
 		assertDataField(InstrSupport.DATAFIELD_INTF_ACC);
 		assertInitAndClinitMethods();
 
+		// FIXME seenClinit is set after addMembers
 		strategy.storeInstance(cv.visitMethod(0, "<clinit>", null, null, null),
 				true, 0);
 	}
