@@ -397,6 +397,19 @@
 
 	<!-- XML Output -->
 
+	<target name="testReportXmlCloseFile">
+		<au:expectfailure expectedMessage="Group name must be supplied">
+			<jacoco:report>
+				<xml destfile="${temp.dir}/report.xml"/>
+			</jacoco:report>
+		</au:expectfailure>
+		<exec failonerror="true" executable="cmd">
+			<arg value="/c"/>
+			<arg value="del ${temp.dir}\\report.xml"/>
+		</exec>
+		<au:assertFileDoesntExist file="${temp.dir}/report.xml"/>
+	</target>
+
 	<target name="testReportXmlNoDestfile">
 		<au:expectfailure expectedMessage="Destination file must be supplied for xml report">
 			<jacoco:report>
