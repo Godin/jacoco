@@ -74,8 +74,38 @@ object KotlinWhenExpressionTarget {
         else -> 6 // assertFullyCovered()
     } // assertFullyCovered()
 
+    private sealed interface S {
+        data object S1 : S
+        data object S2 : S
+        data object S3 : S
+    }
+
+    private fun wip(p: S?): String = when (p) { // assertFullyCovered()
+        null -> "null" // assertFullyCovered(0, 2)
+        is S.S1-> "case 1" // assertFullyCovered(0, 2)
+        is S.S2 -> "case 2" // assertFullyCovered(0, 2)
+        is S.S3 -> "case 3" // assertFullyCovered(0, 0)
+    }
+
+    private fun wip2(p: S?): String = when (p) { // assertPartlyCovered()
+        is S.S1-> "case 1" // assertFullyCovered(0, 2)
+        is S.S2 -> "case 2" // assertFullyCovered(0, 2)
+        is S.S3 -> "case 3" // assertFullyCovered(0, 2)
+        null -> "null" // assertFullyCovered(1, 1)
+    }
+
     @JvmStatic
     fun main(args: Array<String>) {
+        wip(null)
+        wip(S.S1)
+        wip(S.S2)
+        wip(S.S3)
+
+        wip2(null)
+        wip2(S.S1)
+        wip2(S.S2)
+        wip2(S.S3)
+
         whenSealed(Sealed.Sealed1)
         whenSealed(Sealed.Sealed2)
 
