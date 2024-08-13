@@ -121,4 +121,81 @@ public class KotlinWhenFilterTest extends FilterTestBase {
 		assertReplacedBranches(switchNode, newTargets);
 	}
 
+	/**
+	 * <pre>
+	 * enum class E {
+	 *   A
+	 * }
+	 *
+	 * fun example(e: E?): Int = when (e) {
+	 *   null -> 0
+	 *   E.A -> 1
+	 * }
+	 * </pre>
+	 */
+	@org.junit.Ignore
+	@Test
+	public void should_filter_wip() {
+		final MethodNode m = new MethodNode(InstrSupport.ASM_API_VERSION, 0,
+				"example", "(LE;)I", null, null);
+		m.visitCode();
+		Label label0 = new Label();
+		m.visitLabel(label0);
+		m.visitLineNumber(5, label0);
+		m.visitVarInsn(Opcodes.ALOAD, 0);
+		m.visitInsn(Opcodes.DUP);
+		Label label1 = new Label();
+		m.visitJumpInsn(Opcodes.IFNONNULL, label1);
+		final Range range0 = new Range();
+		range0.fromInclusive = m.instructions.getLast();
+		range0.toInclusive = m.instructions.getLast();
+		m.visitInsn(Opcodes.POP);
+		m.visitInsn(Opcodes.ICONST_M1);
+		Label label2 = new Label();
+		m.visitJumpInsn(Opcodes.GOTO, label2);
+		m.visitLabel(label1);
+		m.visitFieldInsn(Opcodes.GETSTATIC, "ExampleKt$WhenMappings",
+				"$EnumSwitchMapping$0", "[I");
+		m.visitInsn(Opcodes.SWAP);
+		m.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "E", "ordinal", "()I", false);
+		m.visitInsn(Opcodes.IALOAD);
+		m.visitLabel(label2);
+		Label label3 = new Label();
+		Label label4 = new Label();
+		Label label5 = new Label();
+		m.visitTableSwitchInsn(-1, 1, label4,
+				new Label[] { label3, label4, label5 });
+		m.visitLabel(label3);
+		m.visitLineNumber(6, label3);
+		m.visitInsn(Opcodes.ICONST_0);
+		Label label6 = new Label();
+		m.visitJumpInsn(Opcodes.GOTO, label6);
+		m.visitLabel(label5);
+		m.visitLineNumber(7, label5);
+		m.visitInsn(Opcodes.ICONST_1);
+		m.visitJumpInsn(Opcodes.GOTO, label6);
+		m.visitLabel(label4);
+		final Range range1 = new Range();
+		range1.fromInclusive = m.instructions.getLast();
+		m.visitLineNumber(5, label4);
+		m.visitTypeInsn(Opcodes.NEW, "kotlin/NoWhenBranchMatchedException");
+		m.visitInsn(Opcodes.DUP);
+		m.visitMethodInsn(Opcodes.INVOKESPECIAL,
+				"kotlin/NoWhenBranchMatchedException", "<init>", "()V", false);
+		m.visitInsn(Opcodes.ATHROW);
+		range1.toInclusive = m.instructions.getLast();
+		m.visitLabel(label6);
+		m.visitLineNumber(8, label6);
+		m.visitInsn(Opcodes.IRETURN);
+		Label label7 = new Label();
+		m.visitLabel(label7);
+		m.visitLocalVariable("e", "LE;", null, label0, label7, 0);
+		m.visitMaxs(2, 1);
+		m.visitEnd();
+
+		filter.filter(m, context, output);
+
+		assertIgnored(range0, range1);
+	}
+
 }

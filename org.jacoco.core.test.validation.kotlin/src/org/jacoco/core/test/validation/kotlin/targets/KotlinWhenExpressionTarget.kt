@@ -43,6 +43,39 @@ object KotlinWhenExpressionTarget {
         Enum.B -> 2 // assertFullyCovered()
     } // assertFullyCovered()
 
+    /**
+     * TODO
+     */
+    private fun whenEnum2(p: Enum?): String = when (p) { // assertFullyCovered(1, 5)
+        null -> "null" // assertFullyCovered()
+        Enum.A -> "A" // assertFullyCovered()
+        Enum.B -> "B" // assertFullyCovered()
+    }
+
+    enum class E {
+        A, B, C, D
+    }
+
+    private fun whenEnum3(p: E?): Int = when (p) { // assertFullyCovered(0, 5)
+        null -> 0 // assertFullyCovered()
+        E.A -> 1 // assertFullyCovered()
+        else -> 2 // assertFullyCovered()
+    }
+
+    private fun whenEnum4(p: E?): Int = when (p) { // assertFullyCovered(0, 5)
+        E.A -> 1 // assertFullyCovered()
+        E.B -> 2 // assertFullyCovered()
+        else -> 3 // assertFullyCovered()
+    }
+
+    /**
+     * TODO compiled into IF
+     */
+    private fun whenEnum5(p: E?): Int = when (p) { // assertNotCovered(2, 0)
+        E.A -> 1 // assertNotCovered(2, 0)
+        else -> 2 // assertNotCovered()
+    }
+
     @Suppress("REDUNDANT_ELSE_IN_WHEN")
     private fun whenEnumRedundantElse(p: Enum): Int = when (p) { // assertFullyCovered(0, 2)
         Enum.A -> 1 // assertFullyCovered()
@@ -84,6 +117,18 @@ object KotlinWhenExpressionTarget {
 
         whenEnum(Enum.A)
         whenEnum(Enum.B)
+
+        whenEnum2(Enum.A)
+        whenEnum2(Enum.B)
+        whenEnum2(null)
+
+        whenEnum3(null)
+        whenEnum3(E.A)
+        whenEnum3(E.B)
+
+        whenEnum4(null)
+        whenEnum4(E.A)
+        whenEnum4(E.B)
 
         whenEnumRedundantElse(Enum.A)
         whenEnumRedundantElse(Enum.B)

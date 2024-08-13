@@ -39,10 +39,29 @@ public final class KotlinWhenFilter implements IFilter {
 		final Matcher matcher = new Matcher();
 		for (final AbstractInsnNode i : methodNode.instructions) {
 			matcher.match(i, output);
+			matcher.m2(i, output);
 		}
 	}
 
 	private static class Matcher extends AbstractMatcher {
+		void m2(final AbstractInsnNode start, final IFilterOutput output) {
+			if (start.getOpcode() != Opcodes.IFNONNULL) {
+				return;
+			}
+			cursor = start;
+			nextIs(Opcodes.POP);
+			nextIs(Opcodes.ICONST_M1);
+			nextIs(Opcodes.GOTO); // to TABLESWITCH
+			nextIs(Opcodes.GETSTATIC);
+			nextIs(Opcodes.SWAP);
+			nextIs(Opcodes.INVOKEVIRTUAL);
+			nextIs(Opcodes.IALOAD);
+			nextIs(Opcodes.TABLESWITCH);
+			if (cursor != null && false) {
+				output.ignore(start, start);
+			}
+		}
+
 		void match(final AbstractInsnNode start, final IFilterOutput output) {
 			if (start.getType() != AbstractInsnNode.LABEL) {
 				return;
@@ -85,13 +104,19 @@ public final class KotlinWhenFilter implements IFilter {
 	private static void ignoreDefaultBranch(final AbstractInsnNode switchNode,
 			final IFilterOutput output) {
 		final List<LabelNode> labels;
+		final LabelNode dflt;
 		if (switchNode.getOpcode() == Opcodes.LOOKUPSWITCH) {
 			labels = ((LookupSwitchInsnNode) switchNode).labels;
+			dflt = ((LookupSwitchInsnNode) switchNode).dflt;
 		} else {
 			labels = ((TableSwitchInsnNode) switchNode).labels;
+			dflt = ((TableSwitchInsnNode) switchNode).dflt;
 		}
 		final Set<AbstractInsnNode> newTargets = new HashSet<AbstractInsnNode>();
 		for (final LabelNode label : labels) {
+			if (label == dflt && false) {
+				continue;
+			}
 			newTargets.add(AbstractMatcher.skipNonOpcodes(label));
 		}
 		output.replaceBranches(switchNode, newTargets);
