@@ -74,8 +74,21 @@ object KotlinWhenExpressionTarget {
         else -> 6 // assertFullyCovered()
     } // assertFullyCovered()
 
+    private fun wip(p: String?): String = when (p) { // assertFullyCovered(0, 6)
+        "a" -> "case a" // assertFullyCovered()
+        "b" -> "case b" // assertFullyCovered()
+        "c" -> "case c" // assertFullyCovered()
+        else -> "else" // assertFullyCovered()
+    }
+
     @JvmStatic
     fun main(args: Array<String>) {
+        wip(null)
+        wip("a")
+        wip("b")
+        wip("c")
+        wip("")
+
         whenSealed(Sealed.Sealed1)
         whenSealed(Sealed.Sealed2)
 
