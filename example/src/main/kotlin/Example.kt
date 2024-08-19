@@ -1,11 +1,16 @@
-inline fun inlineIntoExample() {
-  println("inline into example")
+val a = true
+val b = true
+
+inline fun condA(): Boolean {
+  return a
+}
+
+inline fun condB(): Boolean {
+  return b
 }
 
 fun example() {
-  inlineIntoExample()
-}
-
-inline fun inlineOnlyIntoTest() {
-  println("inline into test");
+  if (condA() && condB()) {
+    println()
+  }
 }
