@@ -12,6 +12,9 @@
  *******************************************************************************/
 package org.jacoco.core.test.validation.java8.targets;
 
+import java.io.Serializable;
+import java.util.function.Supplier;
+
 import static org.jacoco.core.test.validation.targets.Stubs.exec;
 import static org.jacoco.core.test.validation.targets.Stubs.noexec;
 import static org.jacoco.core.test.validation.targets.Stubs.nop;
@@ -22,6 +25,11 @@ import static org.jacoco.core.test.validation.targets.Stubs.nop;
 public class LambdaExpressionsTarget {
 
 	public static void main(String[] args) {
+
+		((Supplier & Serializable) () -> {
+			nop(); // assertFullyCovered()
+			return null;
+		}).get();
 
 		exec(() -> {
 			nop(); // assertFullyCovered()
