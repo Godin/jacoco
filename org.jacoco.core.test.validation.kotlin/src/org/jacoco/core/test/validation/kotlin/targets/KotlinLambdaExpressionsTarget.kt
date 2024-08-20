@@ -22,6 +22,14 @@ object KotlinLambdaExpressionsTarget {
     @JvmStatic
     fun main(args: Array<String>) {
 
+        exec @JvmSerializableLambda { // assertFullyCovered()
+            nop() // assertFullyCovered()
+        } // assertFullyCovered()
+
+        noexec @JvmSerializableLambda { // assertFullyCovered()
+            nop() // assertNotCovered()
+        } // assertNotCovered()
+
         exec { // assertFullyCovered()
             nop() // assertFullyCovered()
         } // assertFullyCovered()
