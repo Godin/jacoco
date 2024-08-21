@@ -47,4 +47,46 @@
     </dependency>
   </dependencies>
 
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-antrun-plugin</artifactId>
+        <executions>
+          <execution>
+            <phase>test</phase>
+            <goals>
+              <goal>run</goal>
+            </goals>
+            <configuration>
+              <!-- mvn clean verify -pl org.jacoco.core,org.jacoco.core.test -->
+              <target>
+                <taskdef name="pitest" classname="org.pitest.ant.PitestTask" classpathref="maven.plugin.classpath"/>
+                <pitest
+                  pitClasspath="maven.plugin.classpath"
+                  verbose="true"
+                  features="+auto_threads"
+                  mutators="STRONGER"
+                  excludedMethods="hashCode"
+                  mutableCodePaths="${org.jacoco:org.jacoco.core:jar}"
+                  classPath="maven.test.classpath"
+                  targetClasses="org.jacoco.*"
+                  targetTests="org.jacoco.*"
+                  reportDir="target/pitest"
+                  sourceDir="../org.jacoco.core/src"
+                />
+              </target>
+            </configuration>
+          </execution>
+        </executions>
+        <dependencies>
+          <dependency>
+            <groupId>org.pitest</groupId>
+            <artifactId>pitest-ant</artifactId>
+            <version>1.16.1</version>
+          </dependency>
+        </dependencies>
+      </plugin>
+    </plugins>
+  </build>
 </project>
