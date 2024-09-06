@@ -12,8 +12,7 @@
  *******************************************************************************/
 package org.jacoco.core.test.validation.kotlin.targets
 
-import org.jacoco.core.test.validation.targets.Stubs.nop
-import org.jacoco.core.test.validation.targets.Stubs.t
+import org.jacoco.core.test.validation.targets.Stubs.*
 
 /**
  * Test target for `inline` functions.
@@ -32,8 +31,16 @@ object KotlinInlineTarget {
         nop() // assertFullyCovered()
     } // assertFullyCovered()
 
+
+    inline fun example(a: Boolean, b: Boolean) {
+        if (a && b)
+            println()
+    }
+
     @JvmStatic
     fun main(args: Array<String>) {
+
+        example(true, t());
 
         inlined_top_level() // assertFullyCovered()
 
