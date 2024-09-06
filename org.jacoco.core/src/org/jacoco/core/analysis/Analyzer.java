@@ -129,6 +129,7 @@ public class Analyzer {
 	 */
 	public void analyzeClass(final byte[] buffer, final String location)
 			throws IOException {
+		System.out.println("Analyzing " + location);
 		try {
 			analyzeClass(buffer);
 		} catch (final RuntimeException cause) {

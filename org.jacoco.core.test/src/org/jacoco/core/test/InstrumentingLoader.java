@@ -65,6 +65,7 @@ public final class InstrumentingLoader extends ClassLoader {
 			}
 			final byte[] instrumented;
 			try {
+				System.out.println("Instrumenting " + name);
 				instrumented = instrumenter.instrument(bytes, name);
 			} catch (IOException e) {
 				throw new ClassNotFoundException("Unable to instrument", e);

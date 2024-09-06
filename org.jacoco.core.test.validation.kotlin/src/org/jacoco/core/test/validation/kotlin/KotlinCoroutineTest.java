@@ -15,6 +15,9 @@ package org.jacoco.core.test.validation.kotlin;
 import org.jacoco.core.test.validation.ValidationTestBase;
 import org.jacoco.core.test.validation.kotlin.targets.KotlinCoroutineTarget;
 
+import java.lang.reflect.Constructor;
+import java.util.Arrays;
+
 /**
  * Test of coroutines.
  */
@@ -22,6 +25,16 @@ public class KotlinCoroutineTest extends ValidationTestBase {
 
 	public KotlinCoroutineTest() {
 		super(KotlinCoroutineTarget.class);
+	}
+
+	@Override
+	protected void run(Class<?> targetClass) throws Exception {
+		Constructor<?>[] declaredConstructors = targetClass.getClassLoader().loadClass(
+						"org.jacoco.core.test.validation.kotlin.targets.KotlinCoroutineTarget$example$1")
+				.getDeclaredConstructors();
+		System.err.println(Arrays.toString(declaredConstructors));
+		declaredConstructors[0].newInstance(null, null);
+		super.run(targetClass);
 	}
 
 }
