@@ -12,7 +12,7 @@
  *******************************************************************************/
 package org.jacoco.core.test.validation.scala.targets
 
-import org.jacoco.core.test.validation.targets.Stubs.{exec, noexec, nop}
+import org.jacoco.core.test.validation.targets.Stubs.{exec, noexec, nop, execSerializable}
 
 /**
  * Test target for anonymous functions.
@@ -27,6 +27,10 @@ object ScalaAnonymousFunctionTarget {
 
     noexec(() => {
       nop() // assertNotCovered()
+    })
+
+    execSerializable(() => {
+      nop() // assertFullyCovered()
     })
 
   }
