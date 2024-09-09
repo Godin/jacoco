@@ -64,4 +64,24 @@
 		<au:assertEquals expected="${agent1}" actual="${agent2}"/>
 	</target>
 
+    <target name="tearDown">
+        <delete dir="${temp.dir}" quiet="false" failonerror="true"/>
+    </target>
+
+    <target name="testAgentClassLoader">
+        <jar destfile="${temp.dir}/test.jar">
+            <fileset dir="${org.jacoco.ant.agentTaskTest.classes.dir}" includes="**/*.class"/>
+            <manifest>
+                <attribute name="Main-Class" value="org.jacoco.ant.AgentLoader"/>
+                <attribute name="Premain-Class"
+                           value="org.jacoco.ant.AgentLoader"/>
+            </manifest>
+        </jar>
+        <java fork="true" failonerror="true" jar="${temp.dir}/test.jar" logError="true">
+            <jvmarg value="-javaagent:${temp.dir}/test.jar" />
+            <arg value="${org.jacoco.ant.agentTaskTest.agent.file}"/>
+        </java>
+        <au:assertFileExists file="jacoco.exec"/>
+    </target>
+
 </project>
