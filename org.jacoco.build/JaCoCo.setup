@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<setup:Project
+    xmi:version="2.0"
+    xmlns:xmi="http://www.omg.org/XMI"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:git="http://www.eclipse.org/oomph/setup/git/1.0"
+    xmlns:jdt="http://www.eclipse.org/oomph/setup/jdt/1.0"
+    xmlns:predicates="http://www.eclipse.org/oomph/predicates/1.0"
+    xmlns:projects="http://www.eclipse.org/oomph/setup/projects/1.0"
+    xmlns:setup="http://www.eclipse.org/oomph/setup/1.0"
+    xmlns:setup.workingsets="http://www.eclipse.org/oomph/setup/workingsets/1.0"
+    xsi:schemaLocation="http://www.eclipse.org/oomph/setup/git/1.0 https://raw.githubusercontent.com/eclipse-oomph/oomph/master/setups/models/Git.ecore http://www.eclipse.org/oomph/setup/jdt/1.0 https://raw.githubusercontent.com/eclipse-oomph/oomph/master/setups/models/JDT.ecore http://www.eclipse.org/oomph/predicates/1.0 https://raw.githubusercontent.com/eclipse-oomph/oomph/master/setups/models/Predicates.ecore http://www.eclipse.org/oomph/setup/projects/1.0 https://raw.githubusercontent.com/eclipse-oomph/oomph/master/setups/models/Projects.ecore http://www.eclipse.org/oomph/setup/workingsets/1.0 https://raw.githubusercontent.com/eclipse-oomph/oomph/master/setups/models/SetupWorkingSets.ecore"
+    name="jacoco"
+    label="JaCoCo">
+  <annotation
+      source="ConfigurationReference">
+    <reference
+        href="JaCoCoConfiguration.setup#/"/>
+  </annotation>
+  <setupTask
+      xsi:type="jdt:JRETask"
+      version="JavaSE-17"
+      location="${jre.location-17}">
+    <description>Define the JRE needed to compile and run the Java projects of ${scope.project.label}</description>
+  </setupTask>
+  <setupTask
+      xsi:type="setup:EclipseIniTask"
+      option="-Xmx"
+      value="2048m"
+      vm="true">
+    <description>Set the heap space needed to work with the projects of ${scope.project.label}</description>
+  </setupTask>
+  <setupTask
+      xsi:type="git:GitCloneTask"
+      id="git.clone.jacoco"
+      remoteURI="jacoco/jacoco">
+    <annotation
+        source="http://www.eclipse.org/oomph/setup/InducedChoices">
+      <detail
+          key="inherit">
+        <value>github.remoteURIs</value>
+      </detail>
+      <detail
+          key="label">
+        <value>${scope.project.label} Github repository</value>
+      </detail>
+      <detail
+          key="target">
+        <value>remoteURI</value>
+      </detail>
+    </annotation>
+    <description>${scope.project.label}</description>
+  </setupTask>
+  <setupTask
+      xsi:type="projects:ProjectsImportTask">
+    <sourceLocator
+        rootFolder="${git.clone.jacoco.location}"
+        locateNestedProjects="true">
+      <excludedPath>org.jacoco.core.test.validation.java7</excludedPath>
+      <excludedPath>org.jacoco.core.test.validation.java8</excludedPath>
+      <excludedPath>org.jacoco.core.test.validation.java14</excludedPath>
+      <excludedPath>org.jacoco.core.test.validation.java16</excludedPath>
+      <excludedPath>org.jacoco.core.test.validation.java21</excludedPath>
+      <excludedPath>org.jacoco.core.test.validation.kotlin</excludedPath>
+      <excludedPath>org.jacoco.core.test.validation.groovy</excludedPath>
+      <excludedPath>org.jacoco.core.test.validation.scala</excludedPath>
+    </sourceLocator>
+  </setupTask>
+  <setupTask
+      xsi:type="setup.workingsets:WorkingSetTask">
+    <workingSet
+        name="${scope.project.name}">
+      <predicate
+          xsi:type="predicates:AndPredicate">
+        <operand
+            xsi:type="predicates:RepositoryPredicate"
+            project="example"/>
+      </predicate>
+    </workingSet>
+    <description>The dynamic working sets for ${scope.project.label}</description>
+  </setupTask>
+  <stream name="master"
+      label="Master">
+    <setupTask
+        xsi:type="setup:EclipseIniTask"
+        disabled="true"
+        option="-Doomph.redirection.jacoco"
+        value="=https://raw.githubusercontent.com/Godin/jacoco/eclipse_oomph_models/org.jacoco.build/JaCoCo.setup->${git.clone.jacoco.location|uri}/org.jacoco.build/JaCoCo.setup"
+        vm="true">
+      <description>
+        Set an Oomph redirection system property to redirect the logical location of this setup to its physical location in the Git clone.
+      </description>
+    </setupTask>
+  </stream>
+  <logicalProjectContainer
+      xsi:type="setup:ProjectCatalog"
+      href="index:/org.eclipse.setup#//@projectCatalogs[name='com.github']"/>
+  <description>JaCoCo.</description>
+</setup:Project>
