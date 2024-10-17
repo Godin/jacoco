@@ -16,11 +16,12 @@ import java.util.BitSet;
 
 import org.jacoco.core.analysis.ICounter;
 import org.jacoco.core.analysis.ILine;
+import org.jacoco.core.analysis.IMethodLine;
 
 /**
  * Implementation of {@link ILine}.
  */
-public abstract class LineImpl implements ILine {
+public abstract class LineImpl implements ILine, IMethodLine {
 
 	/** Max instruction counter value for which singletons are created */
 	private static final int SINGLETON_INS_LIMIT = 8;
@@ -146,7 +147,9 @@ public abstract class LineImpl implements ILine {
 
 	/**
 	 * @return covered branches in the order of bytecode traversal
+	 * @deprecated use {@link #getBranchStatus(int)} instead
 	 */
+	@Deprecated
 	public final BitSet getCoveredBranches() {
 		final int size = Math.min(branches.getTotalCount(), 31);
 		final BitSet result = new BitSet(size);
@@ -154,6 +157,10 @@ public abstract class LineImpl implements ILine {
 			result.set(i, get(coveredBranches, i));
 		}
 		return result;
+	}
+
+	public boolean getBranchStatus(final int index) {
+		return get(coveredBranches, index);
 	}
 
 	/**

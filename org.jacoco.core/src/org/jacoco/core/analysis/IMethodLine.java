@@ -7,31 +7,20 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *    Marc R. Hoffmann - initial API and implementation
+ *    Evgeny Mandrikov - initial API and implementation
  *
  *******************************************************************************/
 package org.jacoco.core.analysis;
 
 /**
- * Coverage data of a single method. The name of this node is the local method
- * name.
  */
-public interface IMethodCoverage extends ISourceNode {
+public interface IMethodLine extends ILine {
 
 	/**
-	 * Returns the descriptor of the method.
-	 *
-	 * @return descriptor
+	 * @param index
+	 *            branch index in the order of bytecode traversal
+	 * @return {@code true} if branch was executed
 	 */
-	String getDesc();
-
-	/**
-	 * Returns the generic signature of the method if defined.
-	 *
-	 * @return generic signature or <code>null</code>
-	 */
-	String getSignature();
-
-	IMethodLine getLine(int nr);
+	boolean getBranchStatus(int index);
 
 }

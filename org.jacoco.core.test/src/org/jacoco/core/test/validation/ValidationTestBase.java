@@ -30,6 +30,7 @@ import org.jacoco.core.analysis.IClassCoverage;
 import org.jacoco.core.analysis.ICounter;
 import org.jacoco.core.analysis.ILine;
 import org.jacoco.core.analysis.IMethodCoverage;
+import org.jacoco.core.analysis.IMethodLine;
 import org.jacoco.core.data.ExecutionData;
 import org.jacoco.core.data.ExecutionDataStore;
 import org.jacoco.core.data.SessionInfo;
@@ -276,9 +277,21 @@ public abstract class ValidationTestBase {
 						throw new AssertionError(String
 								.format("Multiple matching lines (%s)", line));
 					}
-					actual = String
-							.valueOf(((LineImpl) aMethod.getLine(lineNumber))
-									.getCoveredBranches());
+					final IMethodLine aLine = aMethod.getLine(lineNumber);
+					final StringBuilder sb = new StringBuilder();
+					sb.append("{");
+					for (int branchIndex = 0; branchIndex < aLine
+							.getBranchCounter()
+							.getTotalCount(); branchIndex++) {
+						if (aLine.getBranchStatus(branchIndex)) {
+							if (sb.length() > 1) {
+								sb.append(", ");
+							}
+							sb.append(branchIndex);
+						}
+					}
+					sb.append("}");
+					actual = sb.toString();
 					assertEquals(String.format("CoveredBranches (%s)", line),
 							expected, actual);
 				}
