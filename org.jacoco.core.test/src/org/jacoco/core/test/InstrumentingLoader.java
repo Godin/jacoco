@@ -13,6 +13,8 @@
 package org.jacoco.core.test;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collection;
 
 import org.jacoco.core.data.ExecutionDataStore;
 import org.jacoco.core.data.SessionInfoStore;
@@ -33,6 +35,8 @@ public final class InstrumentingLoader extends ClassLoader {
 
 	private final RuntimeData data;
 	private final Instrumenter instrumenter;
+
+	private final ArrayList<String> classNames = new ArrayList<String>();
 
 	public InstrumentingLoader(IRuntime runtime, String scope,
 			ClassLoader delegate) throws Exception {
@@ -69,6 +73,7 @@ public final class InstrumentingLoader extends ClassLoader {
 			} catch (IOException e) {
 				throw new ClassNotFoundException("Unable to instrument", e);
 			}
+			classNames.add(name);
 			c = defineClass(name, instrumented, 0, instrumented.length);
 			if (resolve) {
 				resolveClass(c);
@@ -76,6 +81,10 @@ public final class InstrumentingLoader extends ClassLoader {
 			return c;
 		}
 		return super.loadClass(name, resolve);
+	}
+
+	public Collection<String> classNames() {
+		return classNames;
 	}
 
 	public ExecutionDataStore collect() {
