@@ -292,11 +292,11 @@ public abstract class ValidationTestBase {
 					}
 					sb.append("}");
 					actual = sb.toString();
-					assertEquals(String.format("CoveredBranches (%s)", line),
-							expected, actual);
 				}
 			}
 		}
+		assertEquals(String.format("CoveredBranches (%s)", line), expected,
+				actual);
 	}
 
 }
