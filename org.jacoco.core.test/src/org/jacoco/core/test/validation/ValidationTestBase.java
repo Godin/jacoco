@@ -13,6 +13,7 @@
 package org.jacoco.core.test.validation;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 import java.io.File;
@@ -263,6 +264,22 @@ public abstract class ValidationTestBase {
 	protected void assertMethodCount(final int expectedTotal) {
 		assertEquals(expectedTotal,
 				source.getCoverage().getMethodCounter().getTotalCount());
+	}
+
+	public void assertCoveredBranches(final Source.Line line,
+			final String expected, final String methodName) {
+		String actual = null;
+		for (final IClassCoverage aClass : classes) {
+			for (final IMethodCoverage aMethod : aClass.getMethods()) {
+				if (methodName.equals(aMethod.getName())) {
+					final LineImpl aLine = (LineImpl) aMethod
+							.getLine(line.getNr());
+					assertNull(actual);
+					actual = aLine.getCoveredBranches().toString();
+				}
+			}
+		}
+		assertEquals(expected, actual);
 	}
 
 	public void assertCoveredBranches(final Source.Line line,
