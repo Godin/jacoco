@@ -60,6 +60,21 @@ object KotlinWhenExpressionTarget {
         else -> 7 // assertFullyCovered()
     } // assertFullyCovered()
 
+    private fun whenStringNullableDefault(p: String?): Int = when (p) { // assertFullyCovered(0, 4)
+        "a" -> 1 // assertFullyCovered()
+        "b" -> 2 // assertFullyCovered()
+        "c" -> 3 // assertFullyCovered()
+        else -> 7 // assertFullyCovered()
+    } // assertFullyCovered()
+
+    private fun whenStringNullableCase(p: String?): Int = when (p) { // assertFullyCovered(0, 5)
+        "a" -> 1 // assertFullyCovered()
+        "b" -> 2 // assertFullyCovered()
+        "c" -> 3 // assertFullyCovered()
+        null -> 4 // assertFullyCovered()
+        else -> 5 // assertFullyCovered()
+    } // assertFullyCovered()
+
     /**
      * Unlike [whenString]
      * in this example first case is the only case with biggest hashCode value.
@@ -95,6 +110,17 @@ object KotlinWhenExpressionTarget {
         whenString("\u0000a")
         whenString("\u0000b")
         whenString("\u0000c")
+
+        whenStringNullableDefault("a")
+        whenStringNullableDefault("b")
+        whenStringNullableDefault("c")
+        whenStringNullableDefault("")
+
+        whenStringNullableCase("a")
+        whenStringNullableCase("b")
+        whenStringNullableCase("c")
+        whenStringNullableCase(null)
+        whenStringNullableCase("")
 
         whenStringBiggestHashCodeFirst("")
         whenStringBiggestHashCodeFirst("a")
