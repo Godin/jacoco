@@ -59,6 +59,8 @@ public final class StringSwitchFilter implements IFilter {
 					}
 				} else if (cursor.getNext().getOpcode() == Opcodes.IFNULL) {
 					nextIs(Opcodes.IFNULL);
+					replacements
+							.add(skipNonOpcodes(((JumpInsnNode) cursor).label));
 					nextIs(Opcodes.ALOAD);
 				}
 			}
