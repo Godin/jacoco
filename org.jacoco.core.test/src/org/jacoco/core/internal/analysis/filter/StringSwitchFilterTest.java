@@ -188,10 +188,11 @@ public class StringSwitchFilterTest extends FilterTestBase {
 		final Label case5 = new Label();
 		final Label case6 = new Label();
 
+		m.visitVarInsn(Opcodes.ASTORE, 1);
 		m.visitVarInsn(Opcodes.ALOAD, 1);
+		final AbstractInsnNode expectedFromInclusive = m.instructions.getLast();
 		m.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "java/lang/String", "hashCode",
 				"()I", false);
-		final AbstractInsnNode expectedFromInclusive = m.instructions.getLast();
 		m.visitTableSwitchInsn(97, 99, defaultCase, h1, h2, h3);
 
 		m.visitLabel(h1);
@@ -350,7 +351,8 @@ public class StringSwitchFilterTest extends FilterTestBase {
 		filter.filter(m, context, output);
 
 		assertIgnored(range);
-		assertReplacedBranches(range.fromInclusive.getPrevious(), expectedNewTargets);
+		assertReplacedBranches(range.fromInclusive.getPrevious(),
+				expectedNewTargets);
 	}
 
 	/**
@@ -441,7 +443,8 @@ public class StringSwitchFilterTest extends FilterTestBase {
 		filter.filter(m, context, output);
 
 		assertIgnored(range);
-		assertReplacedBranches(range.fromInclusive.getPrevious(), expectedNewTargets);
+		assertReplacedBranches(range.fromInclusive.getPrevious(),
+				expectedNewTargets);
 	}
 
 	@Test
