@@ -44,21 +44,23 @@ public final class StringSwitchFilter implements IFilter {
 				final IFilterOutput output) {
 			cursor = start;
 			final Set<AbstractInsnNode> replacements = new HashSet<AbstractInsnNode>();
-			if (start.getOpcode() == Opcodes.ALOAD) {
+			if (start.getOpcode() != Opcodes.ASTORE) {
+				return;
+			}
+			if (start.getNext().getOpcode() == Opcodes.ALOAD) {
 				// Kotlin
-				if (start.getNext().getOpcode() == Opcodes.DUP) {
+				nextIs(Opcodes.ALOAD);
+				if (cursor.getNext().getOpcode() == Opcodes.DUP) {
 					nextIs(Opcodes.DUP);
 					nextIs(Opcodes.IFNULL);
 					if (cursor != null) {
 						replacements.add(
 								skipNonOpcodes(((JumpInsnNode) cursor).label));
 					}
-				} else if (start.getNext().getOpcode() == Opcodes.IFNULL) {
+				} else if (cursor.getNext().getOpcode() == Opcodes.IFNULL) {
 					nextIs(Opcodes.IFNULL);
 					nextIs(Opcodes.ALOAD);
 				}
-			} else if (start.getOpcode() != Opcodes.ASTORE) {
-				return;
 			}
 			nextIsInvoke(Opcodes.INVOKEVIRTUAL, "java/lang/String", "hashCode",
 					"()I");
