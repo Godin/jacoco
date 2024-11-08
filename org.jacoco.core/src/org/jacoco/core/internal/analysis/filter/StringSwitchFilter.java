@@ -42,12 +42,24 @@ public final class StringSwitchFilter implements IFilter {
 	private static class Matcher extends AbstractMatcher {
 		public void match(final AbstractInsnNode start,
 				final IFilterOutput output) {
-
-			if (start.getOpcode() != /* ECJ */ Opcodes.ASTORE
-					&& start.getOpcode() != /* Kotlin */ Opcodes.ALOAD) {
+			cursor = start;
+			final Set<AbstractInsnNode> replacements = new HashSet<AbstractInsnNode>();
+			if (start.getOpcode() == Opcodes.ALOAD) {
+				// Kotlin
+				if (start.getNext().getOpcode() == Opcodes.DUP) {
+					nextIs(Opcodes.DUP);
+					nextIs(Opcodes.IFNULL);
+					if (cursor != null) {
+						replacements.add(
+								skipNonOpcodes(((JumpInsnNode) cursor).label));
+					}
+				} else if (start.getNext().getOpcode() == Opcodes.IFNULL) {
+					nextIs(Opcodes.IFNULL);
+					nextIs(Opcodes.ALOAD);
+				}
+			} else if (start.getOpcode() != Opcodes.ASTORE) {
 				return;
 			}
-			cursor = start;
 			nextIsInvoke(Opcodes.INVOKEVIRTUAL, "java/lang/String", "hashCode",
 					"()I");
 			nextIsSwitch();
@@ -73,7 +85,6 @@ public final class StringSwitchFilter implements IFilter {
 				return;
 			}
 
-			final Set<AbstractInsnNode> replacements = new HashSet<AbstractInsnNode>();
 			replacements.add(skipNonOpcodes(defaultLabel));
 
 			for (int i = 0; i < hashCodes; i++) {
@@ -102,8 +113,8 @@ public final class StringSwitchFilter implements IFilter {
 				}
 			}
 
-			output.ignore(s.getNext(), cursor);
-			output.replaceBranches(s, replacements);
+			output.ignore(start.getNext(), cursor);
+			output.replaceBranches(start, replacements);
 		}
 	}
 
