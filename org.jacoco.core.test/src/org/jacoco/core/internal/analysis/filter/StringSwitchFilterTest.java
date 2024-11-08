@@ -51,10 +51,10 @@ public class StringSwitchFilterTest extends FilterTestBase {
 		// switch (...)
 		m.visitInsn(Opcodes.DUP);
 		m.visitVarInsn(Opcodes.ASTORE, 2);
+		final AbstractInsnNode startNode = m.instructions.getLast();
 		m.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "java/lang/String", "hashCode",
 				"()I", false);
 		m.visitTableSwitchInsn(97, 98, caseDefault, h1, h2);
-		final AbstractInsnNode switchNode = m.instructions.getLast();
 
 		m.visitLabel(h1);
 
@@ -103,8 +103,8 @@ public class StringSwitchFilterTest extends FilterTestBase {
 
 		filter.filter(m, context, output);
 
-		assertReplacedBranches(switchNode, expectedNewTargets);
-		assertIgnored(new Range(switchNode.getNext(), expectedToInclusive));
+		assertReplacedBranches(startNode, expectedNewTargets);
+		assertIgnored(new Range(startNode.getNext(), expectedToInclusive));
 	}
 
 	@Test
@@ -126,11 +126,11 @@ public class StringSwitchFilterTest extends FilterTestBase {
 		// switch (...)
 		m.visitInsn(Opcodes.DUP);
 		m.visitVarInsn(Opcodes.ASTORE, 2);
+		final AbstractInsnNode startNode = m.instructions.getLast();
 		m.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "java/lang/String", "hashCode",
 				"()I", false);
 		m.visitLookupSwitchInsn(caseDefault, new int[] { 97 },
 				new Label[] { h1 });
-		final AbstractInsnNode switchNode = m.instructions.getLast();
 
 		m.visitLabel(h1);
 
@@ -152,8 +152,8 @@ public class StringSwitchFilterTest extends FilterTestBase {
 
 		filter.filter(m, context, output);
 
-		assertReplacedBranches(switchNode, expectedNewTargets);
-		assertIgnored(new Range(switchNode.getNext(), expectedToInclusive));
+		assertReplacedBranches(startNode, expectedNewTargets);
+		assertIgnored(new Range(startNode.getNext(), expectedToInclusive));
 	}
 
 	/**
@@ -191,10 +191,10 @@ public class StringSwitchFilterTest extends FilterTestBase {
 		m.visitVarInsn(Opcodes.ALOAD, 1);
 		m.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "java/lang/String", "hashCode",
 				"()I", false);
+		final AbstractInsnNode expectedFromInclusive = m.instructions.getLast();
 		m.visitTableSwitchInsn(97, 99, defaultCase, h1, h2, h3);
 
 		m.visitLabel(h1);
-		final AbstractInsnNode expectedFromInclusive = m.instructions.getLast();
 		m.visitVarInsn(Opcodes.ALOAD, 1);
 		m.visitLdcInsn("a");
 		m.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "java/lang/String", "equals",
