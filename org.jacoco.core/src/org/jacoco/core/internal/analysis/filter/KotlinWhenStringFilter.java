@@ -12,6 +12,7 @@
  *******************************************************************************/
 package org.jacoco.core.internal.analysis.filter;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -71,8 +72,8 @@ public final class KotlinWhenStringFilter implements IFilter {
 				return;
 			}
 
-			final Set<AbstractInsnNode> replacements = new HashSet<AbstractInsnNode>();
-			replacements.add(skipNonOpcodes(defaultLabel));
+			final ArrayList<IFilterOutput.BranchReplacement> replacements = new ArrayList<IFilterOutput.BranchReplacement>();
+			replacements.add(new IFilterOutput.BranchReplacement(s, 0));
 
 			for (int i = 1; i <= hashCodes; i++) {
 				while (true) {
@@ -89,14 +90,15 @@ public final class KotlinWhenStringFilter implements IFilter {
 					} else if (cursor.getOpcode() == Opcodes.GOTO) {
 						// jump to case body
 						replacements.add(
-								skipNonOpcodes(((JumpInsnNode) cursor).label));
+								new IFilterOutput.BranchReplacement(cursor, 0));
 						if (jump.label == defaultLabel) {
 							// end of comparisons for same hashCode
 							break;
 						}
 					} else if (i == hashCodes && jump.label == defaultLabel) {
 						// case body
-						replacements.add(cursor);
+						replacements.add(
+								new IFilterOutput.BranchReplacement(jump, 0));
 						cursor = jump;
 						break;
 					} else {

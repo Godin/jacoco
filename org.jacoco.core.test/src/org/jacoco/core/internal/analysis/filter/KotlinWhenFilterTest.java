@@ -12,9 +12,6 @@
  *******************************************************************************/
 package org.jacoco.core.internal.analysis.filter;
 
-import java.util.HashSet;
-import java.util.Set;
-
 import org.jacoco.core.internal.instr.InstrSupport;
 import org.junit.Test;
 import org.objectweb.asm.Label;
@@ -96,11 +93,9 @@ public class KotlinWhenFilterTest extends FilterTestBase {
 
 		m.visitTableSwitchInsn(0, 0, caseDefault, case1);
 		final AbstractInsnNode switchNode = m.instructions.getLast();
-		final Set<AbstractInsnNode> newTargets = new HashSet<AbstractInsnNode>();
 
 		m.visitLabel(case1);
 		m.visitInsn(Opcodes.ICONST_1);
-		newTargets.add(m.instructions.getLast());
 		m.visitJumpInsn(Opcodes.GOTO, after);
 
 		final Range range1 = new Range();
@@ -118,7 +113,7 @@ public class KotlinWhenFilterTest extends FilterTestBase {
 		filter.filter(m, context, output);
 
 		assertIgnored(range1);
-		assertReplacedBranches(switchNode, newTargets);
+		assertDefaultBranchIgnored(switchNode);
 	}
 
 }

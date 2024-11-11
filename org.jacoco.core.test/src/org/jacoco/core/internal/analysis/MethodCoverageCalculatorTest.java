@@ -20,6 +20,7 @@ import java.util.HashSet;
 import java.util.Map;
 
 import org.jacoco.core.analysis.ISourceNode;
+import org.jacoco.core.internal.analysis.filter.IFilterOutput;
 import org.junit.Before;
 import org.junit.Test;
 import org.objectweb.asm.Opcodes;
@@ -179,7 +180,9 @@ public class MethodCoverageCalculatorTest {
 
 		MethodCoverageCalculator c = new MethodCoverageCalculator(instructions);
 		c.replaceBranches(i1,
-				new HashSet<AbstractInsnNode>(Arrays.asList(i2, i3, i4)));
+				Arrays.asList(new IFilterOutput.BranchReplacement(i2, 0),
+						new IFilterOutput.BranchReplacement(i3, 0),
+						new IFilterOutput.BranchReplacement(i4, 0)));
 		c.calculate(coverage);
 
 		assertLine(1, 0, 1, 1, 2); // branches coverage status replaced
@@ -197,7 +200,9 @@ public class MethodCoverageCalculatorTest {
 		c.merge(i4, i3);
 		c.merge(i3, i2);
 		c.replaceBranches(i1,
-				new HashSet<AbstractInsnNode>(Arrays.asList(i2, i3, i4)));
+				Arrays.asList(new IFilterOutput.BranchReplacement(i2, 0),
+						new IFilterOutput.BranchReplacement(i3, 0),
+						new IFilterOutput.BranchReplacement(i4, 0)));
 		c.calculate(coverage);
 
 		assertLine(1, 0, 1, 0, 3);

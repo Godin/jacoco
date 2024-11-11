@@ -18,14 +18,16 @@ import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.tree.AbstractInsnNode;
+import org.objectweb.asm.tree.LookupSwitchInsnNode;
 import org.objectweb.asm.tree.MethodNode;
+import org.objectweb.asm.tree.TableSwitchInsnNode;
 
 /**
  * Base class for tests of {@link IFilter} implementations.
@@ -36,7 +38,7 @@ public abstract class FilterTestBase {
 
 	private final List<Range> ignoredRanges = new ArrayList<Range>();
 
-	private final Map<AbstractInsnNode, Set<AbstractInsnNode>> replacedBranches = new HashMap<AbstractInsnNode, Set<AbstractInsnNode>>();
+	private final Map<AbstractInsnNode, List<IFilterOutput.BranchReplacement>> replacements = new HashMap<AbstractInsnNode, List<IFilterOutput.BranchReplacement>>();
 
 	protected final IFilterOutput output = new IFilterOutput() {
 		public void ignore(final AbstractInsnNode fromInclusive,
@@ -52,9 +54,9 @@ public abstract class FilterTestBase {
 			fail();
 		}
 
-		public void replaceBranches(final AbstractInsnNode source,
-				final Set<AbstractInsnNode> newTargets) {
-			replacedBranches.put(source, newTargets);
+		public void replaceBranches(final AbstractInsnNode instruction,
+				final List<BranchReplacement> replacements) {
+			FilterTestBase.this.replacements.put(instruction, replacements);
 		}
 	};
 
@@ -68,13 +70,35 @@ public abstract class FilterTestBase {
 	}
 
 	final void assertNoReplacedBranches() {
-		assertTrue(replacedBranches.isEmpty());
+		assertTrue(replacements.isEmpty());
 	}
 
 	final void assertReplacedBranches(final AbstractInsnNode source,
-			final Set<AbstractInsnNode> newTargets) {
-		assertEquals(Collections.singletonMap(source, newTargets),
-				replacedBranches);
+			final List<IFilterOutput.BranchReplacement> expected) {
+		final List<IFilterOutput.BranchReplacement> actual = this.replacements
+				.get(source);
+		assertEquals(expected.size(), actual.size());
+		for (int i = 0; i < expected.size(); i++) {
+			assertEquals(expected.get(i).instruction,
+					actual.get(i).instruction);
+			assertEquals(expected.get(i).branchIndex,
+					actual.get(i).branchIndex);
+		}
+	}
+
+	final void assertDefaultBranchIgnored(AbstractInsnNode switchNode) {
+		final int labels;
+		if (switchNode.getOpcode() == Opcodes.LOOKUPSWITCH) {
+			labels = ((LookupSwitchInsnNode) switchNode).labels.size();
+		} else {
+			labels = ((TableSwitchInsnNode) switchNode).labels.size();
+		}
+		final ArrayList<IFilterOutput.BranchReplacement> replacements = new ArrayList<IFilterOutput.BranchReplacement>();
+		for (int i = 1; i <= labels; i++) {
+			replacements
+					.add(new IFilterOutput.BranchReplacement(switchNode, i));
+		}
+		assertReplacedBranches(switchNode, replacements);
 	}
 
 	static class Range {

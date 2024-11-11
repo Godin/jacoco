@@ -12,9 +12,6 @@
  *******************************************************************************/
 package org.jacoco.core.internal.analysis.filter;
 
-import java.util.HashSet;
-import java.util.Set;
-
 import org.jacoco.core.internal.instr.InstrSupport;
 import org.junit.Test;
 import org.objectweb.asm.Label;
@@ -67,7 +64,6 @@ public class ExhaustiveSwitchFilterTest extends FilterTestBase {
 		m.visitLookupSwitchInsn(dflt, new int[] { 1, 2, 3 },
 				new Label[] { case1, case2, case3 });
 		final AbstractInsnNode switchNode = m.instructions.getLast();
-		final Set<AbstractInsnNode> newTargets = new HashSet<AbstractInsnNode>();
 
 		m.visitLabel(dflt);
 		final Range range = new Range();
@@ -83,16 +79,13 @@ public class ExhaustiveSwitchFilterTest extends FilterTestBase {
 
 		m.visitLabel(case1);
 		m.visitInsn(Opcodes.ICONST_1);
-		newTargets.add(m.instructions.getLast());
 		m.visitJumpInsn(Opcodes.GOTO, end);
 
 		m.visitLabel(case2);
 		m.visitInsn(Opcodes.ICONST_2);
-		newTargets.add(m.instructions.getLast());
 
 		m.visitLabel(case3);
 		m.visitInsn(Opcodes.ICONST_3);
-		newTargets.add(m.instructions.getLast());
 
 		m.visitLabel(end);
 		m.visitInsn(Opcodes.IRETURN);
@@ -100,7 +93,7 @@ public class ExhaustiveSwitchFilterTest extends FilterTestBase {
 		filter.filter(m, context, output);
 
 		assertIgnored(range);
-		assertReplacedBranches(switchNode, newTargets);
+		assertDefaultBranchIgnored(switchNode);
 	}
 
 	/**
@@ -141,7 +134,6 @@ public class ExhaustiveSwitchFilterTest extends FilterTestBase {
 		m.visitLookupSwitchInsn(dflt, new int[] { 1, 2, 3 },
 				new Label[] { case1, case2, case3 });
 		final AbstractInsnNode switchNode = m.instructions.getLast();
-		final Set<AbstractInsnNode> newTargets = new HashSet<AbstractInsnNode>();
 
 		m.visitLabel(dflt);
 		final Range range = new Range();
@@ -156,16 +148,13 @@ public class ExhaustiveSwitchFilterTest extends FilterTestBase {
 
 		m.visitLabel(case1);
 		m.visitInsn(Opcodes.ICONST_1);
-		newTargets.add(m.instructions.getLast());
 		m.visitJumpInsn(Opcodes.GOTO, end);
 
 		m.visitLabel(case2);
 		m.visitInsn(Opcodes.ICONST_2);
-		newTargets.add(m.instructions.getLast());
 
 		m.visitLabel(case3);
 		m.visitInsn(Opcodes.ICONST_3);
-		newTargets.add(m.instructions.getLast());
 
 		m.visitLabel(end);
 		m.visitInsn(Opcodes.IRETURN);
@@ -173,7 +162,7 @@ public class ExhaustiveSwitchFilterTest extends FilterTestBase {
 		filter.filter(m, context, output);
 
 		assertIgnored(range);
-		assertReplacedBranches(switchNode, newTargets);
+		assertDefaultBranchIgnored(switchNode);
 	}
 
 	/**
@@ -214,7 +203,6 @@ public class ExhaustiveSwitchFilterTest extends FilterTestBase {
 		m.visitLookupSwitchInsn(dflt, new int[] { 1, 2, 3 },
 				new Label[] { case1, case2, case3 });
 		final AbstractInsnNode switchNode = m.instructions.getLast();
-		final Set<AbstractInsnNode> newTargets = new HashSet<AbstractInsnNode>();
 
 		m.visitLabel(dflt);
 		final Range range = new Range();
@@ -230,16 +218,13 @@ public class ExhaustiveSwitchFilterTest extends FilterTestBase {
 
 		m.visitLabel(case1);
 		m.visitInsn(Opcodes.ICONST_1);
-		newTargets.add(m.instructions.getLast());
 		m.visitJumpInsn(Opcodes.GOTO, end);
 
 		m.visitLabel(case2);
 		m.visitInsn(Opcodes.ICONST_2);
-		newTargets.add(m.instructions.getLast());
 
 		m.visitLabel(case3);
 		m.visitInsn(Opcodes.ICONST_3);
-		newTargets.add(m.instructions.getLast());
 
 		m.visitLabel(end);
 		m.visitInsn(Opcodes.IRETURN);
@@ -247,7 +232,7 @@ public class ExhaustiveSwitchFilterTest extends FilterTestBase {
 		filter.filter(m, context, output);
 
 		assertIgnored(range);
-		assertReplacedBranches(switchNode, newTargets);
+		assertDefaultBranchIgnored(switchNode);
 	}
 
 	/**

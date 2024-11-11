@@ -12,12 +12,10 @@
  *******************************************************************************/
 package org.jacoco.core.internal.analysis.filter;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
 
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.tree.AbstractInsnNode;
-import org.objectweb.asm.tree.JumpInsnNode;
 import org.objectweb.asm.tree.LabelNode;
 import org.objectweb.asm.tree.LookupSwitchInsnNode;
 import org.objectweb.asm.tree.MethodNode;
@@ -73,8 +71,8 @@ public final class StringSwitchFilter implements IFilter {
 				return;
 			}
 
-			final Set<AbstractInsnNode> replacements = new HashSet<AbstractInsnNode>();
-			replacements.add(skipNonOpcodes(defaultLabel));
+			final ArrayList<IFilterOutput.BranchReplacement> replacements = new ArrayList<IFilterOutput.BranchReplacement>();
+			replacements.add(new IFilterOutput.BranchReplacement(s, 0));
 
 			for (int i = 0; i < hashCodes; i++) {
 				while (true) {
@@ -88,8 +86,8 @@ public final class StringSwitchFilter implements IFilter {
 						return;
 					}
 
-					replacements
-							.add(skipNonOpcodes(((JumpInsnNode) cursor).label));
+					replacements.add(
+							new IFilterOutput.BranchReplacement(cursor, 1));
 
 					if (cursor.getNext().getOpcode() == Opcodes.GOTO) {
 						// end of comparisons for same hashCode
