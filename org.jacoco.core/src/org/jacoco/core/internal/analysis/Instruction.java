@@ -50,7 +50,7 @@ import org.jacoco.core.analysis.ICounter;
  *
  * <ul>
  * <li>{@link #merge(Instruction)}</li>
- * <li>{@link #replaceBranches(Collection)}</li>
+ * <li>{@link #replaceBranches(Instruction[], int[])}</li>
  * </ul>
  */
 public class Instruction {
@@ -159,22 +159,23 @@ public class Instruction {
 	}
 
 	/**
-	 * Creates a copy of this instruction where all outgoing branches are
-	 * replaced with the given instructions. The coverage status of the new
-	 * instruction is derived from the status of the given instructions.
+	 * Creates a copy of this instruction where all branches are replaced. The
+	 * coverage status of the new instruction is derived from the status of the
+	 * given branches of given instructions.
 	 *
-	 * @param newBranches
-	 *            new branches to consider
+	 * @param instructions
+	 *            instructions whose branches should be used
+	 * @param branches
+	 *            branches of instructions that should be used
 	 * @return new instance with replaced branches
 	 */
-	public Instruction replaceBranches(
-			final Collection<Instruction> newBranches) {
+	public Instruction replaceBranches(final Instruction[] instructions,
+			final int[] branches) {
 		final Instruction result = new Instruction(this.line);
-		result.branches = newBranches.size();
-		int idx = 0;
-		for (final Instruction b : newBranches) {
-			if (!b.coveredBranches.isEmpty()) {
-				result.coveredBranches.set(idx++);
+		result.branches = branches.length;
+		for (int i = 0; i < branches.length; i++) {
+			if (instructions[i].coveredBranches.get(branches[i])) {
+				result.coveredBranches.set(i);
 			}
 		}
 		return result;

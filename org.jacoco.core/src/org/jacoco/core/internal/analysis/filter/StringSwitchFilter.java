@@ -12,8 +12,7 @@
  *******************************************************************************/
 package org.jacoco.core.internal.analysis.filter;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
 
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.tree.AbstractInsnNode;
@@ -43,24 +42,21 @@ public final class StringSwitchFilter implements IFilter {
 		public void match(final AbstractInsnNode start,
 				final IFilterOutput output) {
 			cursor = start;
-			final Set<AbstractInsnNode> replacements = new HashSet<AbstractInsnNode>();
+			final ArrayList<IFilterOutput.BranchReplacement> replacements = new ArrayList<IFilterOutput.BranchReplacement>();
 			if (start.getOpcode() != Opcodes.ASTORE) {
 				return;
 			}
+			JumpInsnNode nullCaseJump = null;
 			if (start.getNext().getOpcode() == Opcodes.ALOAD) {
 				// Kotlin
 				nextIs(Opcodes.ALOAD);
 				if (cursor.getNext().getOpcode() == Opcodes.DUP) {
 					nextIs(Opcodes.DUP);
 					nextIs(Opcodes.IFNULL);
-					if (cursor != null) {
-						replacements.add(
-								skipNonOpcodes(((JumpInsnNode) cursor).label));
-					}
+					nullCaseJump = (JumpInsnNode) cursor;
 				} else if (cursor.getNext().getOpcode() == Opcodes.IFNULL) {
 					nextIs(Opcodes.IFNULL);
-					replacements
-							.add(skipNonOpcodes(((JumpInsnNode) cursor).label));
+					nullCaseJump = (JumpInsnNode) cursor;
 					nextIs(Opcodes.ALOAD);
 				}
 			}
@@ -89,7 +85,17 @@ public final class StringSwitchFilter implements IFilter {
 				return;
 			}
 
-			replacements.add(skipNonOpcodes(defaultLabel));
+			replacements.add(new IFilterOutput.BranchReplacement(s, 0));
+			if (nullCaseJump != null && nullCaseJump.label != defaultLabel) {
+				replacements.add(
+						new IFilterOutput.BranchReplacement(nullCaseJump, 1));
+			} else {
+				// FIXME when IFNULL is executed,
+				// then default branch of switch
+				// should be considered as executed
+
+				// ifnull second branch is executed or switch default is executed
+			}
 
 			for (int i = 0; i < hashCodes; i++) {
 				while (true) {
@@ -103,8 +109,8 @@ public final class StringSwitchFilter implements IFilter {
 						return;
 					}
 
-					replacements
-							.add(skipNonOpcodes(((JumpInsnNode) cursor).label));
+					replacements.add(
+							new IFilterOutput.BranchReplacement(cursor, 1));
 
 					if (cursor.getNext().getOpcode() == Opcodes.GOTO) {
 						// end of comparisons for same hashCode

@@ -569,10 +569,10 @@ public class MethodAnalyzerTest implements IProbeIdGenerator {
 			final AbstractInsnNode t2 = methodNode.instructions.get(13);
 			assertEquals(Opcodes.BIPUSH, t2.getOpcode());
 
-			final Set<AbstractInsnNode> newTargets = new HashSet<AbstractInsnNode>();
-			newTargets.add(t1);
-			newTargets.add(t2);
-			output.replaceBranches(i, newTargets);
+			final ArrayList<IFilterOutput.BranchReplacement> replacements = new ArrayList<IFilterOutput.BranchReplacement>();
+			replacements.add(new IFilterOutput.BranchReplacement(t1, 0));
+			replacements.add(new IFilterOutput.BranchReplacement(t2, 0));
+			output.replaceBranches(i, replacements);
 		}
 	};
 

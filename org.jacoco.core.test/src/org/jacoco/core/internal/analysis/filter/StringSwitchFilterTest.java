@@ -12,8 +12,7 @@
  *******************************************************************************/
 package org.jacoco.core.internal.analysis.filter;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
 
 import org.jacoco.core.internal.instr.InstrSupport;
 import org.junit.Test;
@@ -31,7 +30,7 @@ public class StringSwitchFilterTest extends FilterTestBase {
 
 	@Test
 	public void should_filter() {
-		final Set<AbstractInsnNode> expectedNewTargets = new HashSet<AbstractInsnNode>();
+		final ArrayList<IFilterOutput.BranchReplacement> expectedReplacements = new ArrayList<IFilterOutput.BranchReplacement>();
 
 		final MethodNode m = new MethodNode(InstrSupport.ASM_API_VERSION, 0,
 				"name", "()V", null, null);
@@ -55,6 +54,9 @@ public class StringSwitchFilterTest extends FilterTestBase {
 		m.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "java/lang/String", "hashCode",
 				"()I", false);
 		m.visitTableSwitchInsn(97, 98, caseDefault, h1, h2);
+		final AbstractInsnNode switchNode = m.instructions.getLast();
+		expectedReplacements.add(new IFilterOutput.BranchReplacement(
+				m.instructions.getLast(), 0));
 
 		m.visitLabel(h1);
 
@@ -64,6 +66,8 @@ public class StringSwitchFilterTest extends FilterTestBase {
 				"(Ljava/lang/Object;)Z", false);
 		// if equal "a", then goto its case
 		m.visitJumpInsn(Opcodes.IFNE, case1);
+		expectedReplacements.add(new IFilterOutput.BranchReplacement(
+				m.instructions.getLast(), 1));
 
 		m.visitVarInsn(Opcodes.ALOAD, 2);
 		m.visitLdcInsn("\0a");
@@ -71,6 +75,8 @@ public class StringSwitchFilterTest extends FilterTestBase {
 				"(Ljava/lang/Object;)Z", false);
 		// if equal "\0a", then goto its case
 		m.visitJumpInsn(Opcodes.IFNE, case2);
+		expectedReplacements.add(new IFilterOutput.BranchReplacement(
+				m.instructions.getLast(), 1));
 
 		// goto default case
 		m.visitJumpInsn(Opcodes.GOTO, caseDefault);
@@ -83,6 +89,8 @@ public class StringSwitchFilterTest extends FilterTestBase {
 				"(Ljava/lang/Object;)Z", false);
 		// if equal "b", then goto its case
 		m.visitJumpInsn(Opcodes.IFNE, case3);
+		expectedReplacements.add(new IFilterOutput.BranchReplacement(
+				m.instructions.getLast(), 1));
 
 		// goto default case
 		m.visitJumpInsn(Opcodes.GOTO, caseDefault);
@@ -90,26 +98,22 @@ public class StringSwitchFilterTest extends FilterTestBase {
 
 		m.visitLabel(case1);
 		m.visitInsn(Opcodes.RETURN);
-		expectedNewTargets.add(m.instructions.getLast());
 		m.visitLabel(case2);
 		m.visitInsn(Opcodes.RETURN);
-		expectedNewTargets.add(m.instructions.getLast());
 		m.visitLabel(case3);
 		m.visitInsn(Opcodes.RETURN);
-		expectedNewTargets.add(m.instructions.getLast());
 		m.visitLabel(caseDefault);
 		m.visitInsn(Opcodes.RETURN);
-		expectedNewTargets.add(m.instructions.getLast());
 
 		filter.filter(m, context, output);
 
-		assertReplacedBranches(startNode, expectedNewTargets);
+		assertReplacedBranches(startNode, expectedReplacements);
 		assertIgnored(new Range(startNode.getNext(), expectedToInclusive));
 	}
 
 	@Test
 	public void should_filter_when_default_is_first() {
-		final Set<AbstractInsnNode> expectedNewTargets = new HashSet<AbstractInsnNode>();
+		final ArrayList<IFilterOutput.BranchReplacement> expectedReplacements = new ArrayList<IFilterOutput.BranchReplacement>();
 
 		final MethodNode m = new MethodNode(InstrSupport.ASM_API_VERSION, 0,
 				"name", "()V", null, null);
@@ -131,6 +135,9 @@ public class StringSwitchFilterTest extends FilterTestBase {
 				"()I", false);
 		m.visitLookupSwitchInsn(caseDefault, new int[] { 97 },
 				new Label[] { h1 });
+		final AbstractInsnNode switchNode = m.instructions.getLast();
+		expectedReplacements.add(new IFilterOutput.BranchReplacement(
+				m.instructions.getLast(), 0));
 
 		m.visitLabel(h1);
 
@@ -140,19 +147,19 @@ public class StringSwitchFilterTest extends FilterTestBase {
 				"(Ljava/lang/Object;)Z", false);
 		// if equal "a", then goto its case
 		m.visitJumpInsn(Opcodes.IFNE, case1);
+		expectedReplacements.add(new IFilterOutput.BranchReplacement(
+				m.instructions.getLast(), 1));
 
 		final AbstractInsnNode expectedToInclusive = m.instructions.getLast();
 
 		m.visitLabel(caseDefault);
 		m.visitInsn(Opcodes.RETURN);
-		expectedNewTargets.add(m.instructions.getLast());
 		m.visitLabel(case1);
 		m.visitInsn(Opcodes.RETURN);
-		expectedNewTargets.add(m.instructions.getLast());
 
 		filter.filter(m, context, output);
 
-		assertReplacedBranches(startNode, expectedNewTargets);
+		assertReplacedBranches(startNode, expectedReplacements);
 		assertIgnored(new Range(startNode.getNext(), expectedToInclusive));
 	}
 
@@ -172,7 +179,7 @@ public class StringSwitchFilterTest extends FilterTestBase {
 	 */
 	@Test
 	public void should_filter_Kotlin_1_5() {
-		final Set<AbstractInsnNode> expectedNewTargets = new HashSet<AbstractInsnNode>();
+		final ArrayList<IFilterOutput.BranchReplacement> expectedReplacements = new ArrayList<IFilterOutput.BranchReplacement>();
 
 		final MethodNode m = new MethodNode(InstrSupport.ASM_API_VERSION, 0,
 				"example", "()V", null, null);
@@ -194,6 +201,8 @@ public class StringSwitchFilterTest extends FilterTestBase {
 		m.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "java/lang/String", "hashCode",
 				"()I", false);
 		m.visitTableSwitchInsn(97, 99, defaultCase, h1, h2, h3);
+		expectedReplacements.add(new IFilterOutput.BranchReplacement(
+				m.instructions.getLast(), 0));
 
 		m.visitLabel(h1);
 		m.visitVarInsn(Opcodes.ALOAD, 1);
@@ -201,12 +210,16 @@ public class StringSwitchFilterTest extends FilterTestBase {
 		m.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "java/lang/String", "equals",
 				"(Ljava/lang/Object;)Z", false);
 		m.visitJumpInsn(Opcodes.IFNE, case1);
+		expectedReplacements.add(new IFilterOutput.BranchReplacement(
+				m.instructions.getLast(), 1));
 
 		m.visitVarInsn(Opcodes.ALOAD, 1);
 		m.visitLdcInsn("\u0000a");
 		m.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "java/lang/String", "equals",
 				"(Ljava/lang/Object;)Z", false);
 		m.visitJumpInsn(Opcodes.IFNE, case2);
+		expectedReplacements.add(new IFilterOutput.BranchReplacement(
+				m.instructions.getLast(), 1));
 
 		m.visitJumpInsn(Opcodes.GOTO, defaultCase);
 
@@ -216,12 +229,16 @@ public class StringSwitchFilterTest extends FilterTestBase {
 		m.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "java/lang/String", "equals",
 				"(Ljava/lang/Object;)Z", false);
 		m.visitJumpInsn(Opcodes.IFNE, case3);
+		expectedReplacements.add(new IFilterOutput.BranchReplacement(
+				m.instructions.getLast(), 1));
 
 		m.visitVarInsn(Opcodes.ALOAD, 1);
 		m.visitLdcInsn("\u0000b");
 		m.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "java/lang/String", "equals",
 				"(Ljava/lang/Object;)Z", false);
 		m.visitJumpInsn(Opcodes.IFNE, case4);
+		expectedReplacements.add(new IFilterOutput.BranchReplacement(
+				m.instructions.getLast(), 1));
 
 		m.visitJumpInsn(Opcodes.GOTO, defaultCase);
 
@@ -231,43 +248,40 @@ public class StringSwitchFilterTest extends FilterTestBase {
 		m.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "java/lang/String", "equals",
 				"(Ljava/lang/Object;)Z", false);
 		m.visitJumpInsn(Opcodes.IFNE, case5);
+		expectedReplacements.add(new IFilterOutput.BranchReplacement(
+				m.instructions.getLast(), 1));
 
 		m.visitVarInsn(Opcodes.ALOAD, 1);
 		m.visitLdcInsn("\u0000c");
 		m.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "java/lang/String", "equals",
 				"(Ljava/lang/Object;)Z", false);
 		m.visitJumpInsn(Opcodes.IFNE, case6);
+		expectedReplacements.add(new IFilterOutput.BranchReplacement(
+				m.instructions.getLast(), 1));
 
 		m.visitJumpInsn(Opcodes.GOTO, defaultCase);
 		final AbstractInsnNode expectedToInclusive = m.instructions.getLast();
 
 		m.visitLabel(case1);
 		m.visitInsn(Opcodes.RETURN);
-		expectedNewTargets.add(m.instructions.getLast());
 		m.visitLabel(case2);
 		m.visitInsn(Opcodes.RETURN);
-		expectedNewTargets.add(m.instructions.getLast());
 		m.visitLabel(case3);
 		m.visitInsn(Opcodes.RETURN);
-		expectedNewTargets.add(m.instructions.getLast());
 		m.visitLabel(case4);
 		m.visitInsn(Opcodes.RETURN);
-		expectedNewTargets.add(m.instructions.getLast());
 		m.visitLabel(case5);
 		m.visitInsn(Opcodes.RETURN);
-		expectedNewTargets.add(m.instructions.getLast());
 		m.visitLabel(case6);
 		m.visitInsn(Opcodes.RETURN);
-		expectedNewTargets.add(m.instructions.getLast());
 		m.visitLabel(defaultCase);
 		m.visitInsn(Opcodes.RETURN);
-		expectedNewTargets.add(m.instructions.getLast());
 
 		filter.filter(m, context, output);
 
 		assertIgnored(new Range(expectedFromInclusive, expectedToInclusive));
 		assertReplacedBranches(expectedFromInclusive.getPrevious(),
-				expectedNewTargets);
+				expectedReplacements);
 	}
 
 	/**
@@ -282,7 +296,7 @@ public class StringSwitchFilterTest extends FilterTestBase {
 	 */
 	@Test
 	public void should_filter_Kotlin_nullable_default() {
-		final Set<AbstractInsnNode> expectedNewTargets = new HashSet<AbstractInsnNode>();
+		final ArrayList<IFilterOutput.BranchReplacement> expectedReplacements = new ArrayList<IFilterOutput.BranchReplacement>();
 
 		final MethodNode m = new MethodNode(InstrSupport.ASM_API_VERSION, 0,
 				"example", "()V", null, null);
@@ -306,12 +320,16 @@ public class StringSwitchFilterTest extends FilterTestBase {
 		m.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "java/lang/String", "hashCode",
 				"()I", false);
 		m.visitTableSwitchInsn(97, 99, caseElse, h1, h2, h3);
+		expectedReplacements.add(new IFilterOutput.BranchReplacement(
+				m.instructions.getLast(), 0));
 		m.visitLabel(h1);
 		m.visitVarInsn(Opcodes.ALOAD, 2);
 		m.visitLdcInsn("a");
 		m.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "java/lang/String", "equals",
 				"(Ljava/lang/Object;)Z", false);
 		m.visitJumpInsn(Opcodes.IFNE, caseA);
+		expectedReplacements.add(new IFilterOutput.BranchReplacement(
+				m.instructions.getLast(), 1));
 		m.visitJumpInsn(Opcodes.GOTO, caseElse);
 		m.visitLabel(h2);
 		m.visitVarInsn(Opcodes.ALOAD, 2);
@@ -319,6 +337,8 @@ public class StringSwitchFilterTest extends FilterTestBase {
 		m.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "java/lang/String", "equals",
 				"(Ljava/lang/Object;)Z", false);
 		m.visitJumpInsn(Opcodes.IFNE, caseB);
+		expectedReplacements.add(new IFilterOutput.BranchReplacement(
+				m.instructions.getLast(), 1));
 		m.visitJumpInsn(Opcodes.GOTO, caseElse);
 		m.visitLabel(h3);
 		m.visitVarInsn(Opcodes.ALOAD, 2);
@@ -326,24 +346,22 @@ public class StringSwitchFilterTest extends FilterTestBase {
 		m.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "java/lang/String", "equals",
 				"(Ljava/lang/Object;)Z", false);
 		m.visitJumpInsn(Opcodes.IFNE, caseC);
+		expectedReplacements.add(new IFilterOutput.BranchReplacement(
+				m.instructions.getLast(), 1));
 		m.visitJumpInsn(Opcodes.GOTO, caseElse);
 		range.toInclusive = m.instructions.getLast();
 
 		m.visitLabel(caseA);
 		m.visitLdcInsn("case a");
-		expectedNewTargets.add(m.instructions.getLast());
 		m.visitJumpInsn(Opcodes.GOTO, exit);
 		m.visitLabel(caseB);
 		m.visitLdcInsn("case b");
-		expectedNewTargets.add(m.instructions.getLast());
 		m.visitJumpInsn(Opcodes.GOTO, exit);
 		m.visitLabel(caseC);
 		m.visitLdcInsn("case c");
-		expectedNewTargets.add(m.instructions.getLast());
 		m.visitJumpInsn(Opcodes.GOTO, exit);
 		m.visitLabel(caseElse);
 		m.visitLdcInsn("case else");
-		expectedNewTargets.add(m.instructions.getLast());
 
 		m.visitLabel(exit);
 		m.visitInsn(Opcodes.ARETURN);
@@ -352,7 +370,7 @@ public class StringSwitchFilterTest extends FilterTestBase {
 
 		assertIgnored(range);
 		assertReplacedBranches(range.fromInclusive.getPrevious(),
-				expectedNewTargets);
+				expectedReplacements);
 	}
 
 	/**
@@ -368,7 +386,7 @@ public class StringSwitchFilterTest extends FilterTestBase {
 	 */
 	@Test
 	public void should_filter_Kotlin_nullable_case() {
-		final Set<AbstractInsnNode> expectedNewTargets = new HashSet<AbstractInsnNode>();
+		final ArrayList<IFilterOutput.BranchReplacement> expectedReplacements = new ArrayList<IFilterOutput.BranchReplacement>();
 
 		final MethodNode m = new MethodNode(InstrSupport.ASM_API_VERSION, 0,
 				"example", "()V", null, null);
@@ -393,12 +411,18 @@ public class StringSwitchFilterTest extends FilterTestBase {
 		m.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "java/lang/String", "hashCode",
 				"()I", false);
 		m.visitTableSwitchInsn(97, 99, caseElse, h1, h2, h3);
+		expectedReplacements.add(new IFilterOutput.BranchReplacement(
+				m.instructions.getLast(), 0));
+		expectedReplacements.add(new IFilterOutput.BranchReplacement(
+				m.instructions.getLast().getPrevious().getPrevious(), 1));
 		m.visitLabel(h1);
 		m.visitVarInsn(Opcodes.ALOAD, 2);
 		m.visitLdcInsn("a");
 		m.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "java/lang/String", "equals",
 				"(Ljava/lang/Object;)Z", false);
 		m.visitJumpInsn(Opcodes.IFNE, caseA);
+		expectedReplacements.add(new IFilterOutput.BranchReplacement(
+				m.instructions.getLast(), 1));
 		m.visitJumpInsn(Opcodes.GOTO, caseElse);
 		m.visitLabel(h2);
 		m.visitVarInsn(Opcodes.ALOAD, 2);
@@ -406,6 +430,8 @@ public class StringSwitchFilterTest extends FilterTestBase {
 		m.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "java/lang/String", "equals",
 				"(Ljava/lang/Object;)Z", false);
 		m.visitJumpInsn(Opcodes.IFNE, caseB);
+		expectedReplacements.add(new IFilterOutput.BranchReplacement(
+				m.instructions.getLast(), 1));
 		m.visitJumpInsn(Opcodes.GOTO, caseElse);
 		m.visitLabel(h3);
 		m.visitVarInsn(Opcodes.ALOAD, 2);
@@ -413,29 +439,26 @@ public class StringSwitchFilterTest extends FilterTestBase {
 		m.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "java/lang/String", "equals",
 				"(Ljava/lang/Object;)Z", false);
 		m.visitJumpInsn(Opcodes.IFNE, caseC);
+		expectedReplacements.add(new IFilterOutput.BranchReplacement(
+				m.instructions.getLast(), 1));
 		m.visitJumpInsn(Opcodes.GOTO, caseElse);
 		range.toInclusive = m.instructions.getLast();
 
 		m.visitLabel(caseA);
 		m.visitLdcInsn("case a");
-		expectedNewTargets.add(m.instructions.getLast());
 		m.visitJumpInsn(Opcodes.GOTO, exit);
 		m.visitLabel(caseB);
 		m.visitLdcInsn("case b");
-		expectedNewTargets.add(m.instructions.getLast());
 		m.visitJumpInsn(Opcodes.GOTO, exit);
 		m.visitLabel(caseC);
 		m.visitLdcInsn("case c");
-		expectedNewTargets.add(m.instructions.getLast());
 		m.visitJumpInsn(Opcodes.GOTO, exit);
 		m.visitLabel(caseNull);
 		m.visitInsn(Opcodes.POP);
-		expectedNewTargets.add(m.instructions.getLast());
 		m.visitLdcInsn("case null");
 		m.visitJumpInsn(Opcodes.GOTO, exit);
 		m.visitLabel(caseElse);
 		m.visitLdcInsn("case else");
-		expectedNewTargets.add(m.instructions.getLast());
 
 		m.visitLabel(exit);
 		m.visitInsn(Opcodes.ARETURN);
@@ -444,7 +467,7 @@ public class StringSwitchFilterTest extends FilterTestBase {
 
 		assertIgnored(range);
 		assertReplacedBranches(range.fromInclusive.getPrevious(),
-				expectedNewTargets);
+				expectedReplacements);
 	}
 
 	@Test
