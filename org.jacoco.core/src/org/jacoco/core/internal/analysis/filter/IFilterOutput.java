@@ -13,8 +13,6 @@
 package org.jacoco.core.internal.analysis.filter;
 
 import java.util.List;
-import java.util.Objects;
-import java.util.Set;
 
 import org.objectweb.asm.tree.AbstractInsnNode;
 
@@ -51,21 +49,23 @@ public interface IFilterOutput {
 	 * computation of coverage.
 	 *
 	 * @param instruction
-	 *            instruction which branches should be replaced
+	 *            instruction whose branches should be replaced
 	 * @param replacements
-	 *            new targets of branches
+	 *            new branches
 	 */
 	void replaceBranches(AbstractInsnNode instruction,
 			List<BranchReplacement> replacements);
 
 	final class BranchReplacement {
+		public final int branch;
 		public final AbstractInsnNode instruction;
 		public final int branchIndex;
 
-		public BranchReplacement(final AbstractInsnNode instruction,
-				final int branchIndex) {
-			this.instruction = instruction;
-			this.branchIndex = branchIndex;
+		public BranchReplacement(final int branch,
+				final AbstractInsnNode fromInstruction, final int fromBranch) {
+			this.branch = branch;
+			this.instruction = fromInstruction;
+			this.branchIndex = fromBranch;
 		}
 	}
 

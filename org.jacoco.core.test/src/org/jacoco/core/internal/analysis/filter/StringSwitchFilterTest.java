@@ -55,7 +55,7 @@ public class StringSwitchFilterTest extends FilterTestBase {
 				"()I", false);
 		m.visitTableSwitchInsn(97, 98, caseDefault, h1, h2);
 		final AbstractInsnNode switchNode = m.instructions.getLast();
-		expectedReplacements.add(new IFilterOutput.BranchReplacement(
+		expectedReplacements.add(new IFilterOutput.BranchReplacement(0,
 				m.instructions.getLast(), 0));
 
 		m.visitLabel(h1);
@@ -66,7 +66,7 @@ public class StringSwitchFilterTest extends FilterTestBase {
 				"(Ljava/lang/Object;)Z", false);
 		// if equal "a", then goto its case
 		m.visitJumpInsn(Opcodes.IFNE, case1);
-		expectedReplacements.add(new IFilterOutput.BranchReplacement(
+		expectedReplacements.add(new IFilterOutput.BranchReplacement(1,
 				m.instructions.getLast(), 1));
 
 		m.visitVarInsn(Opcodes.ALOAD, 2);
@@ -75,7 +75,7 @@ public class StringSwitchFilterTest extends FilterTestBase {
 				"(Ljava/lang/Object;)Z", false);
 		// if equal "\0a", then goto its case
 		m.visitJumpInsn(Opcodes.IFNE, case2);
-		expectedReplacements.add(new IFilterOutput.BranchReplacement(
+		expectedReplacements.add(new IFilterOutput.BranchReplacement(2,
 				m.instructions.getLast(), 1));
 
 		// goto default case
@@ -89,7 +89,7 @@ public class StringSwitchFilterTest extends FilterTestBase {
 				"(Ljava/lang/Object;)Z", false);
 		// if equal "b", then goto its case
 		m.visitJumpInsn(Opcodes.IFNE, case3);
-		expectedReplacements.add(new IFilterOutput.BranchReplacement(
+		expectedReplacements.add(new IFilterOutput.BranchReplacement(3,
 				m.instructions.getLast(), 1));
 
 		// goto default case
@@ -136,7 +136,7 @@ public class StringSwitchFilterTest extends FilterTestBase {
 		m.visitLookupSwitchInsn(caseDefault, new int[] { 97 },
 				new Label[] { h1 });
 		final AbstractInsnNode switchNode = m.instructions.getLast();
-		expectedReplacements.add(new IFilterOutput.BranchReplacement(
+		expectedReplacements.add(new IFilterOutput.BranchReplacement(0,
 				m.instructions.getLast(), 0));
 
 		m.visitLabel(h1);
@@ -147,7 +147,7 @@ public class StringSwitchFilterTest extends FilterTestBase {
 				"(Ljava/lang/Object;)Z", false);
 		// if equal "a", then goto its case
 		m.visitJumpInsn(Opcodes.IFNE, case1);
-		expectedReplacements.add(new IFilterOutput.BranchReplacement(
+		expectedReplacements.add(new IFilterOutput.BranchReplacement(1,
 				m.instructions.getLast(), 1));
 
 		final AbstractInsnNode expectedToInclusive = m.instructions.getLast();
@@ -201,7 +201,7 @@ public class StringSwitchFilterTest extends FilterTestBase {
 		m.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "java/lang/String", "hashCode",
 				"()I", false);
 		m.visitTableSwitchInsn(97, 99, defaultCase, h1, h2, h3);
-		expectedReplacements.add(new IFilterOutput.BranchReplacement(
+		expectedReplacements.add(new IFilterOutput.BranchReplacement(0,
 				m.instructions.getLast(), 0));
 
 		m.visitLabel(h1);
@@ -210,7 +210,7 @@ public class StringSwitchFilterTest extends FilterTestBase {
 		m.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "java/lang/String", "equals",
 				"(Ljava/lang/Object;)Z", false);
 		m.visitJumpInsn(Opcodes.IFNE, case1);
-		expectedReplacements.add(new IFilterOutput.BranchReplacement(
+		expectedReplacements.add(new IFilterOutput.BranchReplacement(1,
 				m.instructions.getLast(), 1));
 
 		m.visitVarInsn(Opcodes.ALOAD, 1);
@@ -218,7 +218,7 @@ public class StringSwitchFilterTest extends FilterTestBase {
 		m.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "java/lang/String", "equals",
 				"(Ljava/lang/Object;)Z", false);
 		m.visitJumpInsn(Opcodes.IFNE, case2);
-		expectedReplacements.add(new IFilterOutput.BranchReplacement(
+		expectedReplacements.add(new IFilterOutput.BranchReplacement(2,
 				m.instructions.getLast(), 1));
 
 		m.visitJumpInsn(Opcodes.GOTO, defaultCase);
@@ -229,7 +229,7 @@ public class StringSwitchFilterTest extends FilterTestBase {
 		m.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "java/lang/String", "equals",
 				"(Ljava/lang/Object;)Z", false);
 		m.visitJumpInsn(Opcodes.IFNE, case3);
-		expectedReplacements.add(new IFilterOutput.BranchReplacement(
+		expectedReplacements.add(new IFilterOutput.BranchReplacement(3,
 				m.instructions.getLast(), 1));
 
 		m.visitVarInsn(Opcodes.ALOAD, 1);
@@ -237,7 +237,7 @@ public class StringSwitchFilterTest extends FilterTestBase {
 		m.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "java/lang/String", "equals",
 				"(Ljava/lang/Object;)Z", false);
 		m.visitJumpInsn(Opcodes.IFNE, case4);
-		expectedReplacements.add(new IFilterOutput.BranchReplacement(
+		expectedReplacements.add(new IFilterOutput.BranchReplacement(4,
 				m.instructions.getLast(), 1));
 
 		m.visitJumpInsn(Opcodes.GOTO, defaultCase);
@@ -248,7 +248,7 @@ public class StringSwitchFilterTest extends FilterTestBase {
 		m.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "java/lang/String", "equals",
 				"(Ljava/lang/Object;)Z", false);
 		m.visitJumpInsn(Opcodes.IFNE, case5);
-		expectedReplacements.add(new IFilterOutput.BranchReplacement(
+		expectedReplacements.add(new IFilterOutput.BranchReplacement(5,
 				m.instructions.getLast(), 1));
 
 		m.visitVarInsn(Opcodes.ALOAD, 1);
@@ -256,7 +256,7 @@ public class StringSwitchFilterTest extends FilterTestBase {
 		m.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "java/lang/String", "equals",
 				"(Ljava/lang/Object;)Z", false);
 		m.visitJumpInsn(Opcodes.IFNE, case6);
-		expectedReplacements.add(new IFilterOutput.BranchReplacement(
+		expectedReplacements.add(new IFilterOutput.BranchReplacement(6,
 				m.instructions.getLast(), 1));
 
 		m.visitJumpInsn(Opcodes.GOTO, defaultCase);
@@ -320,15 +320,18 @@ public class StringSwitchFilterTest extends FilterTestBase {
 		m.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "java/lang/String", "hashCode",
 				"()I", false);
 		m.visitTableSwitchInsn(97, 99, caseElse, h1, h2, h3);
-		expectedReplacements.add(new IFilterOutput.BranchReplacement(
+		expectedReplacements.add(new IFilterOutput.BranchReplacement(0,
 				m.instructions.getLast(), 0));
+		expectedReplacements.add(
+				new IFilterOutput.BranchReplacement(0, m.instructions.getLast()
+						.getPrevious().getPrevious().getPrevious(), 1));
 		m.visitLabel(h1);
 		m.visitVarInsn(Opcodes.ALOAD, 2);
 		m.visitLdcInsn("a");
 		m.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "java/lang/String", "equals",
 				"(Ljava/lang/Object;)Z", false);
 		m.visitJumpInsn(Opcodes.IFNE, caseA);
-		expectedReplacements.add(new IFilterOutput.BranchReplacement(
+		expectedReplacements.add(new IFilterOutput.BranchReplacement(1,
 				m.instructions.getLast(), 1));
 		m.visitJumpInsn(Opcodes.GOTO, caseElse);
 		m.visitLabel(h2);
@@ -337,7 +340,7 @@ public class StringSwitchFilterTest extends FilterTestBase {
 		m.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "java/lang/String", "equals",
 				"(Ljava/lang/Object;)Z", false);
 		m.visitJumpInsn(Opcodes.IFNE, caseB);
-		expectedReplacements.add(new IFilterOutput.BranchReplacement(
+		expectedReplacements.add(new IFilterOutput.BranchReplacement(2,
 				m.instructions.getLast(), 1));
 		m.visitJumpInsn(Opcodes.GOTO, caseElse);
 		m.visitLabel(h3);
@@ -346,7 +349,7 @@ public class StringSwitchFilterTest extends FilterTestBase {
 		m.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "java/lang/String", "equals",
 				"(Ljava/lang/Object;)Z", false);
 		m.visitJumpInsn(Opcodes.IFNE, caseC);
-		expectedReplacements.add(new IFilterOutput.BranchReplacement(
+		expectedReplacements.add(new IFilterOutput.BranchReplacement(3,
 				m.instructions.getLast(), 1));
 		m.visitJumpInsn(Opcodes.GOTO, caseElse);
 		range.toInclusive = m.instructions.getLast();
@@ -411,9 +414,9 @@ public class StringSwitchFilterTest extends FilterTestBase {
 		m.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "java/lang/String", "hashCode",
 				"()I", false);
 		m.visitTableSwitchInsn(97, 99, caseElse, h1, h2, h3);
-		expectedReplacements.add(new IFilterOutput.BranchReplacement(
+		expectedReplacements.add(new IFilterOutput.BranchReplacement(0,
 				m.instructions.getLast(), 0));
-		expectedReplacements.add(new IFilterOutput.BranchReplacement(
+		expectedReplacements.add(new IFilterOutput.BranchReplacement(1,
 				m.instructions.getLast().getPrevious().getPrevious(), 1));
 		m.visitLabel(h1);
 		m.visitVarInsn(Opcodes.ALOAD, 2);
@@ -421,7 +424,7 @@ public class StringSwitchFilterTest extends FilterTestBase {
 		m.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "java/lang/String", "equals",
 				"(Ljava/lang/Object;)Z", false);
 		m.visitJumpInsn(Opcodes.IFNE, caseA);
-		expectedReplacements.add(new IFilterOutput.BranchReplacement(
+		expectedReplacements.add(new IFilterOutput.BranchReplacement(2,
 				m.instructions.getLast(), 1));
 		m.visitJumpInsn(Opcodes.GOTO, caseElse);
 		m.visitLabel(h2);
@@ -430,7 +433,7 @@ public class StringSwitchFilterTest extends FilterTestBase {
 		m.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "java/lang/String", "equals",
 				"(Ljava/lang/Object;)Z", false);
 		m.visitJumpInsn(Opcodes.IFNE, caseB);
-		expectedReplacements.add(new IFilterOutput.BranchReplacement(
+		expectedReplacements.add(new IFilterOutput.BranchReplacement(3,
 				m.instructions.getLast(), 1));
 		m.visitJumpInsn(Opcodes.GOTO, caseElse);
 		m.visitLabel(h3);
@@ -439,7 +442,7 @@ public class StringSwitchFilterTest extends FilterTestBase {
 		m.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "java/lang/String", "equals",
 				"(Ljava/lang/Object;)Z", false);
 		m.visitJumpInsn(Opcodes.IFNE, caseC);
-		expectedReplacements.add(new IFilterOutput.BranchReplacement(
+		expectedReplacements.add(new IFilterOutput.BranchReplacement(4,
 				m.instructions.getLast(), 1));
 		m.visitJumpInsn(Opcodes.GOTO, caseElse);
 		range.toInclusive = m.instructions.getLast();

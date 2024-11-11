@@ -73,7 +73,8 @@ public final class KotlinWhenStringFilter implements IFilter {
 			}
 
 			final ArrayList<IFilterOutput.BranchReplacement> replacements = new ArrayList<IFilterOutput.BranchReplacement>();
-			replacements.add(new IFilterOutput.BranchReplacement(s, 0));
+			replacements.add(new IFilterOutput.BranchReplacement(0, s, 0));
+			int branch = 0;
 
 			for (int i = 1; i <= hashCodes; i++) {
 				while (true) {
@@ -89,16 +90,18 @@ public final class KotlinWhenStringFilter implements IFilter {
 						return;
 					} else if (cursor.getOpcode() == Opcodes.GOTO) {
 						// jump to case body
-						replacements.add(
-								new IFilterOutput.BranchReplacement(cursor, 0));
+						branch++;
+						replacements.add(new IFilterOutput.BranchReplacement(
+								branch, cursor, 0));
 						if (jump.label == defaultLabel) {
 							// end of comparisons for same hashCode
 							break;
 						}
 					} else if (i == hashCodes && jump.label == defaultLabel) {
 						// case body
-						replacements.add(
-								new IFilterOutput.BranchReplacement(jump, 0));
+						branch++;
+						replacements.add(new IFilterOutput.BranchReplacement(
+								branch, jump, 0));
 						cursor = jump;
 						break;
 					} else {

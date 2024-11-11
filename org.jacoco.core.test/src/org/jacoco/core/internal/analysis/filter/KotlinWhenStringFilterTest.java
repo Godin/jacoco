@@ -54,7 +54,7 @@ public class KotlinWhenStringFilterTest extends FilterTestBase {
 		m.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "java/lang/String", "hashCode",
 				"()I", false);
 		m.visitTableSwitchInsn(97, 98, defaultCase, h1, h2);
-		expectedReplacements.add(new IFilterOutput.BranchReplacement(
+		expectedReplacements.add(new IFilterOutput.BranchReplacement(0,
 				m.instructions.getLast(), 0));
 
 		// case "a"
@@ -67,7 +67,7 @@ public class KotlinWhenStringFilterTest extends FilterTestBase {
 				"(Ljava/lang/Object;)Z", false);
 		m.visitJumpInsn(Opcodes.IFEQ, sameHash);
 		m.visitJumpInsn(Opcodes.GOTO, case1);
-		expectedReplacements.add(new IFilterOutput.BranchReplacement(
+		expectedReplacements.add(new IFilterOutput.BranchReplacement(1,
 				m.instructions.getLast(), 0));
 
 		// case "\u0000a"
@@ -78,7 +78,7 @@ public class KotlinWhenStringFilterTest extends FilterTestBase {
 				"(Ljava/lang/Object;)Z", false);
 		m.visitJumpInsn(Opcodes.IFEQ, defaultCase);
 		m.visitJumpInsn(Opcodes.GOTO, case2);
-		expectedReplacements.add(new IFilterOutput.BranchReplacement(
+		expectedReplacements.add(new IFilterOutput.BranchReplacement(2,
 				m.instructions.getLast(), 0));
 
 		// case "b"
@@ -89,7 +89,7 @@ public class KotlinWhenStringFilterTest extends FilterTestBase {
 				"(Ljava/lang/Object;)Z", false);
 		m.visitJumpInsn(Opcodes.IFEQ, defaultCase);
 		m.visitJumpInsn(Opcodes.GOTO, case3);
-		expectedReplacements.add(new IFilterOutput.BranchReplacement(
+		expectedReplacements.add(new IFilterOutput.BranchReplacement(3,
 				m.instructions.getLast(), 0));
 		final AbstractInsnNode expectedToInclusive = m.instructions.getLast();
 
@@ -139,7 +139,7 @@ public class KotlinWhenStringFilterTest extends FilterTestBase {
 		m.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "java/lang/String", "hashCode",
 				"()I", false);
 		m.visitTableSwitchInsn(97, 98, defaultCase, h1, h2);
-		expectedReplacements.add(new IFilterOutput.BranchReplacement(
+		expectedReplacements.add(new IFilterOutput.BranchReplacement(0,
 				m.instructions.getLast(), 0));
 
 		m.visitLabel(h1);
@@ -150,7 +150,7 @@ public class KotlinWhenStringFilterTest extends FilterTestBase {
 				"(Ljava/lang/Object;)Z", false);
 		m.visitJumpInsn(Opcodes.IFEQ, sameHash);
 		m.visitJumpInsn(Opcodes.GOTO, case2);
-		expectedReplacements.add(new IFilterOutput.BranchReplacement(
+		expectedReplacements.add(new IFilterOutput.BranchReplacement(1,
 				m.instructions.getLast(), 0));
 
 		m.visitLabel(sameHash);
@@ -160,7 +160,7 @@ public class KotlinWhenStringFilterTest extends FilterTestBase {
 				"(Ljava/lang/Object;)Z", false);
 		m.visitJumpInsn(Opcodes.IFEQ, defaultCase);
 		m.visitJumpInsn(Opcodes.GOTO, case3);
-		expectedReplacements.add(new IFilterOutput.BranchReplacement(
+		expectedReplacements.add(new IFilterOutput.BranchReplacement(2,
 				m.instructions.getLast(), 0));
 
 		m.visitLabel(h2);
@@ -170,7 +170,7 @@ public class KotlinWhenStringFilterTest extends FilterTestBase {
 				"(Ljava/lang/Object;)Z", false);
 		m.visitJumpInsn(Opcodes.IFEQ, defaultCase);
 		final AbstractInsnNode expectedToInclusive = m.instructions.getLast();
-		expectedReplacements.add(new IFilterOutput.BranchReplacement(
+		expectedReplacements.add(new IFilterOutput.BranchReplacement(3,
 				m.instructions.getLast(), 0));
 
 		m.visitLabel(case1);

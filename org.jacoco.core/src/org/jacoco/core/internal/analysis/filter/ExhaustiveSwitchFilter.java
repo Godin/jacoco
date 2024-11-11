@@ -95,7 +95,8 @@ final class ExhaustiveSwitchFilter implements IFilter {
 			output.ignore(dflt, cursor);
 			final ArrayList<IFilterOutput.BranchReplacement> replacements = new ArrayList<IFilterOutput.BranchReplacement>();
 			for (int i = 1; i <= labels.size(); i++) {
-				replacements.add(new IFilterOutput.BranchReplacement(start, i));
+				replacements.add(
+						new IFilterOutput.BranchReplacement(i - 1, start, i));
 			}
 			output.replaceBranches(start, replacements);
 		}

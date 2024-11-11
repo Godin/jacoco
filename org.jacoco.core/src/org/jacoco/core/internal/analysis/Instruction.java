@@ -57,9 +57,9 @@ public class Instruction {
 
 	private final int line;
 
-	private int branches;
+	int branches;
 
-	private final BitSet coveredBranches;
+	final BitSet coveredBranches;
 
 	private Instruction predecessor;
 
@@ -169,6 +169,7 @@ public class Instruction {
 	 *            branches of instructions that should be used
 	 * @return new instance with replaced branches
 	 */
+	@Deprecated
 	public Instruction replaceBranches(final Instruction[] instructions,
 			final int[] branches) {
 		final Instruction result = new Instruction(this.line);

@@ -93,8 +93,8 @@ public final class KotlinWhenFilter implements IFilter {
 		}
 		final ArrayList<IFilterOutput.BranchReplacement> replacements = new ArrayList<IFilterOutput.BranchReplacement>();
 		for (int i = 1; i <= labels.size(); i++) {
-			replacements
-					.add(new IFilterOutput.BranchReplacement(switchNode, i));
+			replacements.add(
+					new IFilterOutput.BranchReplacement(i - 1, switchNode, i));
 		}
 		output.replaceBranches(switchNode, replacements);
 	}

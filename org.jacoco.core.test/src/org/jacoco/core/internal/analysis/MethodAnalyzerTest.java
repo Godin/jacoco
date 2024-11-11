@@ -570,8 +570,8 @@ public class MethodAnalyzerTest implements IProbeIdGenerator {
 			assertEquals(Opcodes.BIPUSH, t2.getOpcode());
 
 			final ArrayList<IFilterOutput.BranchReplacement> replacements = new ArrayList<IFilterOutput.BranchReplacement>();
-			replacements.add(new IFilterOutput.BranchReplacement(t1, 0));
-			replacements.add(new IFilterOutput.BranchReplacement(t2, 0));
+			replacements.add(new IFilterOutput.BranchReplacement(0, t1, 0));
+			replacements.add(new IFilterOutput.BranchReplacement(1, t2, 0));
 			output.replaceBranches(i, replacements);
 		}
 	};

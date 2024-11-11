@@ -28,6 +28,85 @@ object KotlinExampleTarget {
         } // assertEmpty()
     } // assertNotCovered()
 
+    private fun explicitDefaultCovered(s: String) {
+        when (s) { // assertFullyCovered(3, 1)
+            "a" -> nop("case a") // assertNotCovered()
+            "b" -> nop("case b") // assertNotCovered()
+            "c" -> nop("case c") // assertNotCovered()
+            else -> nop("else") // assertFullyCovered()
+        } // assertEmpty()
+    }
+
+    /**
+     * "a" passed
+     * TODO should it be consistent with [wipInt] and Java ?
+     */
+    private fun wip(s: String) {
+        when (s) { // assertFullyCovered(3, 1)
+            "a", "b" -> nop(" case a,b") // assertFullyCovered()
+            "c" -> nop("case c") // assertNotCovered()
+            else -> nop("else") // assertNotCovered()
+        }
+    }
+
+    /** 1 passed **/
+    private fun wipInt(i: Int) {
+        when (i) { // assertFullyCovered(2, 1)
+            1, 2 -> nop("case 1, 2") // assertFullyCovered()
+            3 -> nop("case 3") // assertNotCovered()
+            else -> nop("else") // assertNotCovered()
+        }
+    }
+
+    /** empty string passed */
+    private fun nullableImplicitDefault(s: String?) {
+        when (s) { // assertFullyCovered(3, 1)
+            "a" -> nop("case a") // assertNotCovered()
+            "b" -> nop("case b") // assertNotCovered()
+            "c" -> nop("case c") // assertNotCovered()
+        } // assertEmpty()
+    }
+
+    /** null passed */
+    private fun nullableImplicitDefault2(s: String?) {
+        when (s) { // assertFullyCovered(3, 1)
+            "a" -> nop("case a") // assertNotCovered()
+            "b" -> nop("case b") // assertNotCovered()
+            "c" -> nop("case c") // assertNotCovered()
+        } // assertEmpty()
+    }
+
+    /** empty string passed */
+    private fun nullableExplicitDefault(s: String?) {
+        when (s) { // assertFullyCovered(3, 1)
+            "a" -> nop("case a") // assertNotCovered()
+            "b" -> nop("case b") // assertNotCovered()
+            "c" -> nop("case c") // assertNotCovered()
+            else -> nop("else") // assertFullyCovered()
+        } // assertEmpty()
+    }
+
+    /** null passed **/
+    private fun nullableExplicitDefault2(s: String?) {
+        when (s) { // assertFullyCovered(3, 1)
+            "a" -> nop("case a") // assertNotCovered()
+            "b" -> nop("case b") // assertNotCovered()
+            "c" -> nop("case c") // assertNotCovered()
+            else -> nop("else") // assertFullyCovered()
+        } // assertEmpty()
+    }
+
+    /** null passed **/
+    private fun nullableCase(s: String?) {
+        when (s) { // assertFullyCovered(4, 1)
+            "a" -> nop("case a") // assertNotCovered()
+            "b" -> nop("case b") // assertNotCovered()
+            "c" -> nop("case c") // assertNotCovered()
+            null -> nop("null") // assertFullyCovered()
+            else -> nop("else") // assertNotCovered()
+        }
+    }
+
     /**
      * TODO rename "case covered"? cover all cases except default?
      */
@@ -75,6 +154,22 @@ object KotlinExampleTarget {
 
     @JvmStatic
     fun main(args: Array<String>) {
+        wipInt(1)
+
+        wip("a")
+
+        explicitDefaultCovered("")
+
+        nullableImplicitDefault("")
+
+        nullableImplicitDefault2(null)
+
+        nullableExplicitDefault("")
+
+        nullableExplicitDefault2(null)
+
+        nullableCase(null)
+
         implicitDefaultNotCovered("b")
 
         implicitDefaultCovered("")

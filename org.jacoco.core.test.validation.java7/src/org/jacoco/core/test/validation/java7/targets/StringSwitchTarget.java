@@ -19,6 +19,24 @@ import static org.jacoco.core.test.validation.targets.Stubs.nop;
  */
 public class StringSwitchTarget {
 
+	/**
+	 * Inconsistent between ECJ and javac.
+	 */
+	private static void wip(String s) {
+		switch (s) { // assertFullyCovered(2, 1)
+		case "a":
+		case "b":
+			nop("case a, b");
+			break;
+		case "c":
+			nop("case c");
+			break;
+		default:
+			nop("default");
+			break;
+		}
+	}
+
 	private static void covered(Object s) {
 		switch (String.valueOf(s)) { // assertFullyCovered(0, 4)
 		case "a":
@@ -123,6 +141,8 @@ public class StringSwitchTarget {
 
 		default_is_first("");
 		default_is_first("a");
+
+		wip("a");
 	}
 
 }

@@ -13,7 +13,10 @@
 package org.jacoco.core.internal.analysis.filter;
 
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 
+import org.objectweb.asm.Label;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.tree.AbstractInsnNode;
 import org.objectweb.asm.tree.JumpInsnNode;
@@ -85,17 +88,24 @@ public final class StringSwitchFilter implements IFilter {
 				return;
 			}
 
-			replacements.add(new IFilterOutput.BranchReplacement(s, 0));
+			replacements.add(new IFilterOutput.BranchReplacement(0, s, 0));
+			int branch = 0;
 			if (nullCaseJump != null && nullCaseJump.label != defaultLabel) {
-				replacements.add(
-						new IFilterOutput.BranchReplacement(nullCaseJump, 1));
-			} else {
+				branch++;
+				replacements.add(new IFilterOutput.BranchReplacement(branch,
+						nullCaseJump, 1));
+			} else if (nullCaseJump != null) {
 				// FIXME when IFNULL is executed,
 				// then default branch of switch
 				// should be considered as executed
 
-				// ifnull second branch is executed or switch default is executed
+				// ifnull second branch is executed or switch default is
+				// executed
+				replacements.add(new IFilterOutput.BranchReplacement(0,
+						nullCaseJump, 1));
 			}
+
+			final HashSet<Label> cases = new HashSet<Label>();
 
 			for (int i = 0; i < hashCodes; i++) {
 				while (true) {
@@ -109,8 +119,12 @@ public final class StringSwitchFilter implements IFilter {
 						return;
 					}
 
-					replacements.add(
-							new IFilterOutput.BranchReplacement(cursor, 1));
+					final JumpInsnNode jumpToCase = (JumpInsnNode) cursor;
+					// if (cases.add(jumpToCase.label.getLabel())) {
+					branch++;
+					// }
+					replacements.add(new IFilterOutput.BranchReplacement(branch,
+							cursor, 1));
 
 					if (cursor.getNext().getOpcode() == Opcodes.GOTO) {
 						// end of comparisons for same hashCode

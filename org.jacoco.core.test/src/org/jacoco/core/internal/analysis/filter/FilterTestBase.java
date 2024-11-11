@@ -79,6 +79,7 @@ public abstract class FilterTestBase {
 				.get(source);
 		assertEquals(expected.size(), actual.size());
 		for (int i = 0; i < expected.size(); i++) {
+			assertEquals(expected.get(i).branch, actual.get(i).branch);
 			assertEquals(expected.get(i).instruction,
 					actual.get(i).instruction);
 			assertEquals(expected.get(i).branchIndex,
@@ -95,8 +96,8 @@ public abstract class FilterTestBase {
 		}
 		final ArrayList<IFilterOutput.BranchReplacement> replacements = new ArrayList<IFilterOutput.BranchReplacement>();
 		for (int i = 1; i <= labels; i++) {
-			replacements
-					.add(new IFilterOutput.BranchReplacement(switchNode, i));
+			replacements.add(
+					new IFilterOutput.BranchReplacement(i - 1, switchNode, i));
 		}
 		assertReplacedBranches(switchNode, replacements);
 	}

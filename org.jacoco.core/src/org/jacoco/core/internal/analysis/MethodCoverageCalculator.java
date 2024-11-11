@@ -103,22 +103,39 @@ class MethodCoverageCalculator implements IFilterOutput {
 		}
 	}
 
+	/**
+	 * {@link Instruction#replaceBranches(Instruction[], int[])}
+	 */
 	private void applyReplacements() {
 		for (final Entry<AbstractInsnNode, List<BranchReplacement>> entry : replacements
 				.entrySet()) {
-			final List<BranchReplacement> replacements = entry.getValue();
-			final Instruction[] replacementInstructions = new Instruction[replacements
-					.size()];
-			final int[] replacementBranches = new int[replacements.size()];
-			for (int i = 0; i < replacements.size(); i++) {
-				final BranchReplacement replacement = replacements.get(i);
-				replacementInstructions[i] = instructions
-						.get(replacement.instruction);
-				replacementBranches[i] = replacement.branchIndex;
-			}
 			final AbstractInsnNode node = entry.getKey();
-			instructions.put(node, instructions.get(node).replaceBranches(
-					replacementInstructions, replacementBranches));
+			final List<BranchReplacement> replacements = entry.getValue();
+
+			final Instruction newInstruction = new Instruction(
+					instructions.get(node).getLine());
+
+			int branch = 0;
+			for (BranchReplacement replacement : replacements) {
+				if (instructions.get(replacement.instruction).coveredBranches
+						.get(replacement.branchIndex)) {
+					if (replacement.branch != -1) {
+						newInstruction.coveredBranches.set(replacement.branch);
+					} else {
+						newInstruction.coveredBranches.set(branch);
+					}
+				}
+				if (replacement.branch == -1) {
+					newInstruction.branches = Math.max(branch + 1,
+							newInstruction.branches);
+					branch++;
+				} else {
+					newInstruction.branches = Math.max(replacement.branch + 1,
+							newInstruction.branches);
+				}
+			}
+
+			instructions.put(node, newInstruction);
 		}
 	}
 

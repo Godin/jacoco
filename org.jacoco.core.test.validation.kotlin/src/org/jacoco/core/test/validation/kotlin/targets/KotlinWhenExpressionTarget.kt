@@ -77,6 +77,13 @@ object KotlinWhenExpressionTarget {
         else -> "else" // assertFullyCovered()
     }
 
+    private fun wipNull(p: String?): String = when (p) { // assertFullyCovered(3, 1)
+        "a" -> "case a" // assertNotCovered()
+        "b" -> "case b" // assertNotCovered()
+        "c" -> "case c" // assertNotCovered()
+        else -> "else" // assertFullyCovered()
+    }
+
     private fun whenStringNullableCase(p: String?): Int = when (p) { // assertFullyCovered(0, 5)
         "a" -> 1 // assertFullyCovered()
         "b" -> 2 // assertFullyCovered()
@@ -127,6 +134,7 @@ object KotlinWhenExpressionTarget {
         whenStringNullableDefault("")
 
         wip("")
+        wipNull(null)
 
         whenStringNullableCase("a")
         whenStringNullableCase("b")
