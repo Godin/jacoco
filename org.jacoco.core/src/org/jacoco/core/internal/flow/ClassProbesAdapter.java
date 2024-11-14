@@ -69,6 +69,8 @@ public class ClassProbesAdapter extends ClassVisitor
 			// We need to visit the method in any case, otherwise probe ids
 			// are not reproducible
 			methodProbes = EMPTY_METHOD_PROBES_VISITOR;
+			// TODO maybe describe better - ie it is needed for ProbeCounter which is not interested in visiting body
+			throw new UnsupportedOperationException(name);
 		} else {
 			methodProbes = mv;
 		}
@@ -78,6 +80,7 @@ public class ClassProbesAdapter extends ClassVisitor
 			@Override
 			public void visitEnd() {
 				super.visitEnd();
+				// TODO maybe describe who calls whom to emit events
 				LabelFlowAnalyzer.markLabels(this);
 				final MethodProbesAdapter probesAdapter = new MethodProbesAdapter(
 						methodProbes, ClassProbesAdapter.this);

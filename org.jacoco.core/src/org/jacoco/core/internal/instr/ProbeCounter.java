@@ -37,7 +37,8 @@ class ProbeCounter extends ClassProbesVisitor {
 				&& (access & Opcodes.ACC_ABSTRACT) == 0) {
 			methods = true;
 		}
-		return null;
+		return new MethodProbesVisitor() {
+		};
 	}
 
 	@Override
