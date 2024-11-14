@@ -51,6 +51,11 @@ public final class MethodProbesAdapter extends MethodVisitor {
 		this.tryCatchProbeLabels = new HashMap<Label, Label>();
 	}
 
+	@Override
+	public void visitMethodInsn(int opcode, String owner, String name, String descriptor, boolean isInterface) {
+		super.visitMethodInsn(opcode, owner, name, descriptor, isInterface);
+	}
+
 	/**
 	 * If an analyzer is set {@link IFrame} handles are calculated and emitted
 	 * to the probes methods.
@@ -89,10 +94,19 @@ public final class MethodProbesAdapter extends MethodVisitor {
 			if (tryCatchProbeLabels.containsKey(label)) {
 				probesVisitor.visitLabel(tryCatchProbeLabels.get(label));
 			}
-			probesVisitor.visitProbe(idGenerator.nextId());
+
+			if (LabelInfo.getProbeId(label) == -2) {
+				reuseId = idGenerator.nextId();
+				System.err.println("REUSED");
+				probesVisitor.visitProbe(reuseId);
+			} else {
+				probesVisitor.visitProbe(idGenerator.nextId());
+			}
 		}
 		probesVisitor.visitLabel(label);
 	}
+
+	private int reuseId = -1;
 
 	@Override
 	public void visitInsn(final int opcode) {
@@ -104,7 +118,12 @@ public final class MethodProbesAdapter extends MethodVisitor {
 		case Opcodes.ARETURN:
 		case Opcodes.RETURN:
 		case Opcodes.ATHROW:
-			probesVisitor.visitInsnWithProbe(opcode, idGenerator.nextId());
+			if (reuseId != -1) {
+				probesVisitor.visitInsnWithProbe(opcode, reuseId);
+				reuseId = -1;
+			} else {
+				probesVisitor.visitInsnWithProbe(opcode, idGenerator.nextId());
+			}
 			break;
 		default:
 			probesVisitor.visitInsn(opcode);

@@ -138,6 +138,42 @@ public class MethodAnalyzerTest implements IProbeIdGenerator {
 		assertLine(1002, 0, 1, 0, 0);
 	}
 
+	@Test
+	public void nothing() {
+		final Label l0 = new Label();
+		method.visitLabel(l0);
+		method.visitLineNumber(1, l0);
+		method.visitVarInsn(Opcodes.ILOAD, 1);
+		final Label l1 = new Label();
+		method.visitJumpInsn(Opcodes.IFEQ, l1); // probe
+		final Label l2 = new Label();
+		method.visitLabel(l2);
+		method.visitLineNumber(2, l2); // probe because of this line number
+		method.visitInsn(Opcodes.NOP); // 6
+		// duplicate probe[1] here
+		method.visitMethodInsn(Opcodes.INVOKESTATIC, "Foo", "foo",
+				"()Ljava/lang/Void;", false);
+		method.visitInsn(Opcodes.POP);
+		method.visitTypeInsn(Opcodes.NEW, "kotlin/KotlinNothingValueException");
+		method.visitInsn(Opcodes.DUP);
+		method.visitMethodInsn(Opcodes.INVOKESPECIAL,
+				"kotlin/KotlinNothingValueException", "<init>", "()V", false);
+		// probe[1] that safely can be moved up
+		method.visitInsn(Opcodes.ATHROW);
+		method.visitLabel(l1);
+		method.visitLineNumber(3, l1);
+		method.visitInsn(Opcodes.RETURN);
+
+		probes[0] = true;
+//		probes[1] = true;
+		probes[2] = true;
+		runMethodAnalzer();
+		assertEquals(3, nextProbeId);
+		assertLine(1, 0, 2, 0, 2);
+//		assertLine(2, 0, 7, 0, 0);
+		assertLine(3, 0, 1, 0, 0);
+	}
+
 	// === Scenario: method invocation after zero line number
 
 	/**

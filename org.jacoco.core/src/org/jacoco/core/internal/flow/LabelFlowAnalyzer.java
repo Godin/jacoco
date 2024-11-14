@@ -17,7 +17,10 @@ import org.objectweb.asm.Handle;
 import org.objectweb.asm.Label;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
+import org.objectweb.asm.tree.AbstractInsnNode;
+import org.objectweb.asm.tree.LabelNode;
 import org.objectweb.asm.tree.MethodNode;
+import org.objectweb.asm.tree.TypeInsnNode;
 
 /**
  * Method visitor to collect flow related information about the {@link Label}s
@@ -39,6 +42,19 @@ public final class LabelFlowAnalyzer extends MethodVisitor {
 		for (int i = method.tryCatchBlocks.size(); --i >= 0;) {
 			method.tryCatchBlocks.get(i).accept(lfa);
 		}
+
+		for (AbstractInsnNode i = method.instructions.getFirst(); i != null; i = i.getNext()) {
+			if (i.getOpcode() == Opcodes.NEW && ((TypeInsnNode) i).desc.equals("kotlin/KotlinNothingValueException")) {
+				Label label = new Label();
+				LabelNode labelNode = new LabelNode(label);
+				method.instructions.insert(i.getPrevious().getPrevious().getPrevious(), labelNode);
+				System.err.println("INSERTED");
+				// TODO how to get id here?
+				LabelInfo.setSuccessor(label);
+				LabelInfo.setProbeId(label, -2);
+			}
+		}
+
 		method.instructions.accept(lfa);
 	}
 

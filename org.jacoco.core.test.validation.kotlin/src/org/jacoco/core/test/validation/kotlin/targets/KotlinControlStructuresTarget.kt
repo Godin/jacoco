@@ -19,9 +19,12 @@ import org.jacoco.core.test.validation.targets.Stubs.*
  */
 object KotlinControlStructuresTarget {
 
-    private fun unconditionalExecution() {
+    private fun nothing(): Nothing = throw Exception()
 
-        nop() // assertFullyCovered()
+    private fun unconditionalExecution(f: Boolean) {
+
+        if (f) // assertFullyCovered(0, 2)
+            nothing() // assertFullyCovered()
 
     }
 
@@ -145,7 +148,12 @@ object KotlinControlStructuresTarget {
 
     @JvmStatic
     fun main(args: Array<String>) {
-        unconditionalExecution()
+        try {
+            unconditionalExecution(false)
+            unconditionalExecution(true)
+        } catch (_: Exception) {
+
+        }
         missedIfBlock()
         executedIfBlock()
         missedWhileBlock()

@@ -141,6 +141,9 @@ public final class LabelInfo {
 	 */
 	public static boolean needsProbe(final Label label) {
 		final LabelInfo info = get(label);
+		if (info != null && info.probeid == -2) {
+			return true;
+		}
 		return info != null && info.successor
 				&& (info.multiTarget || info.methodInvocationLine);
 	}
