@@ -198,6 +198,7 @@
               <goal>jar</goal>
             </goals>
             <configuration>
+              <javadocExecutable>${java.home}/bin</javadocExecutable>
               <reportOutputDirectory>${project.build.directory}/apidocs</reportOutputDirectory>
               <includeDependencySources>true</includeDependencySources>
               <excludePackageNames>*.internal.*,*.internal,org.jacoco.ant,org.jacoco.maven,org.jacoco.examples</excludePackageNames>
@@ -231,7 +232,7 @@
                 </group>
               </groups>
               <overview>javadoc/overview.html</overview>
-              <stylesheetfile>javadoc/stylesheet.css</stylesheetfile>
+<!--              <stylesheetfile>javadoc/stylesheet.css</stylesheetfile>-->
             </configuration>
           </execution>
         </executions>

@@ -45,6 +45,50 @@
 
     <plugins>
       <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>default-compile</id>
+            <configuration>
+              <release>11</release>
+              <executable>${java.home}/bin</executable>
+<!--              <excludes>-->
+<!--                <exclude>**/module-info.java</exclude>-->
+<!--              </excludes>-->
+            </configuration>
+          </execution>
+          <execution>
+            <id>base-compile</id>
+            <goals>
+              <goal>compile</goal>
+            </goals>
+            <configuration>
+              <excludes>
+                <exclude>**/module-info.java</exclude>
+              </excludes>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <!-- addition of module-info.java to javadoc seems to require its compilation -->
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-javadoc-plugin</artifactId>
+        <configuration>
+          <source>11</source>
+          <sourceFileIncludes>
+            <sourceFileInclude>**/*.java</sourceFileInclude>
+          </sourceFileIncludes>
+          <sourceFileExcludes>
+<!--            <sourceFileExclude>**/module-info.java</sourceFileExclude>-->
+          </sourceFileExcludes>
+          <!-- TODO requires modern javadoc, Maven execution requires modern JDK, so use it: -->
+          <javadocExecutable>${java.home}/bin</javadocExecutable>
+        </configuration>
+      </plugin>
+
+      <plugin>
         <groupId>org.apache.felix</groupId>
         <artifactId>maven-bundle-plugin</artifactId>
         <executions>

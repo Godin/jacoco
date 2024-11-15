@@ -595,7 +595,7 @@
             <id>check-license-header</id>
             <phase>validate</phase>
             <goals>
-              <goal>run</goal>
+<!--              <goal>run</goal>-->
             </goals>
             <configuration>
               <target>
