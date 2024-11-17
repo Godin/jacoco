@@ -170,5 +170,6 @@ public class InstructionTest {
 
 		assertEquals(CounterImpl.getInstance(2, 1),
 				instruction.getBranchCounter());
+		assertEquals("{2}", instruction.getCoveredBranches().toString());
 	}
 }

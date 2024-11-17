@@ -174,8 +174,9 @@ public class Instruction {
 		int idx = 0;
 		for (final Instruction b : newBranches) {
 			if (!b.coveredBranches.isEmpty()) {
-				result.coveredBranches.set(idx++);
+				result.coveredBranches.set(idx);
 			}
+			idx++;
 		}
 		return result;
 	}

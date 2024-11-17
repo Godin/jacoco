@@ -67,6 +67,14 @@ object KotlinBranchesTarget {
             2 -> nop()
             else -> nop()
         }
+
+        val s = "c"
+        when (s) { // assertCoveredBranches("{2}")
+            "a" -> nop("case a")
+            "b" -> nop("case b")
+            "c" -> nop("case c")
+            else -> nop("else")
+        }
     }
 
 }
