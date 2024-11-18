@@ -12,8 +12,10 @@
  *******************************************************************************/
 package org.jacoco.core.test.validation.kotlin.targets
 
+import org.jacoco.core.test.validation.targets.Stubs.nop
+
 /**
- * Test target with `when` expressions with subject of type `enum class`.
+ * Test target with `when` expressions and statements with subject of type `enum class`.
  */
 object KotlinWhenEnumTarget {
 
@@ -25,6 +27,13 @@ object KotlinWhenEnumTarget {
         Enum.A -> 1 // assertFullyCovered()
         Enum.B -> 2 // assertFullyCovered()
     } // assertFullyCovered()
+
+    private fun statement(p: Enum) {
+        when (p) { // assertFullyCovered(0, 2)
+            Enum.A -> nop("case A") // assertFullyCovered()
+            Enum.B -> nop("case B") // assertFullyCovered()
+        } // assertEmpty()
+    }
 
     @Suppress("REDUNDANT_ELSE_IN_WHEN")
     private fun whenEnumRedundantElse(p: Enum): Int = when (p) { // assertFullyCovered(0, 2)
@@ -58,6 +67,9 @@ object KotlinWhenEnumTarget {
     fun main(args: Array<String>) {
         whenEnum(Enum.A)
         whenEnum(Enum.B)
+
+        statement(Enum.A)
+        statement(Enum.B)
 
         whenEnumRedundantElse(Enum.A)
         whenEnumRedundantElse(Enum.B)

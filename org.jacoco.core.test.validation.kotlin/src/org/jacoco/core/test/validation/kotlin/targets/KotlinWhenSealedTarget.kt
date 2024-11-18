@@ -12,8 +12,10 @@
  *******************************************************************************/
 package org.jacoco.core.test.validation.kotlin.targets
 
+import org.jacoco.core.test.validation.targets.Stubs.nop
+
 /**
- * Test target with `when` expressions with subject of type `enum class`.
+ * Test target with `when` expressions and statements with subject of type `enum class`.
  */
 object KotlinWhenSealedTarget {
 
@@ -27,6 +29,13 @@ object KotlinWhenSealedTarget {
         is Sealed.Sealed2 -> 2 // assertFullyCovered()
     } // assertFullyCovered()
 
+    private fun statement(p: Sealed) {
+        when (p) { // assertFullyCovered()
+            Sealed.Sealed1 -> nop("case Sealed1") // assertFullyCovered(0, 2)
+            Sealed.Sealed2 -> nop("case Sealed2") // assertFullyCovered()
+        } // assertEmpty()
+    }
+
     @Suppress("REDUNDANT_ELSE_IN_WHEN")
     private fun whenSealedRedundantElse(p: Sealed): Int = when (p) { // assertFullyCovered()
         is Sealed.Sealed1 -> 1 // assertFullyCovered(0, 2)
@@ -38,6 +47,9 @@ object KotlinWhenSealedTarget {
     fun main(args: Array<String>) {
         whenSealed(Sealed.Sealed1)
         whenSealed(Sealed.Sealed2)
+
+        statement(Sealed.Sealed1)
+        statement(Sealed.Sealed2)
 
         whenSealedRedundantElse(Sealed.Sealed1)
         whenSealedRedundantElse(Sealed.Sealed2)
