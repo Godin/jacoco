@@ -16,7 +16,9 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
+import java.util.SortedMap;
 
 import org.jacoco.core.internal.instr.InstrSupport;
 import org.junit.Test;
@@ -422,6 +424,12 @@ public class FinallyFilterTest implements IFilterOutput {
 		}
 	}
 
+	public void replaceBranches(final AbstractInsnNode source,
+			final SortedMap<AbstractInsnNode, List<InstructionBranch>> newTargets) {
+		fail();
+	}
+
+	@Deprecated
 	public void replaceBranches(final AbstractInsnNode source,
 			final Set<AbstractInsnNode> newTargets) {
 		fail();

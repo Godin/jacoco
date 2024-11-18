@@ -12,7 +12,9 @@
  *******************************************************************************/
 package org.jacoco.core.internal.analysis.filter;
 
+import java.util.List;
 import java.util.Set;
+import java.util.SortedMap;
 
 import org.objectweb.asm.tree.AbstractInsnNode;
 
@@ -53,6 +55,36 @@ public interface IFilterOutput {
 	 * @param newTargets
 	 *            new targets of branches
 	 */
+	void replaceBranches(AbstractInsnNode source,
+			SortedMap<AbstractInsnNode, List<InstructionBranch>> newTargets);
+
+	/**
+	 * {@link #instruction} and its {@link #branch} number.
+	 */
+	final class InstructionBranch {
+		public final AbstractInsnNode instruction;
+		public final int branch;
+
+		/**
+		 * Creates a new {@link InstructionBranch}.
+		 *
+		 * @param instruction
+		 *            instruction
+		 * @param branch
+		 *            branch number
+		 */
+		public InstructionBranch(final AbstractInsnNode instruction,
+				final int branch) {
+			this.instruction = instruction;
+			this.branch = branch;
+		}
+	}
+
+	/**
+	 * @deprecated use {@link #replaceBranches(AbstractInsnNode, SortedMap)}
+	 *             instead
+	 */
+	@Deprecated
 	void replaceBranches(AbstractInsnNode source,
 			Set<AbstractInsnNode> newTargets);
 

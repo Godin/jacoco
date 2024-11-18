@@ -19,6 +19,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
+import java.util.SortedMap;
 
 import org.jacoco.core.analysis.ISourceNode;
 import org.jacoco.core.internal.analysis.filter.IFilterOutput;
@@ -50,12 +51,15 @@ class MethodCoverageCalculator implements IFilterOutput {
 
 	private final Map<AbstractInsnNode, Set<AbstractInsnNode>> replacements;
 
+	private final Map<AbstractInsnNode, SortedMap<AbstractInsnNode, List<InstructionBranch>>> replacements2;
+
 	MethodCoverageCalculator(
 			final Map<AbstractInsnNode, Instruction> instructions) {
 		this.instructions = instructions;
 		this.ignored = new HashSet<AbstractInsnNode>();
 		this.merged = new HashMap<AbstractInsnNode, AbstractInsnNode>();
 		this.replacements = new HashMap<AbstractInsnNode, Set<AbstractInsnNode>>();
+		this.replacements2 = new HashMap<AbstractInsnNode, SortedMap<AbstractInsnNode, List<InstructionBranch>>>();
 	}
 
 	/**
@@ -68,6 +72,7 @@ class MethodCoverageCalculator implements IFilterOutput {
 	void calculate(final MethodCoverageImpl coverage) {
 		applyMerges();
 		applyReplacements();
+		applyReplacements2();
 		ensureCapacity(coverage);
 
 		for (final Entry<AbstractInsnNode, Instruction> entry : instructions
@@ -116,6 +121,36 @@ class MethodCoverageCalculator implements IFilterOutput {
 			final AbstractInsnNode node = entry.getKey();
 			instructions.put(node,
 					instructions.get(node).replaceBranches(newBranches));
+		}
+	}
+
+	private void applyReplacements2() {
+		for (final Entry<AbstractInsnNode, SortedMap<AbstractInsnNode, List<InstructionBranch>>> entry : replacements2
+				.entrySet()) {
+			final SortedMap<AbstractInsnNode, List<InstructionBranch>> targets = entry
+					.getValue();
+			int i = 0;
+			for (final List<InstructionBranch> target : targets.values()) {
+				i += target.size();
+			}
+			final int[] newBranches = new int[i];
+			final Instruction[] instructions = new Instruction[i];
+			final int[] branches = new int[i];
+
+			int branch = 0;
+			i = 0;
+			for (final List<InstructionBranch> target : targets.values()) {
+				for (final InstructionBranch ib : target) {
+					newBranches[i] = branch;
+					instructions[i] = this.instructions.get(ib.instruction);
+					branches[i] = ib.branch;
+					i++;
+				}
+				branch++;
+			}
+			final AbstractInsnNode node = entry.getKey();
+			this.instructions.put(node, this.instructions.get(node)
+					.replaceBranches(newBranches, instructions, branches));
 		}
 	}
 
@@ -170,6 +205,12 @@ class MethodCoverageCalculator implements IFilterOutput {
 		}
 	}
 
+	public void replaceBranches(final AbstractInsnNode source,
+			final SortedMap<AbstractInsnNode, List<InstructionBranch>> newTargets) {
+		replacements2.put(source, newTargets);
+	}
+
+	@Deprecated
 	public void replaceBranches(final AbstractInsnNode source,
 			final Set<AbstractInsnNode> newTargets) {
 		replacements.put(source, newTargets);

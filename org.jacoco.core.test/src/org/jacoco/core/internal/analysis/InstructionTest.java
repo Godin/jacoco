@@ -171,4 +171,19 @@ public class InstructionTest {
 		assertEquals(CounterImpl.getInstance(2, 1),
 				instruction.getBranchCounter());
 	}
+
+	@Test
+	public void replaceBranches() {
+		Instruction i1 = new Instruction(1);
+		Instruction i2 = new Instruction(2);
+		Instruction i3 = new Instruction(3);
+		i3.addBranch(true, 0);
+
+		instruction = instruction.replaceBranches(new int[] { 0, 1, 2 },
+				new Instruction[] { i1, i2, i3 }, new int[] { 0, 0, 0 });
+
+		assertEquals(CounterImpl.getInstance(2, 1),
+				instruction.getBranchCounter());
+	}
+
 }

@@ -160,13 +160,43 @@ public class Instruction {
 
 	/**
 	 * Creates a copy of this instruction where all outgoing branches are
+	 * replaced. The coverage status of the branches of the new instruction is
+	 * derived from the status of the given branches of the given instructions.
+	 *
+	 * @param newBranches
+	 *            indexes of new branches whose execution status should be
+	 *            computed
+	 * @param instructions
+	 *            instructions whose branch execution statuses should be used
+	 * @param branches
+	 *            indexes of branches of given instructions whose execution
+	 *            status should be used
+	 * @return new instance with replaced branches
+	 */
+	public Instruction replaceBranches(final int[] newBranches,
+			final Instruction[] instructions, final int[] branches) {
+		final Instruction result = new Instruction(this.line);
+		for (int i = 0; i < newBranches.length; i++) {
+			if (instructions[i].coveredBranches.get(branches[i])) {
+				result.coveredBranches.set(newBranches[i]);
+			}
+			result.branches = Math.max(result.branches, newBranches[i] + 1);
+		}
+		return result;
+	}
+
+	/**
+	 * Creates a copy of this instruction where all outgoing branches are
 	 * replaced with the given instructions. The coverage status of the new
 	 * instruction is derived from the status of the given instructions.
 	 *
 	 * @param newBranches
 	 *            new branches to consider
 	 * @return new instance with replaced branches
+	 * @deprecated use {@link #replaceBranches(int[], Instruction[], int[])}
+	 *             instead
 	 */
+	@Deprecated
 	public Instruction replaceBranches(
 			final Collection<Instruction> newBranches) {
 		final Instruction result = new Instruction(this.line);
