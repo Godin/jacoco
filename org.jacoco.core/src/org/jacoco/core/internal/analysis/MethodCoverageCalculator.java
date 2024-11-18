@@ -48,14 +48,14 @@ class MethodCoverageCalculator implements IFilterOutput {
 	 */
 	private final Map<AbstractInsnNode, AbstractInsnNode> merged;
 
-	private final Map<AbstractInsnNode, Set<AbstractInsnNode>> replacements;
+	private final Map<AbstractInsnNode, List<AbstractInsnNode>> replacements;
 
 	MethodCoverageCalculator(
 			final Map<AbstractInsnNode, Instruction> instructions) {
 		this.instructions = instructions;
 		this.ignored = new HashSet<AbstractInsnNode>();
 		this.merged = new HashMap<AbstractInsnNode, AbstractInsnNode>();
-		this.replacements = new HashMap<AbstractInsnNode, Set<AbstractInsnNode>>();
+		this.replacements = new HashMap<AbstractInsnNode, List<AbstractInsnNode>>();
 	}
 
 	/**
@@ -106,9 +106,9 @@ class MethodCoverageCalculator implements IFilterOutput {
 	}
 
 	private void applyReplacements() {
-		for (final Entry<AbstractInsnNode, Set<AbstractInsnNode>> entry : replacements
+		for (final Entry<AbstractInsnNode, List<AbstractInsnNode>> entry : replacements
 				.entrySet()) {
-			final Set<AbstractInsnNode> replacements = entry.getValue();
+			final List<AbstractInsnNode> replacements = entry.getValue();
 			final List<Instruction> newBranches = new ArrayList<Instruction>(
 					replacements.size());
 			for (final AbstractInsnNode b : replacements) {
@@ -172,7 +172,7 @@ class MethodCoverageCalculator implements IFilterOutput {
 	}
 
 	public void replaceBranches(final AbstractInsnNode source,
-			final Set<AbstractInsnNode> newTargets) {
+			final List<AbstractInsnNode> newTargets) {
 		replacements.put(source, newTargets);
 	}
 

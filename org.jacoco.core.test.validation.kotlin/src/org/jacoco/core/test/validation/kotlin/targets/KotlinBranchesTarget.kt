@@ -69,10 +69,11 @@ object KotlinBranchesTarget {
         }
 
         val s = "c"
-        when (s) { // assertCoveredBranches("{2}")
+        when (s) { // assertCoveredBranches("{3}")
             "a" -> nop("case a")
             "b" -> nop("case b")
             "c" -> nop("case c")
+            "\u0000a" -> nop("case u0000a")
             else -> nop("else")
         }
     }

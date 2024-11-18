@@ -15,6 +15,7 @@ package org.jacoco.core.internal.analysis;
 import static org.junit.Assert.assertEquals;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -73,6 +74,19 @@ public class MethodCoverageCalculatorTest {
 		assertLine(1, 1, 0, 2, 0);
 		assertLine(2, 0, 1, 2, 1);
 		assertLine(3, 0, 1, 1, 2);
+	}
+
+	@Test
+	public void test() {
+		addInsn(1, true, false);
+		addInsn(1, false, true);
+
+		MethodCoverageCalculator c = new MethodCoverageCalculator(instructions);
+		c.calculate(coverage);
+
+		assertLine(1, 0, 2, 2, 2);
+		assertEquals("{0, 3}",
+				coverage.getLine(1).getCoveredBranches().toString());
 	}
 
 	@Test
@@ -178,8 +192,7 @@ public class MethodCoverageCalculatorTest {
 		InsnNode i4 = addInsn(2, false);
 
 		MethodCoverageCalculator c = new MethodCoverageCalculator(instructions);
-		c.replaceBranches(i1,
-				new HashSet<AbstractInsnNode>(Arrays.asList(i2, i3, i4)));
+		c.replaceBranches(i1, Arrays.<AbstractInsnNode> asList(i2, i3, i4));
 		c.calculate(coverage);
 
 		assertLine(1, 0, 1, 1, 2); // branches coverage status replaced
@@ -196,8 +209,7 @@ public class MethodCoverageCalculatorTest {
 		MethodCoverageCalculator c = new MethodCoverageCalculator(instructions);
 		c.merge(i4, i3);
 		c.merge(i3, i2);
-		c.replaceBranches(i1,
-				new HashSet<AbstractInsnNode>(Arrays.asList(i2, i3, i4)));
+		c.replaceBranches(i1, Arrays.<AbstractInsnNode> asList(i2, i3, i4));
 		c.calculate(coverage);
 
 		assertLine(1, 0, 1, 0, 3);

@@ -12,8 +12,7 @@
  *******************************************************************************/
 package org.jacoco.core.internal.analysis.filter;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
 
 import org.jacoco.core.internal.instr.InstrSupport;
 import org.junit.Test;
@@ -96,7 +95,7 @@ public class KotlinWhenFilterTest extends FilterTestBase {
 
 		m.visitTableSwitchInsn(0, 0, caseDefault, case1);
 		final AbstractInsnNode switchNode = m.instructions.getLast();
-		final Set<AbstractInsnNode> newTargets = new HashSet<AbstractInsnNode>();
+		final ArrayList<AbstractInsnNode> newTargets = new ArrayList<AbstractInsnNode>();
 
 		m.visitLabel(case1);
 		m.visitInsn(Opcodes.ICONST_1);
@@ -135,7 +134,7 @@ public class KotlinWhenFilterTest extends FilterTestBase {
 	public void should_filter_when_by_nullable_enum_with_null_case_and_without_else() {
 		final Range range1 = new Range();
 		final Range range2 = new Range();
-		final HashSet<AbstractInsnNode> newTargets = new HashSet<AbstractInsnNode>();
+		final ArrayList<AbstractInsnNode> newTargets = new ArrayList<AbstractInsnNode>();
 		final MethodNode m = new MethodNode(InstrSupport.ASM_API_VERSION, 0,
 				"example", "(LE;)Ljava/lang/String;", null, null);
 		final Label l1 = new Label();
@@ -178,7 +177,7 @@ public class KotlinWhenFilterTest extends FilterTestBase {
 
 		m.visitLabel(caseNull);
 		m.visitLdcInsn("null");
-		newTargets.add(m.instructions.getLast());
+		newTargets.add(0, m.instructions.getLast());
 		m.visitJumpInsn(Opcodes.GOTO, after);
 
 		m.visitLabel(caseElse);

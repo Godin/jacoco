@@ -12,8 +12,9 @@
  *******************************************************************************/
 package org.jacoco.core.internal.analysis.filter;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.tree.AbstractInsnNode;
@@ -35,13 +36,13 @@ public final class StringSwitchFilter implements IFilter {
 			final IFilterContext context, final IFilterOutput output) {
 		final Matcher matcher = new Matcher();
 		for (final AbstractInsnNode i : methodNode.instructions) {
-			matcher.match(i, output);
+			matcher.match(i, output, methodNode);
 		}
 	}
 
 	private static class Matcher extends AbstractMatcher {
 		public void match(final AbstractInsnNode start,
-				final IFilterOutput output) {
+				final IFilterOutput output, final MethodNode m) {
 
 			if (start.getOpcode() != /* ECJ */ Opcodes.ASTORE
 					&& start.getOpcode() != /* Kotlin */ Opcodes.ALOAD) {
@@ -73,7 +74,7 @@ public final class StringSwitchFilter implements IFilter {
 				return;
 			}
 
-			final Set<AbstractInsnNode> replacements = new HashSet<AbstractInsnNode>();
+			final ArrayList<AbstractInsnNode> replacements = new ArrayList<AbstractInsnNode>();
 			replacements.add(skipNonOpcodes(defaultLabel));
 
 			for (int i = 0; i < hashCodes; i++) {
@@ -103,6 +104,21 @@ public final class StringSwitchFilter implements IFilter {
 			}
 
 			output.ignore(s.getNext(), cursor);
+
+			final AbstractInsnNode defaultCase = skipNonOpcodes(defaultLabel);
+			Collections.sort(replacements, new Comparator<AbstractInsnNode>() {
+				public int compare(final AbstractInsnNode i1,
+						final AbstractInsnNode i2) {
+					if (i1 == i2)
+						return 0;
+					if (i1 == defaultCase)
+						return -1;
+					if (i2 == defaultCase)
+						return 1;
+					return m.instructions.indexOf(i1)
+							- m.instructions.indexOf(i2);
+				}
+			});
 			output.replaceBranches(s, replacements);
 		}
 	}

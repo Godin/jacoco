@@ -12,7 +12,7 @@
  *******************************************************************************/
 package org.jacoco.core.internal.analysis.filter;
 
-import java.util.HashSet;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.objectweb.asm.Opcodes;
@@ -93,7 +93,7 @@ final class ExhaustiveSwitchFilter implements IFilter {
 				return;
 			}
 			output.ignore(dflt, cursor);
-			final HashSet<AbstractInsnNode> replacements = new HashSet<AbstractInsnNode>();
+			final ArrayList<AbstractInsnNode> replacements = new ArrayList<AbstractInsnNode>();
 			for (final AbstractInsnNode label : labels) {
 				replacements.add(skipNonOpcodes(label));
 			}

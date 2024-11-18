@@ -12,8 +12,7 @@
  *******************************************************************************/
 package org.jacoco.core.internal.analysis.filter;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
 
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.tree.AbstractInsnNode;
@@ -71,7 +70,7 @@ public final class KotlinWhenStringFilter implements IFilter {
 				return;
 			}
 
-			final Set<AbstractInsnNode> replacements = new HashSet<AbstractInsnNode>();
+			final ArrayList<AbstractInsnNode> replacements = new ArrayList<AbstractInsnNode>();
 			replacements.add(skipNonOpcodes(defaultLabel));
 
 			for (int i = 1; i <= hashCodes; i++) {
@@ -96,7 +95,7 @@ public final class KotlinWhenStringFilter implements IFilter {
 						}
 					} else if (i == hashCodes && jump.label == defaultLabel) {
 						// case body
-						replacements.add(cursor);
+						replacements.add(1, cursor);
 						cursor = jump;
 						break;
 					} else {

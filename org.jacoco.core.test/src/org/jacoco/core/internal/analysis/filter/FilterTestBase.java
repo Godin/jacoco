@@ -36,7 +36,7 @@ public abstract class FilterTestBase {
 
 	private final List<Range> ignoredRanges = new ArrayList<Range>();
 
-	private final Map<AbstractInsnNode, Set<AbstractInsnNode>> replacedBranches = new HashMap<AbstractInsnNode, Set<AbstractInsnNode>>();
+	private final Map<AbstractInsnNode, List<AbstractInsnNode>> replacedBranches = new HashMap<AbstractInsnNode, List<AbstractInsnNode>>();
 
 	protected final IFilterOutput output = new IFilterOutput() {
 		public void ignore(final AbstractInsnNode fromInclusive,
@@ -52,8 +52,8 @@ public abstract class FilterTestBase {
 			fail();
 		}
 
-		public void replaceBranches(final AbstractInsnNode source,
-				final Set<AbstractInsnNode> newTargets) {
+		public void replaceBranches(AbstractInsnNode source,
+				List<AbstractInsnNode> newTargets) {
 			replacedBranches.put(source, newTargets);
 		}
 	};
@@ -72,7 +72,7 @@ public abstract class FilterTestBase {
 	}
 
 	final void assertReplacedBranches(final AbstractInsnNode source,
-			final Set<AbstractInsnNode> newTargets) {
+			final List<AbstractInsnNode> newTargets) {
 		assertEquals(Collections.singletonMap(source, newTargets),
 				replacedBranches);
 	}

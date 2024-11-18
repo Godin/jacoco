@@ -12,8 +12,7 @@
  *******************************************************************************/
 package org.jacoco.core.internal.analysis.filter;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
 
 import org.jacoco.core.internal.instr.InstrSupport;
 import org.junit.Test;
@@ -31,7 +30,7 @@ public class KotlinWhenStringFilterTest extends FilterTestBase {
 
 	@Test
 	public void should_filter() {
-		final Set<AbstractInsnNode> expectedNewTargets = new HashSet<AbstractInsnNode>();
+		final ArrayList<AbstractInsnNode> expectedNewTargets = new ArrayList<AbstractInsnNode>();
 
 		final MethodNode m = new MethodNode(InstrSupport.ASM_API_VERSION, 0,
 				"name", "()V", null, null);
@@ -97,7 +96,7 @@ public class KotlinWhenStringFilterTest extends FilterTestBase {
 		expectedNewTargets.add(m.instructions.getLast());
 		m.visitLabel(defaultCase);
 		m.visitInsn(Opcodes.RETURN);
-		expectedNewTargets.add(m.instructions.getLast());
+		expectedNewTargets.add(0, m.instructions.getLast());
 
 		filter.filter(m, context, output);
 
@@ -119,7 +118,7 @@ public class KotlinWhenStringFilterTest extends FilterTestBase {
 	 */
 	@Test
 	public void should_filter_when_biggest_hashCode_first() {
-		final Set<AbstractInsnNode> expectedNewTargets = new HashSet<AbstractInsnNode>();
+		final ArrayList<AbstractInsnNode> expectedNewTargets = new ArrayList<AbstractInsnNode>();
 
 		final MethodNode m = new MethodNode(InstrSupport.ASM_API_VERSION, 0,
 				"example", "(Ljava/lang/String;)V", null, null);
@@ -173,7 +172,7 @@ public class KotlinWhenStringFilterTest extends FilterTestBase {
 		expectedNewTargets.add(m.instructions.getLast());
 		m.visitLabel(defaultCase);
 		m.visitInsn(Opcodes.RETURN);
-		expectedNewTargets.add(m.instructions.getLast());
+		expectedNewTargets.add(0, m.instructions.getLast());
 
 		filter.filter(m, context, output);
 

@@ -12,9 +12,8 @@
  *******************************************************************************/
 package org.jacoco.core.internal.analysis.filter;
 
-import java.util.HashSet;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.tree.AbstractInsnNode;
@@ -125,7 +124,7 @@ public final class KotlinWhenFilter implements IFilter {
 			labels = ((TableSwitchInsnNode) switchNode).labels;
 		}
 		final LabelNode defaultLabel = getDefaultLabel(switchNode);
-		final Set<AbstractInsnNode> newTargets = new HashSet<AbstractInsnNode>();
+		final ArrayList<AbstractInsnNode> newTargets = new ArrayList<AbstractInsnNode>();
 		for (final LabelNode label : labels) {
 			if (label != defaultLabel) {
 				newTargets.add(AbstractMatcher.skipNonOpcodes(label));
