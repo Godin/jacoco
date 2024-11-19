@@ -12,10 +12,20 @@
  *******************************************************************************/
 package org.jacoco.core.test.validation.kotlin.targets
 
+import org.jacoco.core.test.validation.targets.Stubs.nop
+
 /**
  * Test target with `when` expressions with subject of type `String`.
  */
 object KotlinWhenStringTarget {
+
+    private fun wip(s: String) {
+        when (s) { // assertFullyCovered(2, 2)
+            "a" -> nop("case a") // assertFullyCovered()
+            "b" -> nop("case b") // assertFullyCovered()
+            "c" -> nop("case c") // assertNotCovered()
+        } // assertEmpty()
+    } // assertFullyCovered()
 
     private fun whenString(p: String): Int = when (p) { // assertFullyCovered(0, 7)
         "a" -> 1 // assertFullyCovered()
@@ -57,6 +67,9 @@ object KotlinWhenStringTarget {
         whenStringBiggestHashCodeFirst("c")
         whenStringBiggestHashCodeFirst("\u0000a")
         whenStringBiggestHashCodeFirst("\u0000b")
+
+        wip("a")
+        wip("b")
     }
 
 }
