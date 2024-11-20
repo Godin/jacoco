@@ -12,8 +12,10 @@
  *******************************************************************************/
 package org.jacoco.core.internal.analysis.filter;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+import java.util.TreeMap;
 
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.tree.AbstractInsnNode;
@@ -33,13 +35,19 @@ public final class StringSwitchFilter implements IFilter {
 
 	public void filter(final MethodNode methodNode,
 			final IFilterContext context, final IFilterOutput output) {
-		final Matcher matcher = new Matcher();
+		final Matcher matcher = new Matcher(methodNode);
 		for (final AbstractInsnNode i : methodNode.instructions) {
 			matcher.match(i, output);
 		}
 	}
 
 	private static class Matcher extends AbstractMatcher {
+		private final MethodNode methodNode;
+
+		Matcher(MethodNode methodNode) {
+			this.methodNode = methodNode;
+		}
+
 		public void match(final AbstractInsnNode start,
 				final IFilterOutput output) {
 
@@ -73,8 +81,10 @@ public final class StringSwitchFilter implements IFilter {
 				return;
 			}
 
-			final Set<AbstractInsnNode> replacements = new HashSet<AbstractInsnNode>();
-			replacements.add(skipNonOpcodes(defaultLabel));
+			final Replacements replacements = new Replacements(
+					new InstructionComparator(methodNode,
+							skipNonOpcodes(defaultLabel)));
+			replacements.add(skipNonOpcodes(defaultLabel), s, 0);
 
 			for (int i = 0; i < hashCodes; i++) {
 				while (true) {
@@ -87,16 +97,21 @@ public final class StringSwitchFilter implements IFilter {
 					if (cursor == null) {
 						return;
 					}
-
-					replacements
-							.add(skipNonOpcodes(((JumpInsnNode) cursor).label));
+					replacements.add(
+							skipNonOpcodes(((JumpInsnNode) cursor).label),
+							cursor, 1);
 
 					if (cursor.getNext().getOpcode() == Opcodes.GOTO) {
 						// end of comparisons for same hashCode
 						// jump to default
 						nextIs(Opcodes.GOTO);
+						replacements.add(
+								skipNonOpcodes(((JumpInsnNode) cursor).label),
+								cursor, 0);
 						break;
 					} else if (cursor.getNext() == defaultLabel) {
+						replacements.add(skipNonOpcodes(defaultLabel), cursor,
+								0);
 						break;
 					}
 				}
@@ -104,6 +119,48 @@ public final class StringSwitchFilter implements IFilter {
 
 			output.ignore(s.getNext(), cursor);
 			output.replaceBranches(s, replacements);
+		}
+	}
+
+	static class Replacements extends
+			TreeMap<AbstractInsnNode, List<IFilterOutput.InstructionBranch>> {
+		Replacements(final Comparator<AbstractInsnNode> comparator) {
+			super(comparator);
+		}
+
+		void add(final AbstractInsnNode target,
+				final AbstractInsnNode fromInstruction, final int fromBranch) {
+			List<IFilterOutput.InstructionBranch> list = get(target);
+			if (list == null) {
+				list = new ArrayList<IFilterOutput.InstructionBranch>();
+				put(target, list);
+			}
+			list.add(new IFilterOutput.InstructionBranch(fromInstruction,
+					fromBranch));
+		}
+	}
+
+	private static class InstructionComparator
+			implements Comparator<AbstractInsnNode> {
+		private final AbstractInsnNode defaultCase;
+		private final MethodNode methodNode;
+
+		InstructionComparator(final MethodNode methodNode,
+				final AbstractInsnNode defaultCase) {
+			this.methodNode = methodNode;
+			this.defaultCase = defaultCase;
+		}
+
+		public int compare(final AbstractInsnNode i1,
+				final AbstractInsnNode i2) {
+			if (i1 == i2)
+				return 0;
+			if (i1 == defaultCase)
+				return -1;
+			if (i2 == defaultCase)
+				return 1;
+			return methodNode.instructions.indexOf(i1)
+					- methodNode.instructions.indexOf(i2);
 		}
 	}
 
