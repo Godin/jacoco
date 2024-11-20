@@ -12,8 +12,8 @@
  *******************************************************************************/
 package org.jacoco.core.internal.analysis.filter;
 
+import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.Set;
 
 import org.jacoco.core.internal.instr.InstrSupport;
 import org.junit.Test;
@@ -96,11 +96,11 @@ public class KotlinWhenFilterTest extends FilterTestBase {
 
 		m.visitTableSwitchInsn(0, 0, caseDefault, case1);
 		final AbstractInsnNode switchNode = m.instructions.getLast();
-		final Set<AbstractInsnNode> newTargets = new HashSet<AbstractInsnNode>();
+		final ArrayList<BranchReplacement> replacements = new ArrayList<BranchReplacement>();
 
 		m.visitLabel(case1);
 		m.visitInsn(Opcodes.ICONST_1);
-		newTargets.add(m.instructions.getLast());
+		replacements.add(new BranchReplacement(0, switchNode, 1));
 		m.visitJumpInsn(Opcodes.GOTO, after);
 
 		final Range range1 = new Range();
@@ -118,7 +118,7 @@ public class KotlinWhenFilterTest extends FilterTestBase {
 		filter.filter(m, context, output);
 
 		assertIgnored(range1);
-		assertReplacedBranches(switchNode, newTargets);
+		assertReplacedBranches(m, switchNode, replacements);
 	}
 
 	/**
@@ -135,7 +135,6 @@ public class KotlinWhenFilterTest extends FilterTestBase {
 	public void should_filter_when_by_nullable_enum_with_null_case_and_without_else() {
 		final Range range1 = new Range();
 		final Range range2 = new Range();
-		final HashSet<AbstractInsnNode> newTargets = new HashSet<AbstractInsnNode>();
 		final MethodNode m = new MethodNode(InstrSupport.ASM_API_VERSION, 0,
 				"example", "(LE;)Ljava/lang/String;", null, null);
 		final Label l1 = new Label();
@@ -162,23 +161,25 @@ public class KotlinWhenFilterTest extends FilterTestBase {
 		m.visitInsn(Opcodes.IALOAD);
 		m.visitLabel(l2);
 		range1.toInclusive = m.instructions.getLast();
-		m.visitTableSwitchInsn(-1, 2, caseElse, caseNull, caseElse, caseA,
-				caseB);
+		m.visitTableSwitchInsn(-1, 2, /* branch 0 */ caseElse,
+				/* branch 1 */ caseNull, /* branch 0 */ caseElse,
+				/* branch 2 */ caseA, /* branch 3 */ caseB);
 		final AbstractInsnNode switchNode = m.instructions.getLast();
+		final ArrayList<BranchReplacement> replacements = new ArrayList<BranchReplacement>();
 
 		m.visitLabel(caseA);
 		m.visitLdcInsn("a");
-		newTargets.add(m.instructions.getLast());
+		replacements.add(new BranchReplacement(0, switchNode, 2));
 		m.visitJumpInsn(Opcodes.GOTO, after);
 
 		m.visitLabel(caseB);
 		m.visitLdcInsn("b");
-		newTargets.add(m.instructions.getLast());
+		replacements.add(new BranchReplacement(1, switchNode, 3));
 		m.visitJumpInsn(Opcodes.GOTO, after);
 
 		m.visitLabel(caseNull);
 		m.visitLdcInsn("null");
-		newTargets.add(m.instructions.getLast());
+		replacements.add(new BranchReplacement(2, switchNode, 1));
 		m.visitJumpInsn(Opcodes.GOTO, after);
 
 		m.visitLabel(caseElse);
@@ -196,7 +197,7 @@ public class KotlinWhenFilterTest extends FilterTestBase {
 		filter.filter(m, context, output);
 
 		assertIgnored(range1, range2);
-		assertReplacedBranches(switchNode, newTargets);
+		assertReplacedBranches(m, switchNode, replacements);
 	}
 
 	/**

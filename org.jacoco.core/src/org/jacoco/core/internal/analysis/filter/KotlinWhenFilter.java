@@ -12,9 +12,11 @@
  *******************************************************************************/
 package org.jacoco.core.internal.analysis.filter;
 
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.TreeMap;
 
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.tree.AbstractInsnNode;
@@ -36,7 +38,7 @@ public final class KotlinWhenFilter implements IFilter {
 
 	public void filter(final MethodNode methodNode,
 			final IFilterContext context, final IFilterOutput output) {
-		final Matcher matcher = new Matcher();
+		final Matcher matcher = new Matcher(methodNode);
 		for (final AbstractInsnNode i : methodNode.instructions) {
 			matcher.match(i, output);
 			matcher.matchNullableEnum(i, output);
@@ -44,6 +46,12 @@ public final class KotlinWhenFilter implements IFilter {
 	}
 
 	private static class Matcher extends AbstractMatcher {
+		private final MethodNode methodNode;
+
+		public Matcher(final MethodNode methodNode) {
+			this.methodNode = methodNode;
+		}
+
 		void match(final AbstractInsnNode start, final IFilterOutput output) {
 			if (start.getType() != AbstractInsnNode.LABEL) {
 				return;
@@ -63,7 +71,7 @@ public final class KotlinWhenFilter implements IFilter {
 					return;
 
 				} else if (getDefaultLabel(i) == start) {
-					ignoreDefaultBranch(i, output);
+					ignoreDefaultBranch(methodNode, i, output);
 					output.ignore(start, cursor);
 					return;
 
@@ -116,8 +124,8 @@ public final class KotlinWhenFilter implements IFilter {
 		}
 	}
 
-	private static void ignoreDefaultBranch(final AbstractInsnNode switchNode,
-			final IFilterOutput output) {
+	private static void ignoreDefaultBranch(final MethodNode methodNode,
+			final AbstractInsnNode switchNode, final IFilterOutput output) {
 		final List<LabelNode> labels;
 		if (switchNode.getOpcode() == Opcodes.LOOKUPSWITCH) {
 			labels = ((LookupSwitchInsnNode) switchNode).labels;
@@ -125,13 +133,19 @@ public final class KotlinWhenFilter implements IFilter {
 			labels = ((TableSwitchInsnNode) switchNode).labels;
 		}
 		final LabelNode defaultLabel = getDefaultLabel(switchNode);
-		final Set<AbstractInsnNode> newTargets = new HashSet<AbstractInsnNode>();
+
+		final StringSwitchFilter.Replacements replacements = new StringSwitchFilter.Replacements(
+				new StringSwitchFilter.InstructionComparator(methodNode, null));
+		int branch = 1;
 		for (final LabelNode label : labels) {
-			if (label != defaultLabel) {
-				newTargets.add(AbstractMatcher.skipNonOpcodes(label));
+			final AbstractInsnNode target = AbstractMatcher
+					.skipNonOpcodes(label);
+			if (label != defaultLabel && !replacements.containsKey(target)) {
+				replacements.add(target, switchNode, branch);
+				branch++;
 			}
 		}
-		output.replaceBranches(switchNode, newTargets);
+		output.replaceBranches(switchNode, replacements);
 	}
 
 }

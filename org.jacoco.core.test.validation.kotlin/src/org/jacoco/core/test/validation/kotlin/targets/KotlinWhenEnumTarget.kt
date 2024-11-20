@@ -21,6 +21,16 @@ object KotlinWhenEnumTarget {
         A, B
     }
 
+    private enum class Enum2 {
+        A, B, C
+    }
+
+    private fun wip(p: Enum2): String =
+        when (p) { // assertFullyCovered(0, 2)
+            Enum2.A, Enum2.B -> "A, B"
+            Enum2.C -> "C"
+        }
+
     private fun whenEnum(p: Enum): Int = when (p) {  // assertFullyCovered(0, 2)
         Enum.A -> 1 // assertFullyCovered()
         Enum.B -> 2 // assertFullyCovered()
@@ -56,6 +66,10 @@ object KotlinWhenEnumTarget {
 
     @JvmStatic
     fun main(args: Array<String>) {
+        wip(Enum2.A)
+        wip(Enum2.B)
+        wip(Enum2.C)
+
         whenEnum(Enum.A)
         whenEnum(Enum.B)
 

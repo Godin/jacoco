@@ -140,8 +140,7 @@ public final class StringSwitchFilter implements IFilter {
 		}
 	}
 
-	private static class InstructionComparator
-			implements Comparator<AbstractInsnNode> {
+	static class InstructionComparator implements Comparator<AbstractInsnNode> {
 		private final AbstractInsnNode defaultCase;
 		private final MethodNode methodNode;
 
