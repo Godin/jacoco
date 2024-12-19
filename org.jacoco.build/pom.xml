@@ -848,6 +848,8 @@
     (see https://github.com/apache/maven-plugin-tools/blob/maven-plugin-tools-3.6.4/maven-plugin-tools-generators/src/main/java/org/apache/maven/tools/plugin/generator/GeneratorUtils.java#L661-L720)
     and maven-invoker-plugin for forked Maven invocations uses the same JDK that is used for Maven.
     This is overridden for tests.
+    TODO note that we can't forbid running Maven on JDK X with -Djdk.version=X+1 -Dbytecode.version=X+1
+    because in case if Maven will not be able to run on X+1 we still want to be able to test X+1
     -->
     <profile>
       <id>java18-bytecode</id>
