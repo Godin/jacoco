@@ -12,6 +12,7 @@
  *******************************************************************************/
 package org.jacoco.core.test.validation.kotlin.targets
 
+import org.jacoco.core.test.validation.targets.Stubs.ex
 import org.jacoco.core.test.validation.targets.Stubs.nop
 
 /**
@@ -81,7 +82,7 @@ object KotlinSafeCallOperatorTarget {
             b?.c ?: "" // assertPartlyCovered(2, 2)
 
         fun nonNullOnly(b: B?): String =
-            b?.c ?: "" // assertPartlyCovered(1, 3)
+            b?.c ?: "" // assertPartlyCovered(2, 2)
 
         fun both(b: B?): String =
             b?.c ?: "" // assertFullyCovered(0, 4)
@@ -92,12 +93,33 @@ object KotlinSafeCallOperatorTarget {
         both(B(""))
     }
 
+    private fun safeCallFollowedByElvisMultiline() {
+        fun nullOnly(b: B?): String =
+            b?.c
+                ?: ""
+
+        fun nonNullOnly(b: B?): String =
+            b?.c
+                ?: ""
+
+        fun both(a: A?): String =
+            a?.b
+                ?.c
+                ?: ""
+
+        nullOnly(null)
+        nonNullOnly(B(""))
+        both(null)
+        both(A(B("")))
+    }
+
     @JvmStatic
     fun main(args: Array<String>) {
         safeCall()
         safeCallChain()
         safeCallChainMultiline()
         safeCallFollowedByElvis()
+        safeCallFollowedByElvisMultiline()
     }
 
 }

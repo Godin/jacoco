@@ -34,22 +34,43 @@ final class KotlinSafeCallOperatorFilter implements IFilter {
 	public void filter(final MethodNode methodNode,
 			final IFilterContext context, final IFilterOutput output) {
 		for (final ArrayList<JumpInsnNode> chain : findChains(methodNode)) {
-			if (chain.size() == 1) {
-				continue;
-			}
+			// if (chain.size() == 1) {
+			// continue;
+			// }
 			final JumpInsnNode lastIfNullInstruction = chain
 					.get(chain.size() - 1);
 			final AbstractInsnNode nullTarget = AbstractMatcher
 					.skipNonOpcodes(lastIfNullInstruction.label);
-			final Iterable<Collection<IFilterOutput.InstructionBranch>> replacements = Arrays.<Collection<IFilterOutput.InstructionBranch>> asList(
-					Collections.singletonList( //
-							new IFilterOutput.InstructionBranch( //
-									lastIfNullInstruction, 0)),
-					Collections.singletonList( //
-							new IFilterOutput.InstructionBranch( //
-									nullTarget, 0)));
+			final ArrayList<IFilterOutput.InstructionBranch> nullBranch = new ArrayList<IFilterOutput.InstructionBranch>();
 			for (final AbstractInsnNode ifNullInstruction : chain) {
-				output.replaceBranches(ifNullInstruction, replacements);
+				nullBranch.add(new IFilterOutput.InstructionBranch(
+						ifNullInstruction, 1));
+			}
+			final AbstractInsnNode ifNonNullInstruction = nullTarget
+					// TODO followed by elvis?
+					// .getPrevious().getPrevious();
+					.getPrevious().getPrevious().getPrevious();
+			if (ifNonNullInstruction.getOpcode() == Opcodes.IFNONNULL) {
+				nullBranch.add(new IFilterOutput.InstructionBranch(
+						ifNonNullInstruction, 0));
+				output.replaceBranches(ifNonNullInstruction,
+						Arrays.<Collection<IFilterOutput.InstructionBranch>> asList( //
+								// null branch
+								nullBranch,
+								// non null branch
+								Collections.singletonList(
+										new IFilterOutput.InstructionBranch(
+												ifNonNullInstruction, 1))));
+			}
+			for (final AbstractInsnNode ifNullInstruction : chain) {
+				output.replaceBranches(ifNullInstruction,
+						Arrays.<Collection<IFilterOutput.InstructionBranch>> asList(
+								// non null branch
+								Collections.singletonList(
+										new IFilterOutput.InstructionBranch(
+												ifNullInstruction, 0)),
+								// null branch
+								nullBranch));
 			}
 		}
 	}

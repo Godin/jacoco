@@ -135,4 +135,154 @@ public class KotlinSafeCallOperatorFilterTest extends FilterTestBase {
 		assertReplacedBranches(m, replacements);
 	}
 
+	/**
+	 * <pre>
+	 * data class B(val c: String)
+	 * fun example(b: B?): String? =
+	 *     b?.c ?: ""
+	 * </pre>
+	 */
+	@Test
+	public void should_filter_safe_call_followed_by_elvis() {
+		context.classAnnotations
+				.add(KotlinGeneratedFilter.KOTLIN_METADATA_DESC);
+		final MethodNode m = new MethodNode(InstrSupport.ASM_API_VERSION, 0,
+				"example", "(LA;)Ljava/lang/String;", null, null);
+		m.visitVarInsn(Opcodes.ALOAD, 0);
+		final Label label1 = new Label();
+		final Label label2 = new Label();
+
+		m.visitInsn(Opcodes.DUP);
+		m.visitJumpInsn(Opcodes.IFNULL, label1);
+		final AbstractInsnNode ifNullInstruction = m.instructions.getLast();
+		m.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "B", "getC",
+				"()Ljava/lang/String;", false);
+
+		m.visitInsn(Opcodes.DUP);
+		m.visitJumpInsn(Opcodes.IFNONNULL, label2);
+		final AbstractInsnNode ifNonNullInstruction = m.instructions.getLast();
+		m.visitLabel(label1);
+		m.visitInsn(Opcodes.POP);
+		m.visitLdcInsn("");
+		m.visitLabel(label2);
+		m.visitInsn(Opcodes.ARETURN);
+
+		filter.filter(m, context, output);
+
+		assertIgnored();
+		final HashMap<AbstractInsnNode, List<Replacement>> replacements = new HashMap<AbstractInsnNode, List<Replacement>>();
+		replacements.put(ifNonNullInstruction, Arrays.asList(
+				// null branch
+				new Replacement(0, ifNonNullInstruction, 0),
+				new Replacement(0, ifNullInstruction, 1),
+				// non null branch
+				new Replacement(1, ifNonNullInstruction, 1)));
+		assertReplacedBranches(m, replacements);
+	}
+
+	/**
+	 * <pre>
+	 * data class A(val b: B)
+	 * data class B(val c: String)
+	 * fun example(a: A?): String? =
+	 *     a?.b?.c ?: ""
+	 * </pre>
+	 */
+	@Test
+	public void should_filter_safe_call_chain_followed_by_elvis() {
+		context.classAnnotations
+				.add(KotlinGeneratedFilter.KOTLIN_METADATA_DESC);
+		final MethodNode m = new MethodNode(InstrSupport.ASM_API_VERSION, 0,
+				"example", "(LA;)Ljava/lang/String;", null, null);
+		m.visitVarInsn(Opcodes.ALOAD, 1);
+		final Label label1 = new Label();
+		final Label label2 = new Label();
+
+		m.visitInsn(Opcodes.DUP);
+		m.visitJumpInsn(Opcodes.IFNULL, label1);
+		final AbstractInsnNode ifNullInstruction1 = m.instructions.getLast();
+		m.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "A", "getB", "()LB;", false);
+
+		m.visitInsn(Opcodes.DUP);
+		m.visitJumpInsn(Opcodes.IFNULL, label1);
+		final AbstractInsnNode ifNullInstruction2 = m.instructions.getLast();
+		m.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "B", "getC",
+				"()Ljava/lang/String;", false);
+
+		m.visitInsn(Opcodes.DUP);
+		m.visitJumpInsn(Opcodes.IFNONNULL, label2);
+		final AbstractInsnNode ifNonNullInstruction = m.instructions.getLast();
+		m.visitLabel(label1);
+		m.visitInsn(Opcodes.POP);
+		final AbstractInsnNode popInstruction = m.instructions.getLast();
+		m.visitLdcInsn("");
+		m.visitLabel(label2);
+		m.visitInsn(Opcodes.ARETURN);
+
+		filter.filter(m, context, output);
+
+		assertIgnored();
+		final HashMap<AbstractInsnNode, List<Replacement>> replacements = new HashMap<AbstractInsnNode, List<Replacement>>();
+		replacements.put(ifNullInstruction1, Arrays.asList(
+				// non null branch
+				new Replacement(0, ifNullInstruction2, 0),
+				// null branch
+				new Replacement(1, popInstruction, 0)));
+		replacements.put(ifNullInstruction2, Arrays.asList(
+				// non null branch
+				new Replacement(0, ifNullInstruction2, 0),
+				// null branch
+				new Replacement(1, popInstruction, 0)));
+		replacements.put(ifNonNullInstruction, Arrays.asList(
+				// null branch
+				new Replacement(0, ifNonNullInstruction, 0),
+				new Replacement(0, ifNullInstruction1, 1),
+				new Replacement(0, ifNullInstruction2, 1),
+				// non null branch
+				new Replacement(1, ifNonNullInstruction, 1)));
+		assertReplacedBranches(m, replacements);
+	}
+
+	/**
+	 * <pre>
+	 * data class B(val c: String)
+	 * fun example(b: B?): String? =
+	 *     b
+	 *         ?.c
+	 *         ?: ""
+	 * </pre>
+	 */
+	@Test
+	public void should_filter_unoptimized_safe_call_followed_by_elvis() {
+		context.classAnnotations
+				.add(KotlinGeneratedFilter.KOTLIN_METADATA_DESC);
+		final MethodNode methodVisitor = new MethodNode(
+				InstrSupport.ASM_API_VERSION, 0, "example",
+				"(LA;)Ljava/lang/String;", null, null);
+		methodVisitor.visitCode();
+		methodVisitor.visitVarInsn(Opcodes.ALOAD, 0);
+		final Label label1 = new Label();
+		methodVisitor.visitJumpInsn(Opcodes.IFNULL, label1);
+		methodVisitor.visitVarInsn(Opcodes.ALOAD, 0);
+		methodVisitor.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "B", "getC",
+				"()Ljava/lang/String;", false);
+		methodVisitor.visitVarInsn(Opcodes.ASTORE, 1);
+		methodVisitor.visitVarInsn(Opcodes.ALOAD, 1);
+		methodVisitor.visitJumpInsn(Opcodes.IFNULL, label1);
+		methodVisitor.visitVarInsn(Opcodes.ALOAD, 1);
+		final Label label2 = new Label();
+		methodVisitor.visitJumpInsn(Opcodes.GOTO, label2);
+		methodVisitor.visitLabel(label1);
+		methodVisitor.visitLdcInsn("");
+		methodVisitor.visitLabel(label2);
+		methodVisitor.visitInsn(Opcodes.ARETURN);
+
+		filter.filter(methodVisitor, context, output);
+
+		assertIgnored();
+		final HashMap<AbstractInsnNode, List<Replacement>> replacements = new HashMap<AbstractInsnNode, List<Replacement>>();
+		// FIXME chains not found
+		assertReplacedBranches(methodVisitor, replacements);
+	}
+
 }
