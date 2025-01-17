@@ -26,8 +26,10 @@ import java.util.Collections;
 import org.jacoco.core.analysis.Analyzer;
 import org.jacoco.core.analysis.CoverageBuilder;
 import org.jacoco.core.analysis.IBundleCoverage;
+import org.jacoco.core.analysis.IClassCoverage;
 import org.jacoco.core.analysis.ICounter;
 import org.jacoco.core.analysis.ILine;
+import org.jacoco.core.analysis.IPackageCoverage;
 import org.jacoco.core.data.ExecutionData;
 import org.jacoco.core.data.ExecutionDataStore;
 import org.jacoco.core.data.SessionInfo;
@@ -111,6 +113,7 @@ public abstract class ValidationTestBase {
 			throws IOException {
 		final byte[] bytes = TargetLoader
 				.getClassDataAsBytes(target.getClassLoader(), data.getName());
+		System.out.println("analyzing " + data.getName());
 		analyzer.analyzeClass(bytes, data.getName());
 		saveBytecodeRepresentations(bytes, data.getName());
 	}
@@ -130,6 +133,22 @@ public abstract class ValidationTestBase {
 						asmWriter), 0);
 		textWriter.close();
 		asmWriter.close();
+	}
+
+	@Test
+	public final void wip() {
+		for (final IPackageCoverage aPackage : bundle.getPackages()) {
+			for (final IClassCoverage aClass : aPackage.getClasses()) {
+				// TODO
+				// https://github.com/JetBrains/kotlin/blob/0e65d29ab058991d62677e61d687c0edc7f2dc58/compiler/backend/src/org/jetbrains/kotlin/codegen/inline/inlineCodegenUtils.kt#L41-L42
+				final File file = new File("src/" + aPackage.getName() + "/"
+						+ aClass.getSourceFileName());
+				System.out.println(aClass.getName());
+				assertTrue(
+						aClass.getSourceFileName() + " for " + aClass.getName(),
+						file.exists());
+			}
+		}
 	}
 
 	/**
