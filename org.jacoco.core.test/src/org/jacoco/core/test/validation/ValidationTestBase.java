@@ -317,4 +317,43 @@ public abstract class ValidationTestBase {
 				actual);
 	}
 
+	/**
+	 * <pre>
+	 * // assertBranches(2, "{0, 1}")
+	 * </pre>
+	 *
+	 * TODO ideas
+	 *
+	 * <pre>
+	 * // assertFullyCovered("main", "tf", "main$lambda$0", "ft")
+	 *
+	 * // TODO no check of total in methods
+	 * // assertFullyCovered(4, "main", "{0}", "main$lambda$0", "{1}")
+	 *
+	 * // TODO no check of Full/Partial
+	 * // assertMethods(2)
+	 * // assertBranches(2, "{0}", "main")
+	 * // assertBranches(2, "{1}", "main$lambda$0")
+	 *
+	 * // TODO no check of aggregated
+	 * // assertMethods(2)
+	 * // assertFullyCovered(2, "{0}", "main")
+	 * // assertPartlyCovered(2, "{1}", "main$lambda$0")
+	 * </pre>
+	 */
+	public void assertBranches(final Source.Line line, final int total,
+			final String executed) {
+		assertCoveredBranches(line, executed);
+		// TODO get this line
+		LineImpl aLine;
+		int covered = 0;
+		for (int index = 0; index <= 31; index++) {
+			if (aLine.getBranchStatus(index)) {
+				covered++;
+			}
+		}
+		assertEquals(total, aLine.getBranchCounter().getTotalCount());
+		assertEquals(covered, aLine.getBranchCounter().getCoveredCount());
+	}
+
 }
