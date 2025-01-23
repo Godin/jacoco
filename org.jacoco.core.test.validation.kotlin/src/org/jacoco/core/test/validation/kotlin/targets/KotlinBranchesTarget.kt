@@ -12,6 +12,7 @@
  *******************************************************************************/
 package org.jacoco.core.test.validation.kotlin.targets
 
+import org.jacoco.core.test.validation.targets.Stubs.exec
 import org.jacoco.core.test.validation.targets.Stubs.f
 import org.jacoco.core.test.validation.targets.Stubs.i2
 import org.jacoco.core.test.validation.targets.Stubs.i3
@@ -67,6 +68,8 @@ object KotlinBranchesTarget {
             2 -> nop()
             else -> nop()
         }
+
+        if (t()) exec { if (f()) nop() } // assertPartlyCovered(2, 2) assertCoveredBranches("{0}", "main") assertCoveredBranches("{1}", "main$lambda$0")
     }
 
 }
