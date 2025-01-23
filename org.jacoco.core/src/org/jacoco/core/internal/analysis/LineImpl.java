@@ -173,15 +173,30 @@ public abstract class LineImpl implements ILine {
 	}
 
 	/**
+	 * Returns covered branches in the order of bytecode traversal.
+	 *
 	 * @return covered branches in the order of bytecode traversal
+	 * @deprecated use {@link #getBranchStatus(int)} instead
 	 */
+	@Deprecated
 	public final BitSet getCoveredBranches() {
 		final int size = Math.min(branches.getTotalCount(), 31);
 		final BitSet result = new BitSet(size);
 		for (int i = 0; i < size; i++) {
-			result.set(i, get(coveredBranches, i));
+			result.set(i, getBranchStatus(i));
 		}
 		return result;
+	}
+
+	/**
+	 * Returns {@code true} if branch with given index was executed.
+	 *
+	 * @param index
+	 *            branch index in the order of bytecode traversal
+	 * @return {@code true} if branch with given index was executed
+	 */
+	public final boolean getBranchStatus(final int index) {
+		return get(coveredBranches, index);
 	}
 
 	private static int set(final int bitSet, final int index) {
