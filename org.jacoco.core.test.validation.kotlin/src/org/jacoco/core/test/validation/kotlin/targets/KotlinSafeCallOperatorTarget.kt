@@ -76,6 +76,27 @@ object KotlinSafeCallOperatorTarget {
         fullCoverage(A(B("")))
     }
 
+    private fun safeCallElvis() {
+        fun nop(x: Any?): String = ""
+        fun xx(a: B?, b: B?) {
+            if (a != null) {
+                val t = b
+                if (t != null) {
+                    nop(t)
+                }
+            }
+            nop(a)
+        }
+
+        fun x(b: B?): String {
+            var x = b
+            var y = b
+                ?.c
+                ?: ""
+            return y
+        }
+    }
+
     @JvmStatic
     fun main(args: Array<String>) {
         safeCall()
