@@ -79,6 +79,7 @@ public final class Filters {
 		return new FilterSet( //
 				new KotlinGeneratedFilter(), //
 				new KotlinSyntheticAccessorsFilter(), //
+				new KotlinMultifileFacadeFilter(), //
 				new KotlinEnumFilter(), //
 				new KotlinSafeCallOperatorFilter(), //
 				new KotlinLateinitFilter(), //

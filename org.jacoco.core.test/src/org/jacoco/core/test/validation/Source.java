@@ -142,6 +142,7 @@ public class Source {
 				vm(target.getPackage().getName()));
 		final IClassCoverage clsCov = findByName(pkgCov.getClasses(),
 				vm(target.getName()));
+		System.out.println("SourceFileName: " + clsCov.getSourceFileName());
 		final ISourceFileCoverage srcCov = findByName(pkgCov.getSourceFiles(),
 				clsCov.getSourceFileName());
 		return new Source(open(SRC_LOCATION + pkgCov.getName() + "/"

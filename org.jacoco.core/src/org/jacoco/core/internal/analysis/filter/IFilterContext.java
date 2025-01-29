@@ -12,12 +12,16 @@
  *******************************************************************************/
 package org.jacoco.core.internal.analysis.filter;
 
+import org.objectweb.asm.tree.AnnotationNode;
+
 import java.util.Set;
 
 /**
  * Context information provided to filters.
  */
 public interface IFilterContext {
+
+	int getClassAccess();
 
 	/**
 	 * @return vm name of the enclosing class
@@ -31,8 +35,11 @@ public interface IFilterContext {
 
 	/**
 	 * @return vm names of the class annotations of the enclosing class
+	 * @deprecated use {@link #getClassAnnotationNodes()} instead
 	 */
 	Set<String> getClassAnnotations();
+
+	Set<AnnotationNode> getClassAnnotationNodes();
 
 	/**
 	 * @return names of the class attributes

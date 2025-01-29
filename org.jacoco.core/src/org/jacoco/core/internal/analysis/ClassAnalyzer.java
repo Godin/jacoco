@@ -30,6 +30,7 @@ import org.objectweb.asm.Attribute;
 import org.objectweb.asm.FieldVisitor;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.tree.AbstractInsnNode;
+import org.objectweb.asm.tree.AnnotationNode;
 import org.objectweb.asm.tree.MethodNode;
 
 /**
@@ -42,7 +43,10 @@ public class ClassAnalyzer extends ClassProbesVisitor
 	private final boolean[] probes;
 	private final StringPool stringPool;
 
+	private int classAccess;
+
 	private final Set<String> classAnnotations = new HashSet<String>();
+	private final Set<AnnotationNode> classAnnotationNodes = new HashSet<AnnotationNode>();
 
 	private final Set<String> classAttributes = new HashSet<String>();
 
@@ -74,6 +78,7 @@ public class ClassAnalyzer extends ClassProbesVisitor
 	public void visit(final int version, final int access, final String name,
 			final String signature, final String superName,
 			final String[] interfaces) {
+		classAccess = access;
 		coverage.setSignature(stringPool.get(signature));
 		coverage.setSuperName(stringPool.get(superName));
 		coverage.setInterfaces(stringPool.get(interfaces));
@@ -83,7 +88,9 @@ public class ClassAnalyzer extends ClassProbesVisitor
 	public AnnotationVisitor visitAnnotation(final String desc,
 			final boolean visible) {
 		classAnnotations.add(desc);
-		return super.visitAnnotation(desc, visible);
+		final AnnotationNode annotationNode = new AnnotationNode(desc);
+		classAnnotationNodes.add(annotationNode);
+		return annotationNode;
 	}
 
 	@Override
@@ -197,6 +204,10 @@ public class ClassAnalyzer extends ClassProbesVisitor
 
 	// IFilterContext implementation
 
+	public int getClassAccess() {
+		return classAccess;
+	}
+
 	public String getClassName() {
 		return coverage.getName();
 	}
@@ -207,6 +218,10 @@ public class ClassAnalyzer extends ClassProbesVisitor
 
 	public Set<String> getClassAnnotations() {
 		return classAnnotations;
+	}
+
+	public Set<AnnotationNode> getClassAnnotationNodes() {
+		return classAnnotationNodes;
 	}
 
 	public Set<String> getClassAttributes() {

@@ -12,6 +12,8 @@
  *******************************************************************************/
 package org.jacoco.core.internal.analysis.filter;
 
+import org.objectweb.asm.tree.AnnotationNode;
+
 import java.util.HashSet;
 import java.util.Set;
 
@@ -20,12 +22,20 @@ import java.util.Set;
  */
 public class FilterContextMock implements IFilterContext {
 
+	public int classAccess;
 	public String className = "Foo";
 	public String superClassName = "java/lang/Object";
+	public Set<AnnotationNode> classAnnotationNodes = new HashSet<AnnotationNode>();
+	/** @deprecated use {@link #classAnnotationNodes} instead */
+	@Deprecated
 	public Set<String> classAnnotations = new HashSet<String>();
 	public Set<String> classAttributes = new HashSet<String>();
 	public String sourceFileName = "Foo.java";
 	public String sourceDebugExtension;
+
+	public int getClassAccess() {
+		return classAccess;
+	}
 
 	public String getClassName() {
 		return className;
@@ -37,6 +47,10 @@ public class FilterContextMock implements IFilterContext {
 
 	public Set<String> getClassAnnotations() {
 		return classAnnotations;
+	}
+
+	public Set<AnnotationNode> getClassAnnotationNodes() {
+		return classAnnotationNodes;
 	}
 
 	public Set<String> getClassAttributes() {

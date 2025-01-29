@@ -100,6 +100,7 @@ public abstract class ValidationTestBase {
 		final CoverageBuilder builder = new CoverageBuilder();
 		final Analyzer analyzer = new Analyzer(store, builder);
 		for (ExecutionData data : store.getContents()) {
+			System.out.println("Analyzing " + data.getName());
 			analyze(analyzer, data);
 		}
 		final String testClassSimpleName = getClass().getSimpleName();

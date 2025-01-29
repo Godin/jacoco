@@ -25,6 +25,18 @@ public class SyntheticFilterTest extends FilterTestBase {
 	private final SyntheticFilter filter = new SyntheticFilter();
 
 	@Test
+	public void should_filter_() {
+		context.classAccess = Opcodes.ACC_SYNTHETIC;
+		final MethodNode m = new MethodNode(InstrSupport.ASM_API_VERSION, 0,
+				"name", "()V", null, null);
+		m.visitInsn(Opcodes.NOP);
+
+		filter.filter(m, context, output);
+
+		assertMethodIgnored(m);
+	}
+
+	@Test
 	public void testNonSynthetic() {
 		final MethodNode m = new MethodNode(InstrSupport.ASM_API_VERSION, 0,
 				"name", "()V", null, null);

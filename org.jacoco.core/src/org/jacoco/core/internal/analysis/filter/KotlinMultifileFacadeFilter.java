@@ -12,44 +12,40 @@
  *******************************************************************************/
 package org.jacoco.core.internal.analysis.filter;
 
-import org.objectweb.asm.Opcodes;
+import org.objectweb.asm.tree.AnnotationNode;
 import org.objectweb.asm.tree.MethodNode;
 
 /**
- * Filters synthetic methods in non-Kotlin classes unless they represent bodies
- * of lambda expressions.
+ * TODO
  */
-final class SyntheticFilter implements IFilter {
-
-	private static boolean isScalaClass(final IFilterContext context) {
-		return context.getClassAttributes().contains("ScalaSig")
-				|| context.getClassAttributes().contains("Scala");
-	}
+final class KotlinMultifileFacadeFilter implements IFilter {
 
 	public void filter(final MethodNode methodNode,
 			final IFilterContext context, final IFilterOutput output) {
-		if ((context.getClassAccess() & Opcodes.ACC_SYNTHETIC) != 0) {
+		if (isMultifileFacade(context)) {
+			System.out.println("Ignoring " + context.getClassName());
 			output.ignore(methodNode.instructions.getFirst(),
 					methodNode.instructions.getLast());
-			return;
 		}
+	}
 
-		if ((methodNode.access & Opcodes.ACC_SYNTHETIC) == 0) {
-			return;
-		}
-
-		if (methodNode.name.startsWith("lambda$")) {
-			return;
-		}
-
-		if (isScalaClass(context)) {
-			if (methodNode.name.startsWith("$anonfun$")) {
-				return;
+	private static boolean isMultifileFacade(final IFilterContext context) {
+		for (final AnnotationNode annotationNode : context
+				.getClassAnnotationNodes()) {
+			if (KotlinGeneratedFilter.KOTLIN_METADATA_DESC
+					.equals(annotationNode.desc)) {
+				for (int i = 0; i < annotationNode.values.size(); i += 2) {
+					final String name = (String) annotationNode.values.get(i);
+					final Object value = annotationNode.values.get(i + 1);
+					if ("k".equals(name)) {
+						return Integer.valueOf(4).equals(value)
+								// TODO unfortunately filters too much:
+								|| Integer.valueOf(3).equals(value);
+					}
+				}
 			}
 		}
-
-		output.ignore(methodNode.instructions.getFirst(),
-				methodNode.instructions.getLast());
+		return false;
 	}
 
 }
