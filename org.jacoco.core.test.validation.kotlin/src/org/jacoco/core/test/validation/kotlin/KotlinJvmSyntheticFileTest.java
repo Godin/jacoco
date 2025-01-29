@@ -13,15 +13,21 @@
 package org.jacoco.core.test.validation.kotlin;
 
 import org.jacoco.core.test.validation.ValidationTestBase;
-import org.jacoco.core.test.validation.kotlin.targets.KotlinCallableReferenceTarget;
+import org.jacoco.core.test.validation.kotlin.targets.KotlinJvmSyntheticFileTargetKt;
+import org.junit.Test;
 
 /**
- * Test of code coverage in {@link KotlinCallableReferenceTarget}.
+ * Test of code coverage in {@link KotlinJvmSyntheticFileTargetKt}.
  */
-public class KotlinCallableReferenceTest extends ValidationTestBase {
+public class KotlinJvmSyntheticFileTest extends ValidationTestBase {
 
-	public KotlinCallableReferenceTest() {
-		super(KotlinCallableReferenceTarget.class);
+	public KotlinJvmSyntheticFileTest() {
+		super(KotlinJvmSyntheticFileTargetKt.class);
+	}
+
+	@Test
+	public void test_method_count() {
+		assertMethodCount(1);
 	}
 
 }

@@ -10,18 +10,15 @@
  *    Evgeny Mandrikov - initial API and implementation
  *
  *******************************************************************************/
-package org.jacoco.core.test.validation.kotlin;
+@file:JvmSynthetic
 
-import org.jacoco.core.test.validation.ValidationTestBase;
-import org.jacoco.core.test.validation.kotlin.targets.KotlinCallableReferenceTarget;
+package org.jacoco.core.test.validation.kotlin.targets
+
+import org.jacoco.core.test.validation.targets.Stubs.nop
 
 /**
- * Test of code coverage in {@link KotlinCallableReferenceTarget}.
+ * Test target in [JvmSynthetic] file.
  */
-public class KotlinCallableReferenceTest extends ValidationTestBase {
-
-	public KotlinCallableReferenceTest() {
-		super(KotlinCallableReferenceTarget.class);
-	}
-
+fun main(args: Array<String>) {
+    nop(args) // assertFullyCovered()
 }

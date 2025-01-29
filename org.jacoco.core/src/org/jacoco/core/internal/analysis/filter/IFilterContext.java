@@ -19,6 +19,8 @@ import java.util.Set;
  */
 public interface IFilterContext {
 
+	int getClassAccess();
+
 	/**
 	 * @return vm name of the enclosing class
 	 */

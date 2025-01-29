@@ -16,38 +16,19 @@ import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.tree.MethodNode;
 
 /**
- * Filters synthetic methods in non-Kotlin classes unless they represent bodies
- * of lambda expressions.
+ * TODO
  */
-final class SyntheticFilter implements IFilter {
-
-	private static boolean isScalaClass(final IFilterContext context) {
-		return context.getClassAttributes().contains("ScalaSig")
-				|| context.getClassAttributes().contains("Scala");
-	}
+final class KotlinCallableReferenceFilter implements IFilter {
 
 	public void filter(final MethodNode methodNode,
 			final IFilterContext context, final IFilterOutput output) {
-		if ((context.getClassAccess() & Opcodes.ACC_SYNTHETIC) != 0) {
-			output.ignore(methodNode.instructions.getFirst(),
-					methodNode.instructions.getLast());
+		if ((context.getClassAccess() & Opcodes.ACC_SYNTHETIC) == 0) {
 			return;
 		}
-
-		if ((methodNode.access & Opcodes.ACC_SYNTHETIC) == 0) {
+		if (!context.getSuperClassName()
+				.startsWith("kotlin/jvm/internal/FunctionReference")) {
 			return;
 		}
-
-		if (methodNode.name.startsWith("lambda$")) {
-			return;
-		}
-
-		if (isScalaClass(context)) {
-			if (methodNode.name.startsWith("$anonfun$")) {
-				return;
-			}
-		}
-
 		output.ignore(methodNode.instructions.getFirst(),
 				methodNode.instructions.getLast());
 	}

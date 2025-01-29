@@ -79,6 +79,7 @@ public final class Filters {
 		return new FilterSet( //
 				new KotlinGeneratedFilter(), //
 				new KotlinSyntheticAccessorsFilter(), //
+				new KotlinCallableReferenceFilter(), //
 				new KotlinEnumFilter(), //
 				new KotlinJvmOverloadsFilter(), //
 				new KotlinSafeCallOperatorFilter(), //

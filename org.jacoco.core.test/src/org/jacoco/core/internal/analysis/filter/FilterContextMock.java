@@ -20,12 +20,17 @@ import java.util.Set;
  */
 public class FilterContextMock implements IFilterContext {
 
+	public int classAccess = 0;
 	public String className = "Foo";
 	public String superClassName = "java/lang/Object";
 	public Set<String> classAnnotations = new HashSet<String>();
 	public Set<String> classAttributes = new HashSet<String>();
 	public String sourceFileName = "Foo.java";
 	public String sourceDebugExtension;
+
+	public int getClassAccess() {
+		return classAccess;
+	}
 
 	public String getClassName() {
 		return className;
