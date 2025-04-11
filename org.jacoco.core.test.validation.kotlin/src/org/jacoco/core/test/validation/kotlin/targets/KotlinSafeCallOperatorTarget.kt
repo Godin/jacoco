@@ -76,11 +76,45 @@ object KotlinSafeCallOperatorTarget {
         fullCoverage(A(B("")))
     }
 
+    private fun safeCallFollowedByElvis() {
+        fun nullOnly(b: B?): String =
+            b?.c ?: "" // assertPartlyCovered(2, 2)
+
+        fun nonNullOnly(b: B?): String =
+            b?.c ?: "" // assertPartlyCovered(2, 2)
+
+        fun fullCoverage(b: B?): String =
+            b?.c ?: "" // assertFullyCovered(0, 4)
+
+        nullOnly(null)
+        nonNullOnly(B(""))
+        fullCoverage(null)
+        fullCoverage(B(""))
+    }
+
+    private fun safeCallChainFollowedByElvis() {
+        fun nullOnly(a: A?): String =
+            a?.b?.c ?: "" // assertPartlyCovered(3, 3)
+
+        fun nonNullOnly(a: A?): String =
+            a?.b?.c ?: "" // assertPartlyCovered(3, 3)
+
+        fun fullCoverage(a: A?): String =
+            a?.b?.c ?: "" // assertFullyCovered(0, 6)
+
+        nullOnly(null)
+        nonNullOnly(A(B("")))
+        fullCoverage(null)
+        fullCoverage(A(B("")))
+    }
+
     @JvmStatic
     fun main(args: Array<String>) {
         safeCall()
         safeCallChain()
         safeCallChainMultiline()
+        safeCallFollowedByElvis()
+        safeCallChainFollowedByElvis()
     }
 
 }
