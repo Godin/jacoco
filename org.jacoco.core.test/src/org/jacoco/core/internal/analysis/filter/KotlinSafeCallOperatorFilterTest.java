@@ -230,4 +230,37 @@ public class KotlinSafeCallOperatorFilterTest extends FilterTestBase {
 		assertReplacedBranches(m, replacements);
 	}
 
+	/**
+	 * <pre>
+	 * data class B(val c: String)
+	 * fun example(b: B?): String? =
+	 *     b?.c
+	 * </pre>
+	 */
+	@Test
+	public void should_not_filter_single_safe_call() {
+		final MethodNode m = new MethodNode(InstrSupport.ASM_API_VERSION, 0,
+				"example", "(LB;)Ljava/lang/String;", null, null);
+		m.visitVarInsn(Opcodes.ALOAD, 0);
+
+		m.visitInsn(Opcodes.DUP);
+		final Label label1 = new Label();
+		m.visitJumpInsn(Opcodes.IFNULL, label1);
+		m.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "B", "getC",
+				"()Ljava/lang/String;", false);
+		final Label label2 = new Label();
+		m.visitJumpInsn(Opcodes.GOTO, label2);
+		m.visitLabel(label1);
+		m.visitInsn(Opcodes.POP);
+		m.visitInsn(Opcodes.ACONST_NULL);
+		m.visitLabel(label2);
+
+		m.visitInsn(Opcodes.ARETURN);
+
+		filter.filter(m, context, output);
+
+		assertIgnored(m);
+		assertNoReplacedBranches();
+	}
+
 }
