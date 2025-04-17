@@ -28,18 +28,49 @@ public abstract class LineImpl implements ILine {
 	/** Max branch counter value for which singletons are created */
 	private static final int SINGLETON_BRA_LIMIT = 4;
 
-	private static final LineImpl[][][][] SINGLETONS = new LineImpl[SINGLETON_INS_LIMIT
-			+ 1][][][];
+	/**
+	 * Frequency of branches on a line
+	 * <pre>
+	 * java -jar org.jacoco.cli/target/org.jacoco.cli-0.8.14-SNAPSHOT-nodeps.jar \
+	 *   classinfo \
+	 *   ~/.java-select/versions/8/jre/lib/rt.jar \
+	 *   --verbose \
+	 *   | grep -v "method" \
+	 *   | grep -v "class" \
+	 *   | tr -s ' ' \
+	 *   | cut -d' ' -f3 \
+	 *   | sort \
+	 *   | uniq -c \
+	 *   | sort -r | head -n10
+	 * </pre>
+	 *
+	 * TODO in-memory size?
+	 */
+	// CSV
+	// | sed 's/^ *//g' | sed 's/ /\, /'
+	private static final LineImpl[][][][] SINGLETONS;
 
 	static {
+		SINGLETONS = new LineImpl[SINGLETON_INS_LIMIT + 1][][][];
 		for (int i = 0; i <= SINGLETON_INS_LIMIT; i++) {
 			SINGLETONS[i] = new LineImpl[SINGLETON_INS_LIMIT + 1][][];
 			for (int j = 0; j <= SINGLETON_INS_LIMIT; j++) {
-				SINGLETONS[i][j] = new LineImpl[SINGLETON_BRA_LIMIT + 1][];
-				for (int k = 0; k <= SINGLETON_BRA_LIMIT; k++) {
-					SINGLETONS[i][j][k] = new LineImpl[SINGLETON_BRA_LIMIT + 1];
-					for (int l = 0; l <= SINGLETON_BRA_LIMIT; l++) {
-						SINGLETONS[i][j][k][l] = new Fix(i, j, k, l);
+				SINGLETONS[i][j] = new LineImpl[SINGLETON_BRA_LIMIT * 2 + 1][];
+				for (int branches = 0; branches <= SINGLETON_BRA_LIMIT
+						+ SINGLETON_BRA_LIMIT; branches++) {
+					SINGLETONS[i][j][branches] = new LineImpl[1 << branches];
+					for (int coveredBranches = 0; coveredBranches < 1 << branches; coveredBranches++) {
+						int bm = 0;
+						int bc = 0;
+						for (int branch = 0; branch < branches; branch++) {
+							if (get(coveredBranches, branch)) {
+								bc++;
+							} else {
+								bm++;
+							}
+						}
+						SINGLETONS[i][j][branches][coveredBranches] = new Fix(i,
+								j, bm, bc, coveredBranches);
 					}
 				}
 			}
@@ -51,17 +82,25 @@ public abstract class LineImpl implements ILine {
 	 */
 	public static final LineImpl EMPTY = SINGLETONS[0][0][0][0];
 
-	private static LineImpl getInstance(final CounterImpl instructions,
-			final CounterImpl branches) {
-		final int im = instructions.getMissedCount();
-		final int ic = instructions.getCoveredCount();
-		final int bm = branches.getMissedCount();
-		final int bc = branches.getCoveredCount();
-		if (im <= SINGLETON_INS_LIMIT && ic <= SINGLETON_INS_LIMIT
-				&& bm <= SINGLETON_BRA_LIMIT && bc <= SINGLETON_BRA_LIMIT) {
-			return SINGLETONS[im][ic][bm][bc];
+	public static LineImpl getInstance(final CounterImpl instructions,
+			final CounterImpl branches, final int coveredBranches) {
+		if (instructions.getMissedCount() > SINGLETON_INS_LIMIT
+				|| instructions.getCoveredCount() > SINGLETON_INS_LIMIT
+				|| branches.getMissedCount() > SINGLETON_BRA_LIMIT
+				|| branches.getCoveredCount() > SINGLETON_BRA_LIMIT) {
+			final Var result = new Var(instructions, branches);
+			result.coveredBranches = coveredBranches;
+			return result;
 		}
-		return new Var(instructions, branches);
+		return SINGLETONS[instructions.getMissedCount()][instructions
+				.getCoveredCount()][branches.getTotalCount()][coveredBranches];
+	}
+
+	public static LineImpl getInstance(final CounterImpl instructions,
+			final CounterImpl branches) {
+		final int coveredBranches = ((1 << branches.getTotalCount())
+				- 1) >> branches.getMissedCount();
+		return getInstance(instructions, branches, coveredBranches);
 	}
 
 	/**
@@ -75,19 +114,13 @@ public abstract class LineImpl implements ILine {
 		@Override
 		public LineImpl increment(final ICounter instructions,
 				final ICounter branches, final BitSet coveredBranches) {
-			final int currentBranchesTotalCount = this.branches.getTotalCount();
 			this.instructions = this.instructions.increment(instructions);
 			this.branches = this.branches.increment(branches);
 			if (coveredBranches == null) {
 				// is not line of MethodCoverageImpl
 				return this;
 			}
-			for (int i = 0; i < branches.getTotalCount(); i++) {
-				if (coveredBranches.get(i)) {
-					this.coveredBranches = set(this.coveredBranches,
-							currentBranchesTotalCount + i);
-				}
-			}
+			this.coveredBranches = append(branches.getTotalCount(), coveredBranches);
 			return this;
 		}
 	}
@@ -96,9 +129,11 @@ public abstract class LineImpl implements ILine {
 	 * Immutable version.
 	 */
 	private static final class Fix extends LineImpl {
-		public Fix(final int im, final int ic, final int bm, final int bc) {
+		public Fix(final int im, final int ic, final int bm, final int bc,
+				final int coveredBranches) {
 			super(CounterImpl.getInstance(im, ic),
 					CounterImpl.getInstance(bm, bc));
+			this.coveredBranches = coveredBranches;
 		}
 
 		@Override
@@ -113,9 +148,9 @@ public abstract class LineImpl implements ILine {
 				return getInstance(incrementedInstructions,
 						incrementedBranches);
 			}
-			return new Var(CounterImpl.COUNTER_0_0, CounterImpl.COUNTER_0_0)
-					.increment(incrementedInstructions, incrementedBranches,
-							coveredBranches);
+			final int bitSet = this.append(branches.getTotalCount(), coveredBranches);
+			return getInstance(incrementedInstructions, incrementedBranches,
+					bitSet);
 		}
 	}
 
@@ -182,6 +217,17 @@ public abstract class LineImpl implements ILine {
 			result.set(i, get(coveredBranches, i));
 		}
 		return result;
+	}
+
+	protected int append(final int size, final BitSet coveredBranches) {
+		final int thisTotalCount = this.branches.getTotalCount();
+		int bitSet = this.coveredBranches;
+		for (int i = 0; i < size; i++) {
+			if (coveredBranches.get(i)) {
+				bitSet = set(bitSet, thisTotalCount + i);
+			}
+		}
+		return bitSet;
 	}
 
 	private static int set(final int bitSet, final int index) {
