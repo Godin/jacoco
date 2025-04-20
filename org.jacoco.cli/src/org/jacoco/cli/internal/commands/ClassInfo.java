@@ -66,6 +66,9 @@ public class ClassInfo extends Command {
 
 		private final PrintWriter out;
 
+		int total;
+		int singletons;
+
 		Printer(final PrintWriter out) {
 			this.out = out;
 			out.println("  INST   BRAN   LINE   METH   CXTY   ELEMENT");
@@ -80,6 +83,8 @@ public class ClassInfo extends Command {
 						.iterator(); i.hasNext();) {
 					printMethod(i.next(), i.hasNext());
 				}
+
+				out.println(singletons + " singletons out of " + total);
 			}
 		}
 
@@ -101,6 +106,12 @@ public class ClassInfo extends Command {
 						total(line.getInstructionCounter()),
 						total(line.getBranchCounter()), indent,
 						Integer.valueOf(nr));
+
+				total++;
+				if (line.getInstructionCounter().getTotalCount() <= 4
+						&& line.getBranchCounter().getTotalCount() <= 4) {
+					singletons++;
+				}
 			}
 		}
 

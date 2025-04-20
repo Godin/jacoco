@@ -30,14 +30,16 @@ public abstract class LineImpl implements ILine {
 			+ 1][][][];
 
 	static {
-		for (int i = 0; i <= SINGLETON_INS_LIMIT; i++) {
-			SINGLETONS[i] = new LineImpl[SINGLETON_INS_LIMIT + 1][][];
-			for (int j = 0; j <= SINGLETON_INS_LIMIT; j++) {
-				SINGLETONS[i][j] = new LineImpl[SINGLETON_BRA_LIMIT + 1][];
-				for (int k = 0; k <= SINGLETON_BRA_LIMIT; k++) {
-					SINGLETONS[i][j][k] = new LineImpl[SINGLETON_BRA_LIMIT + 1];
-					for (int l = 0; l <= SINGLETON_BRA_LIMIT; l++) {
-						SINGLETONS[i][j][k][l] = new Fix(i, j, k, l);
+		for (int it = 0; it <= SINGLETON_INS_LIMIT; it++) {
+			SINGLETONS[it] = new LineImpl[SINGLETON_INS_LIMIT + 1][][];
+			for (int ic = 0; ic <= it; ic++) {
+				SINGLETONS[it][ic] = new LineImpl[SINGLETON_BRA_LIMIT + 1][];
+				for (int bt = 0; bt <= SINGLETON_BRA_LIMIT; bt++) {
+					SINGLETONS[it][ic][bt] = new LineImpl[SINGLETON_BRA_LIMIT
+							+ 1];
+					for (int bc = 0; bc <= bt; bc++) {
+						SINGLETONS[it][ic][bt][bc] = new Fix(it - ic, ic,
+								bt - bc, bc);
 					}
 				}
 			}
@@ -51,13 +53,12 @@ public abstract class LineImpl implements ILine {
 
 	private static LineImpl getInstance(final CounterImpl instructions,
 			final CounterImpl branches) {
-		final int im = instructions.getMissedCount();
+		final int it = instructions.getTotalCount();
 		final int ic = instructions.getCoveredCount();
-		final int bm = branches.getMissedCount();
+		final int bt = branches.getTotalCount();
 		final int bc = branches.getCoveredCount();
-		if (im <= SINGLETON_INS_LIMIT && ic <= SINGLETON_INS_LIMIT
-				&& bm <= SINGLETON_BRA_LIMIT && bc <= SINGLETON_BRA_LIMIT) {
-			return SINGLETONS[im][ic][bm][bc];
+		if (it <= SINGLETON_INS_LIMIT && bt <= SINGLETON_BRA_LIMIT) {
+			return SINGLETONS[it][ic][bt][bc];
 		}
 		return new Var(instructions, branches);
 	}
