@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2024 Mountainminds GmbH & Co. KG and Contributors
+ * Copyright (c) 2009, 2025 Mountainminds GmbH & Co. KG and Contributors
  * This program and the accompanying materials are made available under
  * the terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0
@@ -23,6 +23,24 @@ object PrivateEmptyNoArgConstructorTarget {
         constructor(s: String) : this() // assertFullyCovered()
     }
 
+    class E1 private constructor() { // assertFullyCovered()
+        init {
+            Stubs.nop() // assertFullyCovered()
+        }
+
+        constructor(s: String) : this() // assertFullyCovered()
+    }
+
+    class E3(
+        val s: String = "s"
+    ) {
+        private constructor() : this("")
+    }
+
+    data class D(val s: String) {
+        private constructor() : this("")
+    }
+
     /* non-empty TODO validation test does not analyze this class even if it was instrumented */
     class E2 private constructor() { // assertNotCovered()
         init {
@@ -34,6 +52,7 @@ object PrivateEmptyNoArgConstructorTarget {
     fun main(args: Array<String>) {
         Stubs.nop(E2::class.java.declaredMethods)
         Example("")
+        E1("")
     }
 
 }
