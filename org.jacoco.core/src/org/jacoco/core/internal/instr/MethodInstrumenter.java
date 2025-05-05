@@ -23,7 +23,7 @@ import org.objectweb.asm.Opcodes;
  * This method adapter inserts probes as requested by the
  * {@link MethodProbesVisitor} events.
  */
-class MethodInstrumenter extends MethodProbesVisitor {
+public class MethodInstrumenter extends MethodProbesVisitor {
 
 	private final IProbeInserter probeInserter;
 

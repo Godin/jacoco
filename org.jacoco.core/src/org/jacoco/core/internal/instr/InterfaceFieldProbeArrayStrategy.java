@@ -13,6 +13,7 @@
 package org.jacoco.core.internal.instr;
 
 import org.jacoco.core.runtime.IExecutionDataAccessorGenerator;
+import org.jacoco.core.runtime.OfflineInstrumentationAccessGenerator;
 import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.Label;
 import org.objectweb.asm.MethodVisitor;
@@ -50,6 +51,10 @@ class InterfaceFieldProbeArrayStrategy implements IProbeArrayStrategy {
 		this.classId = classId;
 		this.probeCount = probeCount;
 		this.accessorGenerator = accessorGenerator;
+	}
+
+	public boolean direct() {
+		return !(accessorGenerator instanceof OfflineInstrumentationAccessGenerator);
 	}
 
 	public int storeInstance(final MethodVisitor mv, final boolean clinit,

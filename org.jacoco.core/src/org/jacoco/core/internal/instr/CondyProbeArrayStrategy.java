@@ -13,6 +13,7 @@
 package org.jacoco.core.internal.instr;
 
 import org.jacoco.core.runtime.IExecutionDataAccessorGenerator;
+import org.jacoco.core.runtime.OfflineInstrumentationAccessGenerator;
 import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.ConstantDynamic;
 import org.objectweb.asm.Handle;
@@ -46,6 +47,10 @@ public class CondyProbeArrayStrategy implements IProbeArrayStrategy {
 		this.isInterface = isInterface;
 		this.classId = classId;
 		this.accessorGenerator = accessorGenerator;
+	}
+
+	public boolean direct() {
+		return !(accessorGenerator instanceof OfflineInstrumentationAccessGenerator);
 	}
 
 	public int storeInstance(final MethodVisitor mv, final boolean clinit,
