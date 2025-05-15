@@ -13,6 +13,7 @@
 package org.jacoco.core.runtime;
 
 import org.objectweb.asm.ClassWriter;
+import org.objectweb.asm.Label;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 
@@ -73,11 +74,41 @@ public class InjectedClassRuntime extends AbstractRuntime {
 	}
 
 	private static byte[] createClass(final String name) {
-		final ClassWriter cw = new ClassWriter(0);
+		final ClassWriter cw = new ClassWriter(
+				ClassWriter.COMPUTE_FRAMES | ClassWriter.COMPUTE_MAXS);
 		cw.visit(Opcodes.V9, Opcodes.ACC_SYNTHETIC | Opcodes.ACC_PUBLIC,
 				name.replace('.', '/'), null, "java/lang/Object", null);
 		cw.visitField(Opcodes.ACC_PUBLIC | Opcodes.ACC_STATIC, FIELD_NAME,
 				FIELD_TYPE, null, null);
+
+		MethodVisitor mv = cw.visitMethod(
+				Opcodes.ACC_PUBLIC | Opcodes.ACC_STATIC, "sleep", "()V", null,
+				null);
+		mv.visitCode();
+		mv.visitInsn(Opcodes.LCONST_1);
+		mv.visitMethodInsn(Opcodes.INVOKESTATIC, "java/lang/Thread", "sleep",
+				"(J)V", false);
+		mv.visitInsn(Opcodes.RETURN);
+		mv.visitMaxs(2, 0);
+		mv.visitEnd();
+
+		mv = cw.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_STATIC, "hit",
+				"([ZI)V", null, null);
+		mv.visitCode();
+		mv.visitVarInsn(Opcodes.ALOAD, 0);
+		mv.visitVarInsn(Opcodes.ILOAD, 1);
+		mv.visitInsn(Opcodes.BALOAD);
+		Label label = new Label();
+		mv.visitJumpInsn(Opcodes.IFNE, label);
+		mv.visitVarInsn(Opcodes.ALOAD, 0);
+		mv.visitVarInsn(Opcodes.ILOAD, 1);
+		mv.visitInsn(Opcodes.ICONST_1);
+		mv.visitInsn(Opcodes.BASTORE);
+		mv.visitLabel(label);
+		mv.visitInsn(Opcodes.RETURN);
+		mv.visitMaxs(2, 2);
+		mv.visitEnd();
+
 		cw.visitEnd();
 		return cw.toByteArray();
 	}

@@ -22,6 +22,8 @@ import org.objectweb.asm.MethodVisitor;
  */
 public interface IProbeArrayStrategy {
 
+	String direct();
+
 	/**
 	 * Creates code that stores the probe array instance in the given variable.
 	 *

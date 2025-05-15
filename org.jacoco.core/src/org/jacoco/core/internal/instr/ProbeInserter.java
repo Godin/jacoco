@@ -12,6 +12,7 @@
  *******************************************************************************/
 package org.jacoco.core.internal.instr;
 
+import org.jacoco.core.JaCoCo;
 import org.objectweb.asm.AnnotationVisitor;
 import org.objectweb.asm.Label;
 import org.objectweb.asm.MethodVisitor;
@@ -31,7 +32,7 @@ import org.objectweb.asm.TypePath;
  * "https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-4.html#jvms-4.10.2.3">a
  * value of type long or double which occupy two variables</a>.
  */
-class ProbeInserter extends MethodVisitor implements IProbeInserter {
+public class ProbeInserter extends MethodVisitor implements IProbeInserter {
 
 	private final IProbeArrayStrategy arrayStrategy;
 
@@ -42,13 +43,13 @@ class ProbeInserter extends MethodVisitor implements IProbeInserter {
 	private final boolean clinit;
 
 	/** Position of the inserted variable. */
-	private final int variable;
+	protected final int variable;
 
 	/** Label for the new beginning of the method */
-	private final Label beginLabel;
+	protected final Label beginLabel;
 
 	/** Maximum stack usage of the code to access the probe array. */
-	private int accessorStackSize;
+    protected int accessorStackSize;
 
 	/**
 	 * Creates a new {@link ProbeInserter}.
@@ -65,7 +66,7 @@ class ProbeInserter extends MethodVisitor implements IProbeInserter {
 	 *            callback to create the code that retrieves the reference to
 	 *            the probe array
 	 */
-	ProbeInserter(final int access, final String name, final String desc,
+	public ProbeInserter(final int access, final String name, final String desc,
 			final MethodVisitor mv, final IProbeArrayStrategy arrayStrategy) {
 		super(InstrSupport.ASM_API_VERSION, mv);
 		this.clinit = InstrSupport.CLINIT_NAME.equals(name);
@@ -83,22 +84,33 @@ class ProbeInserter extends MethodVisitor implements IProbeInserter {
 		// For a probe we set the corresponding position in the boolean[] array
 		// to true.
 
-		mv.visitVarInsn(Opcodes.ALOAD, variable);
+		if (arrayStrategy instanceof ClassFieldProbeArrayStrategy) {
+			mv.visitFieldInsn(Opcodes.GETSTATIC, arrayStrategy.direct(),
+					"$jacocoData", "[Z");
+		} else {
+			mv.visitVarInsn(Opcodes.ALOAD, variable);
+		}
 
 		// Stack[0]: [Z
 
 		InstrSupport.push(mv, id);
 
-		// Stack[1]: I
-		// Stack[0]: [Z
+		if (arrayStrategy.direct() != null) {
+			mv.visitMethodInsn(Opcodes.INVOKESTATIC, "java/lang/$JaCoCo", "hit",
+					"([ZI)V", false);
+		} else {
 
-		mv.visitInsn(Opcodes.ICONST_1);
+			// Stack[1]: I
+			// Stack[0]: [Z
 
-		// Stack[2]: I
-		// Stack[1]: I
-		// Stack[0]: [Z
+			mv.visitInsn(Opcodes.ICONST_1);
 
-		mv.visitInsn(Opcodes.BASTORE);
+			// Stack[2]: I
+			// Stack[1]: I
+			// Stack[0]: [Z
+
+			mv.visitInsn(Opcodes.BASTORE);
+		}
 	}
 
 	@Override

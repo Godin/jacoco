@@ -19,7 +19,11 @@ import org.objectweb.asm.MethodVisitor;
  * The strategy does not emit any code at all. This is used for interface types
  * without any code.
  */
-class NoneProbeArrayStrategy implements IProbeArrayStrategy {
+public class NoneProbeArrayStrategy implements IProbeArrayStrategy {
+
+	public String direct() {
+		return null;
+	}
 
 	public int storeInstance(final MethodVisitor mv, final boolean clinit,
 			final int variable) {

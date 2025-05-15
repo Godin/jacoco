@@ -22,7 +22,7 @@ import org.objectweb.asm.MethodVisitor;
  * contains additional stackmap frames at unexpected offsets, which is case for
  * some class files compiled with ECJ.
  */
-class DuplicateFrameEliminator extends MethodVisitor {
+public class DuplicateFrameEliminator extends MethodVisitor {
 
 	private boolean instruction;
 

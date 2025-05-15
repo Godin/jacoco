@@ -63,6 +63,10 @@ public class ClassInstrumenterTest implements IProbeArrayStrategy {
 
 	// === IProbeArrayStrategy ===
 
+	public String direct() {
+		return null;
+	}
+
 	public int storeInstance(MethodVisitor mv, boolean clinit, int variable) {
 		return 0;
 	}

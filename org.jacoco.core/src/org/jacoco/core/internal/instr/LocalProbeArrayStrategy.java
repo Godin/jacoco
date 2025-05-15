@@ -13,6 +13,7 @@
 package org.jacoco.core.internal.instr;
 
 import org.jacoco.core.runtime.IExecutionDataAccessorGenerator;
+import org.jacoco.core.runtime.OfflineInstrumentationAccessGenerator;
 import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
@@ -37,6 +38,10 @@ class LocalProbeArrayStrategy implements IProbeArrayStrategy {
 		this.classId = classId;
 		this.probeCount = probeCount;
 		this.accessorGenerator = accessorGenerator;
+	}
+
+	public String direct() {
+		return null;
 	}
 
 	public int storeInstance(final MethodVisitor mv, final boolean clinit,

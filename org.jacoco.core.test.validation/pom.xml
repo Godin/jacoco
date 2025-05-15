@@ -31,7 +31,8 @@
   </modules>
 
   <properties>
-    <jacoco.skip>true</jacoco.skip>
+    <!--jacoco.skip>true</jacoco.skip-->
+    <jacoco.excludes>*</jacoco.excludes>
 
     <!-- when bytecode.version not specified -->
     <groovy.targetBytecode>1.8</groovy.targetBytecode>
