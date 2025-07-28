@@ -25,6 +25,20 @@
   <name>JaCoCo :: Agent</name>
   <description>JaCoCo Agent</description>
 
+  <dependencies>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>org.jacoco.agent.rt</artifactId>
+      <version>${project.version}</version>
+      <exclusions>
+        <exclusion>
+          <groupId>*</groupId>
+          <artifactId>*</artifactId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+  </dependencies>
+
   <build>
     <sourceDirectory>src</sourceDirectory>
 
