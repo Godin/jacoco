@@ -19,6 +19,12 @@ import org.jacoco.core.test.validation.targets.Stubs
  */
 object PrivateEmptyNoArgConstructorTarget {
 
+    /** also has private empty no-arg constructor */
+    object O {
+        fun x() {
+        }
+    }
+
     class Example private constructor() { // assertEmpty()
         constructor(s: String) : this() // assertFullyCovered()
     }
