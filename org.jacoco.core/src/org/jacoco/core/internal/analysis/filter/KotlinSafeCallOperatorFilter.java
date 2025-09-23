@@ -27,7 +27,7 @@ import org.objectweb.asm.tree.VarInsnNode;
  * Filters bytecode that Kotlin compiler generates for chains of safe call
  * operators ({@code ?.}).
  */
-final class KotlinSafeCallOperatorFilter implements IFilter {
+public final class KotlinSafeCallOperatorFilter implements IFilter {
 
 	public void filter(final MethodNode methodNode,
 			final IFilterContext context, final IFilterOutput output) {
