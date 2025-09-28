@@ -16,4 +16,4 @@ jobs:
         shell: bash
         run: |
           ./mvnw -V -B -e --no-transfer-progress \
-            verify
+            verify -Dbytecode.version=17
