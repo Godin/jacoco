@@ -35,9 +35,11 @@ public class KotlinSerializableSealedTest extends ValidationTestBase {
 	}
 
 	@Test
-	public void test_method_count() {
-		assertMethodCount(
-				/* main + static initializer + constructor + getter */4);
+	public void test_methods() {
+		assertMethods("KotlinSerializableSealedTarget$Sealed$A.<init>",
+				"KotlinSerializableSealedTarget$Sealed$A.getData",
+				"KotlinSerializableSealedTarget$Sealed.<clinit>",
+				"KotlinSerializableSealedTarget.main");
 	}
 
 }

@@ -26,8 +26,12 @@ public class SyntheticTest extends ValidationTestBase {
 	}
 
 	@Test
-	public void test_method_count() {
-		assertMethodCount(5);
+	public void test_methods() {
+		assertMethods("SyntheticTarget$Inner.<init>",
+				"SyntheticTarget$Inner.get", //
+				"SyntheticTarget$Inner.inc", //
+				"SyntheticTarget.get", //
+				"SyntheticTarget.main");
 	}
 
 }

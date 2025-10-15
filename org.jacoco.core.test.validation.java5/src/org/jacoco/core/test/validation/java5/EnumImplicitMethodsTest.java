@@ -26,8 +26,12 @@ public class EnumImplicitMethodsTest extends ValidationTestBase {
 	}
 
 	@Test
-	public void test_method_count() {
-		assertMethodCount(5);
+	public void test_methods() {
+		assertMethods("EnumImplicitMethodsTarget.<clinit>",
+				"EnumImplicitMethodsTarget.<init>",
+				"EnumImplicitMethodsTarget.main",
+				"EnumImplicitMethodsTarget.valueOf",
+				"EnumImplicitMethodsTarget.values");
 	}
 
 }

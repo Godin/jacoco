@@ -27,8 +27,11 @@ import java.util.Collections;
 import org.jacoco.core.analysis.Analyzer;
 import org.jacoco.core.analysis.CoverageBuilder;
 import org.jacoco.core.analysis.IBundleCoverage;
+import org.jacoco.core.analysis.IClassCoverage;
 import org.jacoco.core.analysis.ICounter;
 import org.jacoco.core.analysis.ILine;
+import org.jacoco.core.analysis.IMethodCoverage;
+import org.jacoco.core.analysis.IPackageCoverage;
 import org.jacoco.core.data.ExecutionData;
 import org.jacoco.core.data.ExecutionDataStore;
 import org.jacoco.core.data.SessionInfo;
@@ -283,9 +286,19 @@ public abstract class ValidationTestBase {
 		assertEquals("Log events", Arrays.asList(events), getter.invoke(null));
 	}
 
-	protected void assertMethodCount(final int expectedTotal) {
-		assertEquals(expectedTotal,
-				source.getCoverage().getMethodCounter().getTotalCount());
+	protected void assertMethods(String... expected) {
+		final ArrayList<String> actual = new ArrayList<String>();
+		for (final IPackageCoverage aPackage : bundle.getPackages()) {
+			for (final IClassCoverage aClass : aPackage.getClasses()) {
+				for (final IMethodCoverage aMethod : aClass.getMethods()) {
+					final String simpleClassName = aClass.getName()
+							.substring(aClass.getName().lastIndexOf('/') + 1);
+					actual.add(simpleClassName + "." + aMethod.getName());
+				}
+			}
+		}
+		Collections.sort(actual);
+		assertEquals(Arrays.asList(expected), actual);
 	}
 
 }

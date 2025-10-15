@@ -35,9 +35,15 @@ public class KotlinSerializableTest extends ValidationTestBase {
 	}
 
 	@Test
-	public void test_method_count() {
-		assertMethodCount(
-				/* main + 3 constructors + 3 getters + 1 method in companion */8);
+	public void test_methods() {
+		assertMethods("KotlinSerializableTarget$Example.<init>",
+				"KotlinSerializableTarget$Example.getData",
+				"KotlinSerializableTarget$ExampleWithCustomSerializer.<init>",
+				"KotlinSerializableTarget$ExampleWithCustomSerializer.getData",
+				"KotlinSerializableTarget$ExampleWithHandWrittenCompanion$Companion.serializer",
+				"KotlinSerializableTarget$ExampleWithHandWrittenCompanion.<init>",
+				"KotlinSerializableTarget$ExampleWithHandWrittenCompanion.getData",
+				"KotlinSerializableTarget.main");
 	}
 
 }

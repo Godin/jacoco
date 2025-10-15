@@ -45,8 +45,9 @@ public class KotlinLambdaSerializableTest extends ValidationTestBase {
 	}
 
 	@Test
-	public void test_method_count() {
-		assertMethodCount(/* main + lambda */ 2);
+	public void test_methods() {
+		assertMethods("KotlinLambdaSerializableTarget.main",
+				"KotlinLambdaSerializableTarget.main$lambda$0");
 	}
 
 }

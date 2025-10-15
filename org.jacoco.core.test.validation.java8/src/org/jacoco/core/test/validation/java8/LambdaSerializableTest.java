@@ -44,8 +44,13 @@ public class LambdaSerializableTest extends ValidationTestBase {
 	}
 
 	@Test
-	public void test_method_count() {
-		assertMethodCount(/* constructor + main + lambda */ 3);
+	public void test_methods() {
+		assertMethods("LambdaSerializableTarget.<init>",
+				// https://github.com/openjdk/jdk/blob/jdk-11-ga/src/jdk.compiler/share/classes/com/sun/tools/javac/comp/LambdaToMethod.java#L2015-L2057
+				isJDKCompiler
+						? "LambdaSerializableTarget.lambda$main$a06155df$1"
+						: "LambdaSerializableTarget.lambda$0",
+				"LambdaSerializableTarget.main");
 	}
 
 }

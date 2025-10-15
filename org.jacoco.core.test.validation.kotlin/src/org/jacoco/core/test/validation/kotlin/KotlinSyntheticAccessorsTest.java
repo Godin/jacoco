@@ -47,8 +47,12 @@ public class KotlinSyntheticAccessorsTest extends ValidationTestBase {
 	}
 
 	@Test
-	public void test_method_count() {
-		assertMethodCount(/* main + 2 in Outer + 2 in Inner */ 5);
+	public void test_methods() {
+		assertMethods("KotlinSyntheticAccessorsTarget$Outer$Inner.<init>",
+				"KotlinSyntheticAccessorsTarget$Outer$Inner.accessOuter",
+				"KotlinSyntheticAccessorsTarget$Outer.<init>",
+				"KotlinSyntheticAccessorsTarget$Outer.getX",
+				"KotlinSyntheticAccessorsTarget.main");
 	}
 
 }

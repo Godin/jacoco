@@ -45,8 +45,9 @@ public class KotlinInlineReifiedTest extends ValidationTestBase {
 	}
 
 	@Test
-	public void test_method_count() {
-		assertMethodCount(2);
+	public void test_methods() {
+		assertMethods("KotlinInlineReifiedTarget.example",
+				"KotlinInlineReifiedTarget.main");
 	}
 
 }

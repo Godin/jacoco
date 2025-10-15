@@ -26,7 +26,7 @@ public class GroovyAutoExternalizeClassTest extends ValidationTestBase {
 	}
 
 	@Test
-	public void test_method_count() {
-		assertMethodCount(1);
+	public void test_methods() {
+		assertMethods("GroovyAutoExternalizeClassTarget.main");
 	}
 }

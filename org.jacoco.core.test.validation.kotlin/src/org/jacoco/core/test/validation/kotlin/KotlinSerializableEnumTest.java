@@ -26,8 +26,9 @@ public class KotlinSerializableEnumTest extends ValidationTestBase {
 	}
 
 	@Test
-	public void test_method_count() {
-		assertMethodCount(/* main + static initializer */2);
+	public void test_methods() {
+		assertMethods("KotlinSerializableEnumTarget$E.<clinit>",
+				"KotlinSerializableEnumTarget.main");
 	}
 
 }

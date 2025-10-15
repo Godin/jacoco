@@ -26,8 +26,8 @@ public class GroovySortableClassTest extends ValidationTestBase {
 	}
 
 	@Test
-	public void test_method_count() {
-		// main method and static initializer
-		assertMethodCount(2);
+	public void test_methods() {
+		assertMethods("GroovySortableClassTarget.<clinit>",
+				"GroovySortableClassTarget.main");
 	}
 }
