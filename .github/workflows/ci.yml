@@ -20,15 +20,28 @@ jobs:
           - jdk: 21
           - jdk: 21
             ecj: true
+
+          # If build starts to fail due to changes in JDK Early-Access versions
+          # 1. pin version:
+          #    define JDK_EA_VERSION variable in repository settings
+          #    with value of previous non-failing version
+          # 2. record failing version into new issue
+          #    to do investigations and to not forget to unpin it
+          # For example "26.0.0-ea.24.0.ea" corresponds to
+          # 26.0.0-beta+24-ea at https://adoptium.net/temurin/nightly
+          # built from https://github.com/adoptium/jdk/releases/tag/jdk-26+24_adopt
+          - jdk: 26
+            jdk_ea_version: ${{ vars.JDK_EA_VERSION || '26-ea' }}
+
     name: JDK ${{ matrix.jdk }}${{ matrix.ecj && ' with ECJ' || ''}}
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@1af3b93b6815bc44a9784bd300feb67ff0d1eeb3 # v6.0.0
       - uses: actions/setup-java@dded0888837ed1f317902acf8a20df0ad188d165 # v5.0.0
         with:
-          distribution: 'zulu'
+          distribution: 'temurin'
           java-version: |
-            ${{ matrix.jdk }}
+            ${{ matrix.jdk_ea_version || matrix.jdk }}
             17
       - name: 'Generate toolchains.xml'
         env:
