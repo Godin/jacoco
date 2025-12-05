@@ -353,7 +353,7 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-javadoc-plugin</artifactId>
-          <version>3.11.2</version>
+          <version>3.12.0</version>
           <configuration>
             <quiet>true</quiet>
             <detectOfflineLinks>false</detectOfflineLinks>
@@ -780,7 +780,6 @@
             <configuration>
               <additionalOptions>
                 <!-- https://bugs.openjdk.org/browse/JDK-8324774 -->
-                <option>--no-fonts</option>
               </additionalOptions>
             </configuration>
           </plugin>
@@ -1120,7 +1119,6 @@
             <configuration>
               <additionalOptions>
                 <!-- https://bugs.openjdk.org/browse/JDK-8324774 -->
-                <option>--no-fonts</option>
               </additionalOptions>
             </configuration>
           </plugin>
