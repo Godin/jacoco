@@ -42,7 +42,8 @@ jobs:
           distribution: 'temurin'
           java-version: |
             ${{ matrix.jdk_ea_version || matrix.jdk }}
-            ${{ matrix.jdk >= 17 && ' ' || 17 }}
+            17
+#            ${{ matrix.jdk >= 17 && ' ' || 17 }}
       - name: 'Generate toolchains.xml'
         env:
           JDK_VERSION: ${{ matrix.jdk }}
@@ -68,6 +69,13 @@ jobs:
             verify -Djdk.version=${{ matrix.jdk }} -Dbytecode.version=${{ matrix.jdk }} \
             ${{ matrix.ecj && '-Decj' || ''}} \
             --toolchains=toolchains.xml
+      - uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v5.0.0
+        if: always()
+        id: artifact-upload-step
+        with:
+          name: jacoco
+          path: jacoco/target/*.zip
+          if-no-files-found: error
 
   Windows:
     if: false
@@ -105,6 +113,7 @@ jobs:
         run: |
           ./mvnw -V -B -e --no-transfer-progress \
             verify -Djdk.version=6 -Dbytecode.version=5 \
+            sonar:sonar -Dsonar.scanner.skipJreProvisioning \
             --toolchains=toolchains.xml
       - uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v5.0.0
         id: artifact-upload-step
