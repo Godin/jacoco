@@ -16,6 +16,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.lang.reflect.Method;
@@ -43,6 +44,7 @@ import org.jacoco.report.FileMultiReportOutput;
 import org.jacoco.report.IReportVisitor;
 import org.jacoco.report.ISourceFileLocator;
 import org.jacoco.report.html.HTMLFormatter;
+import org.jacoco.report.internal.text.TextFormatter;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runners.model.MultipleFailureException;
@@ -163,6 +165,12 @@ public abstract class ValidationTestBase {
 				new File("src"), "UTF-8", 4);
 		visitor.visitBundle(bundle, sourceFileLocator);
 		visitor.visitEnd();
+		{ // FIXME this is just an example
+			final IReportVisitor v = new TextFormatter().createVisitor(
+					new FileMultiReportOutput(new File(destination + "/text")));
+			v.visitBundle(bundle, sourceFileLocator);
+			v.visitEnd();
+		}
 	}
 
 	/**

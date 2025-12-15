@@ -36,6 +36,7 @@ import org.jacoco.report.MultiReportVisitor;
 import org.jacoco.report.MultiSourceFileLocator;
 import org.jacoco.report.csv.CSVFormatter;
 import org.jacoco.report.html.HTMLFormatter;
+import org.jacoco.report.internal.text.TextFormatter;
 import org.jacoco.report.xml.XMLFormatter;
 import org.kohsuke.args4j.Argument;
 import org.kohsuke.args4j.Option;
@@ -71,6 +72,9 @@ public class Report extends Command {
 
 	@Option(name = "--html", usage = "output directory for the HTML report", metaVar = "<dir>")
 	File html;
+
+	@Option(name = "--text", usage = "output directory for the TEXT report", metaVar = "<dir>")
+	File text;
 
 	@Override
 	public String description() {
@@ -157,6 +161,12 @@ public class Report extends Command {
 			final HTMLFormatter formatter = new HTMLFormatter();
 			visitors.add(
 					formatter.createVisitor(new FileMultiReportOutput(html)));
+		}
+
+		if (text != null) {
+			final TextFormatter formatter = new TextFormatter();
+			visitors.add(
+					formatter.createVisitor(new FileMultiReportOutput(text)));
 		}
 
 		return new MultiReportVisitor(visitors);

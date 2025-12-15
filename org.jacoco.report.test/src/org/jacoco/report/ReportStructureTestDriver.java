@@ -44,17 +44,7 @@ public class ReportStructureTestDriver {
 	private final Collection<ExecutionData> executionData = Collections
 			.emptyList();
 
-	public final ISourceFileLocator sourceFileLocator = new ISourceFileLocator() {
-
-		public Reader getSourceFile(String packageName, String fileName)
-				throws IOException {
-			return new StringReader("");
-		}
-
-		public int getTabWidth() {
-			return 4;
-		}
-	};
+	public final ISourceFileLocator sourceFileLocator;
 
 	private final IMethodCoverage methodCoverage;
 
@@ -67,6 +57,22 @@ public class ReportStructureTestDriver {
 	private final BundleCoverageImpl bundleCoverage;
 
 	public ReportStructureTestDriver() {
+		this(new ISourceFileLocator() {
+			public Reader getSourceFile(final String packageName,
+					final String fileName) {
+				return new StringReader("");
+			}
+
+			public int getTabWidth() {
+				return 4;
+			}
+		});
+	}
+
+	public ReportStructureTestDriver(
+			final ISourceFileLocator sourceFileLocator) {
+		this.sourceFileLocator = sourceFileLocator;
+
 		final MethodCoverageImpl m = new MethodCoverageImpl("fooMethod", "()V",
 				null);
 		m.increment(CounterImpl.getInstance(3, 5), CounterImpl.COUNTER_0_0, 1);

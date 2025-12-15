@@ -1,0 +1,29 @@
+BUNDLE BundleName
+PACKAGE org/example
+ 99/99 99/99 999/999
+CLASS org/example
+ 99/99 99/99 999/999 0xABCDE
+METHOD foo()V
+  1/1  99/99 999/999
+METHOD bar()V
+  1/1  99/99 999/999
+SOURCE org/example/Example.java
+              2/3
+                1 | class Example {
+  1/1  99/99 9999 |   void example() {
+                3 |   }
+                4 | }
+
+---
+
+ B     I     L
+2/3  15/25  3/3 BUNDLE BundleName
+2/3  15/25  3/3   PACKAGE    org/example
+2/3  15/25  3/3     CLASS    org/example/Example 0xABCDE
+2/3  15/25  3/3       METHOD fooMethod()V
+2/3  15/25  3/3       METHOD barMethod()V
+2/3  15/25  3/3     SOURCE   org/example/Example.java
+      5/8     1     | class Example {
+2/3   5/8     2     |   void example() {
+              3     |   }
+      5/9     4     | }
