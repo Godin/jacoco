@@ -27,7 +27,37 @@
 	<target name="testJaCoCoWithJmx">
 		<echo file="${temp.dir}/jmxremote.access">user readonly</echo>
 		<echo file="${temp.dir}/jmxremote.password">user password</echo>
+
 		<chmod file="${temp.dir}/jmxremote.password" perm="600"/>
+
+		<!-- FIXME replace deprecated cacls by icacls -->
+		<echo message="show acl - icacls"/>
+		<exec osfamily="windows" failonerror="true" executable="icacls">
+			<arg value="${temp.dir}\\jmxremote.password"/>
+		</exec>
+		<!-- https://stackoverflow.com/questions/43312953/using-icacls-to-set-file-permission-to-read-only -->
+		<echo message="reset acl"/>
+		<exec osfamily="windows" failonerror="true" executable="icacls">
+			<arg value="${temp.dir}\\jmxremote.password"/>
+			<arg value="/reset"/>
+		</exec>
+		<echo message="set acl"/>
+		<exec osfamily="windows" failonerror="true" executable="icacls">
+			<arg value="${temp.dir}\\jmxremote.password"/>
+			<arg value="/grant:r"/>
+			<arg value="${user.name}:R"/>
+		</exec>
+		<echo message="set inheritance"/>
+		<exec osfamily="windows" failonerror="true" executable="icacls">
+			<arg value="${temp.dir}\\jmxremote.password"/>
+			<arg value="/inheritance:r"/>
+		</exec>
+		<echo message="show acl"/>
+		<exec osfamily="windows" failonerror="true" executable="cmd">
+			<arg value="/c"/>
+			<arg value="cacls ${temp.dir}\\jmxremote.password"/>
+		</exec>
+
 		<jacoco:coverage output="none" jmx="true" sessionId="test-session">
 			<java classname="org.jacoco.ant.JmxTarget" fork="true" failonerror="true">
 				<classpath path="${org.jacoco.ant.jmxTest.classes.dir}"/>
