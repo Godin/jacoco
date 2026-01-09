@@ -130,7 +130,7 @@ jobs:
     # without following condition this job can have result "skipped" if needed job was "skipped"
     # auto-merge ignores skipped jobs even if they are required by branch protection rules
     if: ${{ always() }}
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-slim
     steps:
       - name: Check results of all needed jobs
         run: |
