@@ -27,6 +27,9 @@
       <plugin>
         <groupId>@project.groupId@</groupId>
         <artifactId>jacoco-maven-plugin</artifactId>
+        <configuration>
+          <port>6301</port>
+        </configuration>
         <executions>
           <execution>
             <id>prepare-agent</id>
@@ -35,7 +38,6 @@
             </goals>
             <configuration>
               <output>tcpserver</output>
-              <port>6301</port>
             </configuration>
           </execution>
           <execution>
