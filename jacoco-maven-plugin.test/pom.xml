@@ -58,7 +58,10 @@
           <localRepositoryPath>${project.build.directory}/local-repo</localRepositoryPath>
           <goals>
             <goal>clean</goal>
+            <!--
             <goal>install</goal>
+            -->
+            <goal>verify</goal>
           </goals>
           <settingsFile>it/settings.xml</settingsFile>
           <properties>
