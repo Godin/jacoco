@@ -87,6 +87,7 @@
                   <jvmarg value="${argLine}"/>
                   <arg value="${project.build.directory}/term.txt"/>
                 </java>
+                <sleep seconds="2"/>
               </target>
             </configuration>
           </execution>
