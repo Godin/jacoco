@@ -35,6 +35,7 @@
             </goals>
             <configuration>
               <output>tcpserver</output>
+              <port>6301</port>
             </configuration>
           </execution>
           <execution>
