@@ -42,6 +42,16 @@ jobs:
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
+      # TODO use commitHash
+      - uses: actions/cache@v5
+        with:
+          # TODO crossOsArchive requires relative paths
+          enablecrossOsArchive: true
+          path: |
+            ~/.m2/repository
+            ~/.m2/wrapper
+          key: maven-${{ runner.os }}-${{ hashFiles('**/pom.xml', '.mvn/wrapper/maven-wrapper.properties') }}
+          restore-keys: maven-${{ runner.os }}
       - uses: actions/setup-java@f2beeb24e141e01a676f977032f5a29d81c9e27e # v5.1.0
         with:
           distribution: 'zulu'
@@ -79,6 +89,14 @@ jobs:
     environment: ${{ (github.repository == 'jacoco/jacoco' && github.ref == 'refs/heads/master') && 'snapshot' || null }}
     steps:
       - uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
+      - uses: actions/cache@v5
+        with:
+          enablecrossOsArchive: true
+          path: |
+            ~/.m2/repository
+            ~/.m2/wrapper
+          key: maven-${{ runner.os }}-${{ hashFiles('**/pom.xml', '.mvn/wrapper/maven-wrapper.properties') }}
+          restore-keys: maven-${{ runner.os }}
       - uses: actions/setup-java@f2beeb24e141e01a676f977032f5a29d81c9e27e # v5.1.0
         with:
           distribution: 'zulu'
