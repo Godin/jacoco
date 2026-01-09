@@ -27,6 +27,7 @@
   <name>JaCoCo :: Test :: Maven Plugin</name>
 
   <properties>
+    <invoker.skip>${skipTests}</invoker.skip>
     <!-- Enable recording of coverage during execution of maven-invoker-plugin -->
     <jacoco.propertyName>invoker.mavenOpts</jacoco.propertyName>
     <jacoco.includes>org.jacoco.maven.*</jacoco.includes>
@@ -48,7 +49,6 @@
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-invoker-plugin</artifactId>
         <configuration>
-          <skipInvocation>${skipTests}</skipInvocation>
           <projectsDirectory>it</projectsDirectory>
           <cloneProjectsTo>${project.build.directory}/it</cloneProjectsTo>
           <pomIncludes>

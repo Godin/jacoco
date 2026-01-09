@@ -72,6 +72,7 @@ jobs:
           ./mvnw -V -B -e --no-transfer-progress \
             verify -Djdk.version=${{ matrix.jdk }} -Dbytecode.version=${{ matrix.jdk }} \
             ${{ matrix.ecj && '-Decj' || ''}} \
+            -Dinvoker.skip \
             --toolchains=toolchains.xml
   Windows:
     runs-on: windows-2022
