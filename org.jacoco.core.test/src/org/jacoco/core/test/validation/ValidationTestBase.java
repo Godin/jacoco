@@ -16,8 +16,11 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -32,6 +35,7 @@ import org.jacoco.core.analysis.ILine;
 import org.jacoco.core.data.ExecutionData;
 import org.jacoco.core.data.ExecutionDataStore;
 import org.jacoco.core.data.SessionInfo;
+import org.jacoco.core.internal.InputStreams;
 import org.jacoco.core.internal.analysis.CounterImpl;
 import org.jacoco.core.internal.instr.InstrSupport;
 import org.jacoco.core.test.InstrumentingLoader;
@@ -46,9 +50,13 @@ import org.jacoco.report.html.HTMLFormatter;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runners.model.MultipleFailureException;
+import org.objectweb.asm.ClassReader;
+import org.objectweb.asm.tree.ClassNode;
+import org.objectweb.asm.tree.MethodNode;
 import org.objectweb.asm.util.ASMifier;
 import org.objectweb.asm.util.Textifier;
 import org.objectweb.asm.util.TraceClassVisitor;
+import org.objectweb.asm.util.TraceMethodVisitor;
 
 /**
  * Base class for validation tests. It executes the given class under code
@@ -80,6 +88,58 @@ public abstract class ValidationTestBase {
 	protected ValidationTestBase(final Class<?> target) {
 		this.target = target;
 		this.asmDir = new File("target/asm/" + target.getSimpleName());
+	}
+
+	protected static String fileToString(final String name) throws IOException {
+		final File file = new File(name);
+		if (!file.isFile()) {
+			return name + " not found";
+		}
+		final FileInputStream inputStream = new FileInputStream(name);
+		final byte[] bytes = InputStreams.readFully(inputStream);
+		inputStream.close();
+		return new String(bytes);
+	}
+
+	protected static MethodNode getMethodNode(Class cls, String name)
+			throws Exception {
+		final byte[] classBytes = TargetLoader.getClassDataAsBytes(cls);
+		final ClassReader classReader = InstrSupport.classReaderFor(classBytes);
+		final ClassNode classNode = new ClassNode();
+		classReader.accept(classNode, ClassReader.SKIP_FRAMES);
+		MethodNode result = null;
+		for (MethodNode methodNode : classNode.methods) {
+			if (name.equals(methodNode.name)) {
+				if (result != null) {
+					throw new IllegalStateException();
+				}
+				result = methodNode;
+			}
+		}
+		return result;
+	}
+
+	protected static String textify(final MethodNode methodNode) {
+		final Textifier textifier = new Textifier();
+		methodNode.accept(new TraceMethodVisitor(null, textifier));
+		final StringWriter stringWriter = new StringWriter();
+		final PrintWriter printWriter = new PrintWriter(stringWriter);
+		textifier.print(printWriter);
+		printWriter.flush();
+		return stringWriter.toString().replaceAll(" ++\n", "\n");
+	}
+
+	protected static void assertBytecode(Class cls, String methodName)
+			throws Exception {
+		final String fileName = cls.getSimpleName() + "#" + methodName + ".txt";
+		final String expected = fileToString(fileName);
+		final String actual = textify(getMethodNode(cls, methodName));
+		if (true) {
+			FileWriter fileWriter = new FileWriter(fileName);
+			fileWriter.write(actual);
+			fileWriter.close();
+		}
+		assertEquals(fileName, expected, actual);
 	}
 
 	@Before

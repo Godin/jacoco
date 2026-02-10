@@ -1,0 +1,111 @@
+    TRYCATCHBLOCK L0 L1 L2 java/lang/Throwable
+   L3
+    LINENUMBER 67 L3
+    ALOAD 0
+    DUP
+    INVOKESTATIC java/util/Objects.requireNonNull (Ljava/lang/Object;)Ljava/lang/Object;
+    POP
+    ASTORE 1
+    ICONST_0
+    ISTORE 2
+   L4
+    ALOAD 1
+    ILOAD 2
+    INVOKEDYNAMIC typeSwitch(Ljava/lang/Object;I)I [
+      // handle kind 0x6 : INVOKESTATIC
+      java/lang/runtime/SwitchBootstraps.typeSwitch(Ljava/lang/invoke/MethodHandles$Lookup;Ljava/lang/String;Ljava/lang/invoke/MethodType;[Ljava/lang/Object;)Ljava/lang/invoke/CallSite;
+      // arguments:
+      org.jacoco.core.test.validation.java21.targets.RecordPatternsTarget$Container.class,
+      java.lang.String.class
+    ]
+    LOOKUPSWITCH
+      0: L5
+      1: L6
+      default: L7
+   L5
+    LINENUMBER 68 L5
+    ALOAD 1
+    CHECKCAST org/jacoco/core/test/validation/java21/targets/RecordPatternsTarget$Container
+    ASTORE 3
+   L8
+    LINENUMBER 75 L8
+    ALOAD 3
+   L0
+    LINENUMBER 68 L0
+    INVOKEVIRTUAL org/jacoco/core/test/validation/java21/targets/RecordPatternsTarget$Container.component ()Ljava/lang/Object;
+   L1
+    ASTORE 6
+   L9
+    LINENUMBER 75 L9
+    ICONST_0
+    ISTORE 7
+    ALOAD 6
+    ILOAD 7
+    INVOKEDYNAMIC typeSwitch(Ljava/lang/Object;I)I [
+      // handle kind 0x6 : INVOKESTATIC
+      java/lang/runtime/SwitchBootstraps.typeSwitch(Ljava/lang/invoke/MethodHandles$Lookup;Ljava/lang/String;Ljava/lang/invoke/MethodType;[Ljava/lang/Object;)Ljava/lang/invoke/CallSite;
+      // arguments:
+      java.lang.String.class,
+      java.lang.Integer.class
+    ]
+    TABLESWITCH
+      -1: L10
+      0: L11
+      1: L12
+      default: L10
+   L11
+    LINENUMBER 68 L11
+    ALOAD 6
+    CHECKCAST java/lang/String
+    ASTORE 4
+   L13
+    LINENUMBER 69 L13
+    LDC "Container(String)"
+    GOTO L14
+   L12
+    LINENUMBER 70 L12
+    ALOAD 6
+    CHECKCAST java/lang/Integer
+    ASTORE 5
+   L15
+    LINENUMBER 71 L15
+    LDC "Container(Integer)"
+    GOTO L14
+   L10
+    LINENUMBER 75 L10
+    ICONST_1
+    ISTORE 2
+    GOTO L4
+   L6
+    LINENUMBER 72 L6
+    ALOAD 1
+    CHECKCAST java/lang/String
+    ASTORE 6
+   L16
+    LINENUMBER 73 L16
+    LDC "String"
+    GOTO L14
+   L7
+    LINENUMBER 75 L7
+    LDC "default"
+    GOTO L14
+   L14
+    LINENUMBER 67 L14
+    ARETURN
+   L2
+    LINENUMBER 72 L2
+    ASTORE 1
+    NEW java/lang/MatchException
+    DUP
+    ALOAD 1
+    INVOKEVIRTUAL java/lang/Throwable.toString ()Ljava/lang/String;
+    ALOAD 1
+    INVOKESPECIAL java/lang/MatchException.<init> (Ljava/lang/String;Ljava/lang/Throwable;)V
+    ATHROW
+   L17
+    LOCALVARIABLE c Ljava/lang/String; L13 L12 4
+    LOCALVARIABLE c Ljava/lang/Integer; L15 L10 5
+    LOCALVARIABLE s Ljava/lang/String; L16 L7 6
+    LOCALVARIABLE o Ljava/lang/Object; L3 L17 0
+    MAXSTACK = 4
+    MAXLOCALS = 8

@@ -69,4 +69,12 @@ public class RecordPatternsTest extends ValidationTestBase {
 		}
 	}
 
+	@org.junit.Test
+	public void testBytecodes() throws Exception {
+		assertBytecode(RecordPatternsTarget.class, "switchStatement1");
+		assertBytecode(RecordPatternsTarget.class, "outerLookupSwitch");
+		assertBytecode(RecordPatternsTarget.class, "innerInstanceof");
+		assertBytecode(RecordPatternsTarget.class, "exhaustive");
+	}
+
 }

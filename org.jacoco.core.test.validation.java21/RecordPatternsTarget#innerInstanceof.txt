@@ -1,0 +1,83 @@
+    TRYCATCHBLOCK L0 L1 L2 java/lang/Throwable
+   L3
+    LINENUMBER 80 L3
+    ALOAD 0
+    DUP
+    INVOKESTATIC java/util/Objects.requireNonNull (Ljava/lang/Object;)Ljava/lang/Object;
+    POP
+    ASTORE 1
+    ICONST_0
+    ISTORE 2
+   L4
+    ALOAD 1
+    ILOAD 2
+    INVOKEDYNAMIC typeSwitch(Ljava/lang/Object;I)I [
+      // handle kind 0x6 : INVOKESTATIC
+      java/lang/runtime/SwitchBootstraps.typeSwitch(Ljava/lang/invoke/MethodHandles$Lookup;Ljava/lang/String;Ljava/lang/invoke/MethodType;[Ljava/lang/Object;)Ljava/lang/invoke/CallSite;
+      // arguments:
+      org.jacoco.core.test.validation.java21.targets.RecordPatternsTarget$Container.class,
+      java.lang.String.class
+    ]
+    LOOKUPSWITCH
+      0: L5
+      1: L6
+      default: L7
+   L5
+    LINENUMBER 81 L5
+    ALOAD 1
+    CHECKCAST org/jacoco/core/test/validation/java21/targets/RecordPatternsTarget$Container
+    ASTORE 3
+    ALOAD 3
+   L0
+    INVOKEVIRTUAL org/jacoco/core/test/validation/java21/targets/RecordPatternsTarget$Container.component ()Ljava/lang/Object;
+   L1
+    ASTORE 5
+    ALOAD 5
+    INSTANCEOF java/lang/String
+    IFEQ L8
+    ALOAD 5
+    CHECKCAST java/lang/String
+    ASTORE 4
+   L9
+    GOTO L10
+   L8
+    ICONST_1
+    ISTORE 2
+    GOTO L4
+   L10
+    LINENUMBER 82 L10
+    LDC "Container(String)"
+    GOTO L11
+   L6
+    LINENUMBER 83 L6
+    ALOAD 1
+    CHECKCAST java/lang/String
+    ASTORE 5
+   L12
+    LINENUMBER 84 L12
+    LDC "String"
+    GOTO L11
+   L7
+    LINENUMBER 86 L7
+    LDC "default"
+    GOTO L11
+   L11
+    LINENUMBER 80 L11
+    ARETURN
+   L2
+    LINENUMBER 83 L2
+    ASTORE 1
+    NEW java/lang/MatchException
+    DUP
+    ALOAD 1
+    INVOKEVIRTUAL java/lang/Throwable.toString ()Ljava/lang/String;
+    ALOAD 1
+    INVOKESPECIAL java/lang/MatchException.<init> (Ljava/lang/String;Ljava/lang/Throwable;)V
+    ATHROW
+   L13
+    LOCALVARIABLE c Ljava/lang/String; L9 L8 4
+    LOCALVARIABLE c Ljava/lang/String; L10 L6 4
+    LOCALVARIABLE s Ljava/lang/String; L12 L7 5
+    LOCALVARIABLE o Ljava/lang/Object; L3 L13 0
+    MAXSTACK = 4
+    MAXLOCALS = 6
