@@ -31,9 +31,21 @@ public class SwitchPatternMatchingTarget {
 		}
 	}
 
+	private static void exhaustive(Sealed o) {
+		switch (o) { // assertFullyCovered(0, 2)
+			case Sealed.A a -> // assertFullyCovered()
+				nop(a); // assertFullyCovered()
+			case Sealed.B b -> // assertFullyCovered()
+				nop(b);  // assertFullyCovered()
+		} // assertEmpty()
+	}
+
 	public static void main(String[] args) {
 		example("");
 		example("a");
+
+		exhaustive(new Sealed.A(""));
+		exhaustive(new Sealed.B(""));
 	}
 
 }

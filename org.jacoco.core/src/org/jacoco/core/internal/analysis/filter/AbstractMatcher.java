@@ -15,9 +15,11 @@ package org.jacoco.core.internal.analysis.filter;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.objectweb.asm.Handle;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.tree.AbstractInsnNode;
 import org.objectweb.asm.tree.FieldInsnNode;
+import org.objectweb.asm.tree.InvokeDynamicInsnNode;
 import org.objectweb.asm.tree.MethodInsnNode;
 import org.objectweb.asm.tree.MethodNode;
 import org.objectweb.asm.tree.TypeInsnNode;
@@ -127,6 +129,26 @@ abstract class AbstractMatcher {
 		default:
 			cursor = null;
 		}
+	}
+
+	/**
+	 * Moves {@link #cursor} to next instruction if it is
+	 * <code>INVOKEDYNAMIC</code> with given name, BSM owner and BSM name,
+	 * otherwise sets it to <code>null</code>.
+	 */
+	final void nextIsInvokeDynamic(final String name, final String bsmOwner,
+			final String bsmName) {
+		nextIs(Opcodes.INVOKEDYNAMIC);
+		if (cursor == null) {
+			return;
+		}
+		final InvokeDynamicInsnNode i = (InvokeDynamicInsnNode) cursor;
+		final Handle bsm = i.bsm;
+		if (name.equals(i.name) && bsmOwner.equals(bsm.getOwner())
+				&& bsmName.equals(bsm.getName())) {
+			return;
+		}
+		cursor = null;
 	}
 
 	/**
