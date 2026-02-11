@@ -66,6 +66,7 @@ public final class Filters {
 				new EnumEmptyConstructorFilter(), //
 				new RecordsFilter(), //
 				new ExhaustiveSwitchFilter(), //
+				// TODO note that wins last filter which remaps
 				new RecordPatternFilter(), //
 				new AnnotationGeneratedFilter());
 	}

@@ -109,12 +109,14 @@ class MethodCoverageCalculator implements IFilterOutput {
 				return instructions.get(node);
 			}
 		};
+		final HashMap<AbstractInsnNode, Instruction> replaced = new HashMap<AbstractInsnNode, Instruction>();
 		for (final Entry<AbstractInsnNode, Replacements> entry : replacements
 				.entrySet()) {
 			final AbstractInsnNode node = entry.getKey();
-			instructions.put(node, instructions.get(node)
+			replaced.put(node, instructions.get(node)
 					.replaceBranches(entry.getValue(), mapper));
 		}
+		instructions.putAll(replaced);
 	}
 
 	private void ensureCapacity(final MethodCoverageImpl coverage) {

@@ -13,6 +13,7 @@
 package org.jacoco.core.test.validation.java21.targets;
 
 import static org.jacoco.core.test.validation.targets.Stubs.nop;
+import org.jacoco.core.test.validation.targets.Stubs;
 
 /**
  * This target exercises pattern matching for switch
@@ -31,9 +32,31 @@ public class SwitchPatternMatchingTarget {
 		}
 	}
 
+	private static void exhaustive(Sealed o) {
+		switch (o) { // assertFullyCovered(0, 2)
+		case Sealed.A a -> // assertFullyCovered()
+			nop(a); // assertFullyCovered()
+		case Sealed.B b -> // assertFullyCovered()
+			nop(b); // assertFullyCovered()
+		} // assertEmpty()
+	}
+
+	private static void enumSwitch(Stubs.Enum o) {
+		switch (o) {
+		case Stubs.Enum e //
+		when e == Stubs.Enum.A -> //
+			nop(e);
+		case Stubs.Enum e -> //
+			nop(e);
+		}
+	}
+
 	public static void main(String[] args) {
 		example("");
 		example("a");
+
+		exhaustive(new Sealed.A(""));
+		exhaustive(new Sealed.B(""));
 	}
 
 }

@@ -46,6 +46,7 @@ import org.jacoco.report.html.HTMLFormatter;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runners.model.MultipleFailureException;
+import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.util.ASMifier;
 import org.objectweb.asm.util.Textifier;
 import org.objectweb.asm.util.TraceClassVisitor;
@@ -144,7 +145,8 @@ public abstract class ValidationTestBase {
 		InstrSupport.classReaderFor(classBytes)
 				.accept(new TraceClassVisitor(new TraceClassVisitor(null,
 						new Textifier(), textWriter), new ASMifier(),
-						asmWriter), 0);
+						asmWriter),
+						/* ClassReader.SKIP_DEBUG | */ ClassReader.SKIP_FRAMES);
 		textWriter.close();
 		asmWriter.close();
 	}

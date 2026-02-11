@@ -17,6 +17,7 @@ import static org.junit.Assert.assertSame;
 
 import org.jacoco.core.internal.instr.InstrSupport;
 import org.junit.Test;
+import org.objectweb.asm.Handle;
 import org.objectweb.asm.Label;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.tree.MethodNode;
@@ -103,6 +104,42 @@ public class AbstractMatcherTest {
 		// should not do anything when cursor is null
 		matcher.cursor = null;
 		matcher.nextIsSwitch();
+	}
+
+	@Test
+	public void nextIsInvokeDynamic() {
+		// should set cursor to null when opcode mismatch
+		m.visitInsn(Opcodes.NOP);
+		m.visitInsn(Opcodes.NOP);
+		matcher.cursor = m.instructions.getFirst();
+		matcher.nextIsInvokeDynamic("name", "bsmOwner", "bsmName");
+
+		// should set cursor to null when name mismatch
+		m.instructions.clear();
+		m.visitInsn(Opcodes.NOP);
+		m.visitInvokeDynamicInsn("name", "descriptor",
+				new Handle(Opcodes.H_INVOKESTATIC, "bsmOwner", "bsmName",
+						"bsmDescriptor", false));
+		matcher.nextIsInvokeDynamic("another_name", "bsmOwner", "bsmName");
+
+		// should set cursor to null when BSM owner mismatch
+		matcher.cursor = m.instructions.getFirst();
+		matcher.nextIsInvokeDynamic("name", "another_bsmOwner", "bsmName");
+		assertNull(matcher.cursor);
+
+		// should set cursor to null when BSM name mismatch
+		matcher.cursor = m.instructions.getFirst();
+		matcher.nextIsInvokeDynamic("name", "bsmOwner", "another_bsmName");
+		assertNull(matcher.cursor);
+
+		// should set cursor to next instruction when match
+		matcher.cursor = m.instructions.getFirst();
+		matcher.nextIsInvokeDynamic("name", "bsmOwner", "bsmName");
+		assertSame(m.instructions.getLast(), matcher.cursor);
+
+		// should not do anything when cursor is null
+		matcher.cursor = null;
+		matcher.nextIsInvokeDynamic("", "", "");
 	}
 
 	@Test

@@ -49,4 +49,24 @@ public class RecordPatternsTest extends ValidationTestBase {
 		}
 	}
 
+	public void fullyJavac(final Line line) {
+		if (isJDKCompiler) {
+			assertFullyCovered(line, 0, 0);
+		}
+	}
+
+	public void fullyEcj(final Line line, final int missedBranches,
+			final int coveredBranches) {
+		if (!isJDKCompiler) {
+			assertFullyCovered(line, missedBranches, coveredBranches);
+		}
+	}
+
+	public void partlyEcj(final Line line, final int missedBranches,
+			final int coveredBranches) {
+		if (!isJDKCompiler) {
+			assertPartlyCovered(line, missedBranches, coveredBranches);
+		}
+	}
+
 }

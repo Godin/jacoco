@@ -45,7 +45,8 @@ final class RecordsFilter implements IFilter {
 				return false;
 			}
 			firstIsALoad0(m);
-			nextIsInvokeDynamic("toString");
+			nextIsInvokeDynamic("toString", "java/lang/runtime/ObjectMethods",
+					"bootstrap");
 			nextIs(Opcodes.ARETURN);
 			return cursor != null;
 		}
@@ -55,7 +56,8 @@ final class RecordsFilter implements IFilter {
 				return false;
 			}
 			firstIsALoad0(m);
-			nextIsInvokeDynamic("hashCode");
+			nextIsInvokeDynamic("hashCode", "java/lang/runtime/ObjectMethods",
+					"bootstrap");
 			nextIs(Opcodes.IRETURN);
 			return cursor != null;
 		}
@@ -109,24 +111,10 @@ final class RecordsFilter implements IFilter {
 			}
 			firstIsALoad0(m);
 			nextIs(Opcodes.ALOAD);
-			nextIsInvokeDynamic("equals");
+			nextIsInvokeDynamic("equals", "java/lang/runtime/ObjectMethods",
+					"bootstrap");
 			nextIs(Opcodes.IRETURN);
 			return cursor != null;
-		}
-
-		private void nextIsInvokeDynamic(final String name) {
-			nextIs(Opcodes.INVOKEDYNAMIC);
-			if (cursor == null) {
-				return;
-			}
-			final InvokeDynamicInsnNode i = (InvokeDynamicInsnNode) cursor;
-			final Handle bsm = i.bsm;
-			if (name.equals(i.name)
-					&& "java/lang/runtime/ObjectMethods".equals(bsm.getOwner())
-					&& "bootstrap".equals(bsm.getName())) {
-				return;
-			}
-			cursor = null;
 		}
 	}
 
