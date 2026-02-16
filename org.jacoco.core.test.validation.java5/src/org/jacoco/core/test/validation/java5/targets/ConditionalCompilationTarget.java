@@ -18,6 +18,8 @@ import static org.jacoco.core.test.validation.targets.Stubs.nop;
  * <a href=
  * "https://docs.oracle.com/javase/specs/jls/se25/html/jls-14.html#d5e27651">
  * Conditional compilation</a>.
+ *
+ * TODO link to specification of constant expression
  */
 public class ConditionalCompilationTarget {
 
@@ -37,6 +39,41 @@ public class ConditionalCompilationTarget {
 			nop("then"); // assertFullyCovered()
 		} else { // assertEmpty()
 			nop("else"); // assertEmpty()
+		} // assertEmpty()
+	}
+
+	/**
+	 * {@link #FALSE} leads to compilation error
+	 */
+	private static void whileLoop() {
+		while (TRUE) { // assertEmpty()
+			nop(); // assertNotCovered()
+			break; // assertEmpty()
+		}
+	}
+
+	private static void doWhileLoop() {
+		do { // assertEmpty()
+			nop(); // assertNotCovered()
+		} while (FALSE); // assertEmpty()
+	}
+
+	private static void doWhileLoop2() {
+		do { // assertEmpty()
+			nop(); // assertNotCovered()
+			if (TRUE) /* TODO compare when not constant */
+				break; // assertEmpty()
+		} while (TRUE); // assertEmpty()
+	}
+
+	private static void noInCaseOfSwitchStatement() {
+		switch (42) { // assertNotCovered(2, 0)
+		case 42: // assertEmpty()
+			nop("42"); // assertNotCovered()
+			break; // assertNotCovered()
+		default: // assertEmpty()
+			nop("default"); // assertNotCovered()
+			break; // assertEmpty()
 		} // assertEmpty()
 	}
 

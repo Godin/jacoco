@@ -143,6 +143,14 @@ public class StringSwitchTarget {
 		}
 	}
 
+	private static void defaultOnly() {
+		switch ("") { // assertNotCovered()
+		default: // assertEmpty()
+			nop("default"); // assertNotCovered()
+			break; // assertEmpty()
+		} // assertEmpty()
+	}
+
 	public static void main(String[] args) {
 		covered("");
 		covered("a");

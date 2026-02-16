@@ -38,6 +38,50 @@ object KotlinConditionalCompilationTarget {
         } // assertEmpty()
     }
 
+    private fun whileLoop() {
+        while (TRUE) { // assertNotCovered()
+            nop() // assertNotCovered()
+            break // assertNotCovered()
+        } // assertEmpty()
+    }
+
+    private fun doWhileLoop() {
+        do { // assertEmpty()
+            nop() // assertNotCovered()
+        } while (FALSE) // assertNotCovered()
+    }
+
+    private fun doDoWhileLoop2() {
+        do { // assertEmpty()
+            nop() // assertNotCovered()
+        } while (TRUE) // assertNotCovered()
+    }
+
+    private fun doDoWhileLoop3() {
+        do { // assertEmpty()
+            break // assertNotCovered()
+        } while (TRUE) // assertEmpty()
+    }
+
+    /**
+     * cf with Java
+     */
+    private fun wip() {
+        when (2) { // assertNotCovered()
+            0 -> nop("0") // assertNotCovered()
+            1 -> nop("1") // assertNotCovered()
+            2 -> nop("2") // assertNotCovered()
+            else -> nop("else") // assertEmpty()
+        } // assertEmpty()
+
+        when (0) { // assertNotCovered()
+            0 -> nop("0") // assertNotCovered()
+            1 -> nop("1") // assertEmpty()
+            2 -> nop("2") // assertEmpty()
+            else -> nop("else") // assertEmpty()
+        } // assertEmpty()
+    }
+
     @JvmStatic
     fun main(args: Array<String>) {
         conditionFalse()

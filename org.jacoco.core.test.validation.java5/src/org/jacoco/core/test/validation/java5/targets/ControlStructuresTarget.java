@@ -17,6 +17,7 @@ import static org.jacoco.core.test.validation.targets.Stubs.i2;
 import static org.jacoco.core.test.validation.targets.Stubs.nop;
 import static org.jacoco.core.test.validation.targets.Stubs.t;
 
+import java.net.URI;
 import java.util.Collections;
 
 /**
@@ -161,7 +162,7 @@ public class ControlStructuresTarget {
 			break;
 		default:
 			nop(); // assertNotCovered()
-			break;
+			break; // assertEmpty()
 		}
 
 	}
@@ -248,7 +249,7 @@ public class ControlStructuresTarget {
 			break;
 		default:
 			nop(); // assertFullyCovered()
-			break;
+			break; // assertEmpty()
 		}
 
 	}
@@ -264,8 +265,30 @@ public class ControlStructuresTarget {
 			break;
 		case 2:
 			nop(); // assertFullyCovered()
-			break;
+			break; // assertEmpty()
 		}
+
+	}
+
+	private static void switchDefaultOnly(final int i) {
+
+		switch (i) { // assertNotCovered()
+		default: // assertEmpty()
+			nop(); // assertNotCovered()
+			break; // assertEmpty()
+		} // assertEmpty()
+
+	}
+
+	private static void switchEmpty(final int i) {
+
+		switch (i) { // assertNotCovered()
+		}
+
+		switch (0) { // assertNotCovered()
+		}
+
+		nop();
 
 	}
 
