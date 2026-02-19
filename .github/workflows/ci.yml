@@ -8,36 +8,7 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - jdk: 6
-          - jdk: 7
-          - jdk: 8
-          - jdk: 8
-            ecj: true
-          - jdk: 9
-          - jdk: 10
-          - jdk: 11
-          - jdk: 11
-            ecj: true
-          - jdk: 12
-          - jdk: 13
-          - jdk: 14
-          - jdk: 15
-          - jdk: 16
-          - jdk: 17
-          - jdk: 17
-            ecj: true
           - jdk: 18
-          - jdk: 19
-          - jdk: 20
-          - jdk: 21
-          - jdk: 21
-            ecj: true
-          - jdk: 22
-          - jdk: 23
-          - jdk: 23
-            ecj: true
-          - jdk: 24
-          - jdk: 25
     name: JDK ${{ matrix.jdk }}${{ matrix.ecj && ' with ECJ' || ''}}
     runs-on: ubuntu-24.04
     steps:
@@ -47,7 +18,11 @@ jobs:
           distribution: 'zulu'
           java-version: |
             ${{ matrix.jdk }}
-            17
+      - run: |
+          set -x
+          wget "https://repo1.maven.org/maven2/org/jacoco/org.jacoco.agent/0.8.14/org.jacoco.agent-0.8.14-runtime.jar"
+          java -javaagent:org.jacoco.agent-0.8.14-runtime.jar -version
+          java -javaagent:org.jacoco.agent-0.8.14-runtime.jar=jmx=true -version
       - name: 'Generate toolchains.xml'
         env:
           JDK_VERSION: ${{ matrix.jdk }}
@@ -85,6 +60,7 @@ jobs:
           java-version: |
             6
             17
+      - run: exit 1
       - name: 'Generate toolchains.xml'
         env:
           JDK_VERSION: 6
