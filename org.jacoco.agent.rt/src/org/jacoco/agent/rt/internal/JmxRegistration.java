@@ -33,6 +33,7 @@ class JmxRegistration implements Callable<Void> {
 	private final ObjectName name;
 
 	JmxRegistration(final IAgent agent) throws Exception {
+		((MBeanServer) null).getClass();
 		server = ManagementFactory.getPlatformMBeanServer();
 		name = new ObjectName(JMX_NAME);
 		server.registerMBean(new StandardMBean(agent, IAgent.class), name);
