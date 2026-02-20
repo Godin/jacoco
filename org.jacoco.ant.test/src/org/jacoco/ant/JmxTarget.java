@@ -27,7 +27,6 @@ public class JmxTarget {
 		final JMXServiceURL url = new JMXServiceURL(
 				"service:jmx:rmi:///jndi/rmi://127.0.0.1:9999/jmxrmi");
 		final HashMap<String, Object> environment = new HashMap<String, Object>();
-		environment.put("prop_retry_without_ssl", "true");
 		environment.put("jmx.remote.credentials",
 				new String[] { "user", "password" });
 		final JMXConnector jmxConnector = JMXConnectorFactory.connect(url,

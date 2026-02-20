@@ -50,7 +50,16 @@
 				<jvmarg value="-Dcom.sun.management.jmxremote.authenticate=true"/>
 				<jvmarg value="-Dcom.sun.management.jmxremote.access.file=${temp.dir}/jmxremote.access"/>
 				<jvmarg value="-Dcom.sun.management.jmxremote.password.file=${temp.dir}/jmxremote.password"/>
-				<jvmarg value="-Dcom.sun.management.jmxremote.ssl=false"/>
+				<jvmarg value="-Dcom.sun.management.jmxremote.ssl=true"/>
+				<jvmarg value="-Dcom.sun.management.jmxremote.ssl.need.client.auth=true"/>
+				<!--
+				keytool -genkeypair -alias test -keyalg RSA -keysize 2048 -validity 36500 \
+					-keystore keystore.jks -storepass password -keypass password -dname "CN=localhost"
+				-->
+				<jvmarg value="-Djavax.net.ssl.keyStore=${basedir}/data/keystore.jks"/>
+				<jvmarg value="-Djavax.net.ssl.keyStorePassword=password"/>
+				<jvmarg value="-Djavax.net.ssl.trustStore=${basedir}/data/keystore.jks"/>
+				<jvmarg value="-Djavax.net.ssl.trustStorePassword=password"/>
 				<jvmarg value="-Dcom.sun.management.jmxremote.port=9999"/>
 				<jvmarg value="-Dcom.sun.management.jmxremote.host=localhost"/>
 				<jvmarg value="-Djava.rmi.server.hostname=localhost"/>
