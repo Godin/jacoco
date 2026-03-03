@@ -52,18 +52,33 @@ public class AgentTest implements IExceptionLogger, IAgentOutput {
 	private Exception loggedException;
 
 	/**
-	 * Avoids https://bugs.openjdk.org/browse/JDK-8287073 that was fixed in
-	 * OpenJDK version 19, but backported only to OpenJDK versions 8u392,
-	 * 11.0.17, 17.0.5.
+	 * Allows to avoid part of https://bugs.openjdk.org/browse/JDK-8287073,
+	 * which was fixed in OpenJDK version 19, but backported only to OpenJDK
+	 * versions 8u392, 11.0.17, 17.0.5.
 	 */
 	@BeforeClass
 	public static void beforeClass() {
+		// After failed invocation
 		try {
 			ManagementFactory.getPlatformMBeanServer();
 		} catch (final NullPointerException ignore) {
-			// in jdk.internal.platform.cgroupv2.CgroupV2Subsystem.getInstance
+			// at jdk.internal.platform.cgroupv2.CgroupV2Subsystem.getInstance
+			// ...
+			// com.sun.management.internal.OperatingSystemImpl.<init>
+			// com.sun.management.internal.PlatformMBeanProviderImpl.getOperatingSystemMXBean
+			// ...
 		}
+		// Tests and code under tests able to do some operations with
 		ManagementFactory.getPlatformMBeanServer();
+		try {
+			ManagementFactory.getOperatingSystemMXBean();
+		} catch (final NullPointerException expected) {
+			// at jdk.internal.platform.cgroupv2.CgroupV2Subsystem.getInstance
+			// ...
+			// java.lang.management.ManagementFactory.getPlatformMXBean
+			// com.sun.management.internal.OperatingSystemImpl.<init>
+			// ...
+		}
 	}
 
 	@Before
