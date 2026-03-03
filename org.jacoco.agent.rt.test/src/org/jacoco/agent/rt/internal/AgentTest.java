@@ -62,22 +62,35 @@ public class AgentTest implements IExceptionLogger, IAgentOutput {
 		try {
 			ManagementFactory.getPlatformMBeanServer();
 		} catch (final NullPointerException ignore) {
-			// at jdk.internal.platform.cgroupv2.CgroupV2Subsystem.getInstance
+			// Cannot invoke "jdk.internal.platform.CgroupInfo.getMountPoint()"
+			// because "anyController" is null
+			// at
+			// jdk.internal.platform.cgroupv2.CgroupV2Subsystem.getInstance
 			// ...
 			// com.sun.management.internal.OperatingSystemImpl.<init>
 			// com.sun.management.internal.PlatformMBeanProviderImpl.getOperatingSystemMXBean
 			// ...
-		}
-		// Tests and code under tests able to do some operations with
-		ManagementFactory.getPlatformMBeanServer();
-		try {
-			ManagementFactory.getOperatingSystemMXBean();
-		} catch (final NullPointerException expected) {
-			// at jdk.internal.platform.cgroupv2.CgroupV2Subsystem.getInstance
-			// ...
-			// java.lang.management.ManagementFactory.getPlatformMXBean
-			// com.sun.management.internal.OperatingSystemImpl.<init>
-			// ...
+			// java.lang.management.ManagementFactory.getPlatformMBeanServer
+
+			// After failed invocation tests and code under tests able to do
+			// some operations with
+			ManagementFactory.getPlatformMBeanServer();
+			try {
+				ManagementFactory.getOperatingSystemMXBean();
+				fail("Exception expected");
+			} catch (final NullPointerException expected) {
+				// Cannot invoke
+				// "jdk.internal.platform.CgroupInfo.getMountPoint()"
+				// because "anyController" is null
+				// at
+				// jdk.internal.platform.cgroupv2.CgroupV2Subsystem.getInstance
+				// ...
+				// com.sun.management.internal.OperatingSystemImpl.<init>
+				// com.sun.management.internal.PlatformMBeanProviderImpl.getOperatingSystemMXBean
+				// ...
+				// java.lang.management.ManagementFactory.getPlatformMXBean
+				// java.lang.management.ManagementFactory.getOperatingSystemMXBean
+			}
 		}
 	}
 
