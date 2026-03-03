@@ -68,8 +68,9 @@ public class AgentTest implements IExceptionLogger, IAgentOutput {
 			// com.sun.management.internal.PlatformMBeanProviderImpl.getOperatingSystemMXBean
 			// ...
 		}
-		// Tests and code under tests able to do some operations with
+		// Tests and code under tests able to do some operations such as
 		ManagementFactory.getPlatformMBeanServer();
+		// But not for example
 		try {
 			ManagementFactory.getOperatingSystemMXBean();
 		} catch (final NullPointerException expected) {
