@@ -171,6 +171,11 @@ public class MockSocketConnectionTest extends ExecutorTestBase {
 			fail("IndexOutOfBoundsException expected");
 		} catch (final IndexOutOfBoundsException e) {
 			// expected
+			assertEquals(!REAL_SOCKETS ? null
+					: (JavaVersion.current().isBefore("13")
+							? "length == 1 off == -1 buffer length == 0"
+							: "Range [-1, -1 + 1) out of bounds for length 0"),
+					e.getMessage());
 		}
 	}
 
@@ -188,6 +193,11 @@ public class MockSocketConnectionTest extends ExecutorTestBase {
 			fail("IndexOutOfBoundsException expected");
 		} catch (final IndexOutOfBoundsException e) {
 			// expected
+			assertEquals(!REAL_SOCKETS ? null
+					: (JavaVersion.current().isBefore("13")
+							? "length == 1 off == -1 buffer length == 0"
+							: "Range [1, 1 + 0) out of bounds for length 0"),
+					e.getMessage());
 		}
 	}
 
@@ -200,6 +210,11 @@ public class MockSocketConnectionTest extends ExecutorTestBase {
 			fail("IndexOutOfBoundsException expected");
 		} catch (final IndexOutOfBoundsException e) {
 			// expected
+			assertEquals(!REAL_SOCKETS ? null
+					: (JavaVersion.current().isBefore("13")
+							? "length == -1 off == 0 buffer length == 1"
+							: "Range [0, 0 + -1) out of bounds for length 1"),
+					e.getMessage());
 		}
 	}
 
@@ -212,6 +227,11 @@ public class MockSocketConnectionTest extends ExecutorTestBase {
 			fail("IndexOutOfBoundsException expected");
 		} catch (final IndexOutOfBoundsException e) {
 			// expected
+			assertEquals(!REAL_SOCKETS ? null
+					: (JavaVersion.current().isBefore("13")
+							? "length == 1 off == 1 buffer length == 1"
+							: "Range [1, 1 + 1) out of bounds for length 1"),
+					e.getMessage());
 		}
 	}
 
