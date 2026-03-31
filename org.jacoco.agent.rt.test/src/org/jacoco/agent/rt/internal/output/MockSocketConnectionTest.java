@@ -41,8 +41,10 @@ public class MockSocketConnectionTest extends ExecutorTestBase {
 	 * To verify that the tests reflect the behavior of real TCP sockets this
 	 * flag can be set to <code>true</code>.
 	 */
-	private static final boolean REAL_SOCKETS = Boolean
-			.getBoolean("MockSocketConnectionTest.realSockets");
+	private static final boolean REAL_SOCKETS = //
+			true;
+	// Boolean
+	// .getBoolean("MockSocketConnectionTest.realSockets");
 
 	private Socket a;
 
