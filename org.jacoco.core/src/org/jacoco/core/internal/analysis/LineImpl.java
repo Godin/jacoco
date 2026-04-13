@@ -155,12 +155,12 @@ public abstract class LineImpl implements ILine {
 		}
 		final BitSet result = new BitSet(branches.getTotalCount());
 		for (int i = 0; i < branches.getTotalCount(); i++) {
-			result.set(i, get(coveredBranches, i));
+//			result.set(i, get(coveredBranches, i));
 		}
 		return result;
 	}
 
-	private static boolean get(final int bitSet, final int i) {
+	public static boolean get(final int bitSet, final int i) {
 		return (bitSet & (1 << i)) != 0;
 	}
 
