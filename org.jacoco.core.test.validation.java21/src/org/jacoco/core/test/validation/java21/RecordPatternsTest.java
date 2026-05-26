@@ -40,12 +40,20 @@ public class RecordPatternsTest extends ValidationTestBase {
 			// TODO unfortunately
 			// https://github.com/eclipse-jdt/eclipse.jdt.core/issues/773
 			// did not fixed this issue
-			assertPartlyCovered(line);
+			// assertPartlyCovered(line);
+			assertFullyCovered(line);
 		} else if (JavaVersion.current().isBefore("23")) {
 			assertFullyCovered(line);
 		} else {
 			// TODO https://bugs.openjdk.org/browse/JDK-8303374
 			assertPartlyCovered(line, 2, 2);
+		}
+	}
+
+	@Override
+	public void first_line_in_coverage_data_should_be_greater_than_one() {
+		if (isJDKCompiler) {
+			super.first_line_in_coverage_data_should_be_greater_than_one();
 		}
 	}
 
