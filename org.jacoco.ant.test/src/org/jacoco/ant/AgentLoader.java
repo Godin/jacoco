@@ -57,6 +57,18 @@ public final class AgentLoader {
 		final Method premain = agentClass.getDeclaredMethod("premain",
 				String.class, Instrumentation.class);
 		premain.invoke(null, "", instrumentation);
+
+		Object m1 = getModule(Object.class);
+		System.err.println(m1);
+		Object m2 = getModule(Class.forName("java.lang.$JaCoCo"));
+		System.err.println(m2);
+		if (m1 == m2 || m1 != m2) {
+			throw new AssertionError();
+		}
+	}
+
+	private static Object getModule(Class<?> cls) throws Exception {
+		return Class.class.getMethod("getModule").invoke(cls);
 	}
 
 }
