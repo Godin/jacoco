@@ -49,6 +49,20 @@ jobs:
           java-version: |
             ${{ matrix.jdk }}
             21
+      - &cache
+        uses: actions/cache@27d5ce7f107fe9357f9df03efb73ab90386fccae # v5.0.5
+        with:
+          path: |
+            ~/.m2/repository
+            ~/.m2/wrapper
+          key: maven-${{ runner.os }}-${{ hashFiles('**/pom.xml', '.mvn/wrapper/maven-wrapper.properties') }}
+          restore-keys: maven-${{ runner.os }}
+      - name:
+        # First job from matrix to complete will save cache,
+        # and it might contain not all modules (eg job `JDK 6`),
+        # but their dependencies should be cached:
+        run: |
+          mvn --quiet dependency:go-offline
       - name: 'Generate toolchains.xml'
         env:
           JDK_VERSION: ${{ matrix.jdk }}
@@ -70,7 +84,7 @@ jobs:
           " > toolchains.xml
       - name: 'Build'
         run: |
-          ./mvnw -V -B -e --no-transfer-progress \
+          ./mvnw -V -B -e \
             verify -Djdk.version=${{ matrix.jdk }} -Dbytecode.version=${{ matrix.jdk }} \
             ${{ matrix.ecj && '-Decj' || ''}} \
             --toolchains=toolchains.xml
@@ -85,6 +99,7 @@ jobs:
           java-version: |
             6
             21
+      - *cache
       - name: 'Generate toolchains.xml'
         env:
           JDK_VERSION: 6
@@ -108,7 +123,7 @@ jobs:
       - name: 'Build'
         shell: bash
         run: |
-          ./mvnw -V -B -e --no-transfer-progress \
+          ./mvnw -V -B -e \
             verify -Djdk.version=6 -Dbytecode.version=5 \
             -f org.jacoco.build \
             ${{ secrets.SONARQUBE_TOKEN && 'sonar:sonar' || '' }} \
