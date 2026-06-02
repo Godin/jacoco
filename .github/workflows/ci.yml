@@ -85,6 +85,7 @@ jobs:
       - name: 'Build'
         run: |
           ./mvnw -V -B -e \
+            -Dinvoker.parallelThreads=0.5C \
             verify -Djdk.version=${{ matrix.jdk }} -Dbytecode.version=${{ matrix.jdk }} \
             ${{ matrix.ecj && '-Decj' || ''}} \
             --toolchains=toolchains.xml
