@@ -9,18 +9,24 @@ jobs:
       matrix:
         include:
           - jdk: 6
+            x64: true
           - jdk: 7
+            x64: true
           - jdk: 8
           - jdk: 8
             ecj: true
           - jdk: 9
+            x64: true
           - jdk: 10
+            x64: true
           - jdk: 11
           - jdk: 11
             ecj: true
           - jdk: 12
+            x64: true
           - jdk: 13
           - jdk: 14
+            x64: true
           - jdk: 15
           - jdk: 16
           - jdk: 17
@@ -39,8 +45,8 @@ jobs:
           - jdk: 24
           - jdk: 25
           - jdk: 26
-    name: JDK ${{ matrix.jdk }}${{ matrix.ecj && ' with ECJ' || ''}}
-    runs-on: ubuntu-24.04
+    name: JDK ${{ matrix.jdk }}${{ matrix.ecj && ' with ECJ' || ''}} ${{ matrix.x64 && 'x64' || 'arm' }}
+    runs-on: ubuntu-24.04${{ matrix.x64 && '' || '-arm' }}
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
       - uses: actions/setup-java@be666c2fcd27ec809703dec50e508c2fdc7f6654 # v5.2.0
@@ -66,7 +72,7 @@ jobs:
       - name: 'Generate toolchains.xml'
         env:
           JDK_VERSION: ${{ matrix.jdk }}
-          JDK_HOME_VARIABLE_NAME: JAVA_HOME_${{ matrix.jdk }}_X64
+          JDK_HOME_VARIABLE_NAME: JAVA_HOME_${{ matrix.jdk }}_${{ matrix.x64 && 'X64' || 'ARM64' }}
         run: |
           echo "
           <toolchains>
