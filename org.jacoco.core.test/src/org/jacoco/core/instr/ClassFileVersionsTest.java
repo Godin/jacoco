@@ -204,6 +204,11 @@ public class ClassFileVersionsTest {
 		testVersion(V26 + 1, true);
 	}
 
+	@Test
+	public void test_28() throws IOException {
+		testVersion(V26 + 2, true);
+	}
+
 	private void testVersion(int version, boolean frames) throws IOException {
 		final byte[] original = createClass(version, frames);
 
