@@ -29,9 +29,21 @@ public class JEP401Target {
 		} // assertFullyCovered()
 	} // assertEmpty()
 
+	private static value class StrictInit {
+		private int v;
+		StrictInit(int v) {
+			if (v < 0) {
+				this.v = -v;
+			} else {
+				this.v = v;
+			}
+		}
+	}
+
 	public static void main(String[] args) {
 		new R(1);
 		new C(1);
+		new StrictInit(1);
 	}
 
 }
