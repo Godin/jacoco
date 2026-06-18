@@ -40,21 +40,21 @@ public class RecordPatternsTarget {
 	}
 
 	private static String nestedRecordPattern(Object o) {
-		return switch (o) { // assertJavacFully(0,4) assertEcjFully(0,7)
-		case R(String c) -> // assertJavacPartly(1,2) assertEcjFully(0,2)
+		return switch (o) { // assertFullyCovered(0,7)
+		case R(String c) -> // assertJavacFully() assertEcjFully(0,2)
 			"R(String)"; // assertFullyCovered()
-		case R(Integer c) -> // assertJavacFully(0,0) assertEcjFully(0,2)
+		case R(Integer c) -> // assertJavacFully() assertEcjFully(0,2)
 			"R(Integer)"; // assertFullyCovered()
-		case R(R(String c)) -> // assertJavacFully(0,0) assertEcjPartly(1,3)
+		case R(R(String c)) -> // assertJavacFully() assertEcjPartly(1,3)
 			"R(R(String))"; // assertFullyCovered()
-		case R(R(Integer c)) -> // assertJavacFully(0,0) assertEcjPartly(2,2)
+		case R(R(Integer c)) -> // assertJavacFully() assertEcjPartly(2,2)
 			"R(R(Integer))"; // assertFullyCovered()
 		case String c -> // assertFullyCovered()
 			"String"; // assertFullyCovered()
 		case Integer i -> // assertFullyCovered()
 			"Integer"; // assertFullyCovered()
 		default -> // assertEmpty()
-			"default"; // assertJavacPartly(1,3) assertEcjFully(0,0)
+			"default"; // assertFullyCovered()
 		}; // assertEmpty()
 	}
 
