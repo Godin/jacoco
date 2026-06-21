@@ -35,6 +35,11 @@ jobs:
       " > toolchains.xml
     displayName: Setup JDK
   - bash: |
+      git clone https://gitlab.ow2.org/asm/asm.git
+      cd asm
+      git checkout STRICT_FIELD_INIT
+      ./gradle/gradlew publishToMavenLocal
+  - bash: |
       if [[ "$JDK_VERSION" -ge "21" ]]; then
         export JAVA_HOME=$PWD/.jdk
       else
