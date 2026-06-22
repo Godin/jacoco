@@ -19,20 +19,25 @@ import java.util.List;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.commons.AnalyzerAdapter;
+import org.objectweb.asm.tree.NameAndType;
 
 /**
  * IFrame implementation which creates snapshots from an {@link AnalyzerAdapter}
  */
 class FrameSnapshot implements IFrame {
 
-	private static final FrameSnapshot NOP = new FrameSnapshot(null, null);
+	private static final FrameSnapshot NOP = new FrameSnapshot(null, null,
+			null);
 
 	private final Object[] locals;
 	private final Object[] stack;
+	private final String[] unsetFields;
 
-	private FrameSnapshot(final Object[] locals, final Object[] stack) {
+	private FrameSnapshot(final Object[] locals, final Object[] stack,
+			final String[] unsetFields) {
 		this.locals = locals;
 		this.stack = stack;
+		this.unsetFields = unsetFields;
 	}
 
 	/**
@@ -51,7 +56,19 @@ class FrameSnapshot implements IFrame {
 		}
 		final Object[] locals = reduce(analyzer.locals, 0);
 		final Object[] stack = reduce(analyzer.stack, popCount);
-		return new FrameSnapshot(locals, stack);
+		final String[] unsetFields;
+		if (analyzer.unsetFields != null) {
+			unsetFields = new String[analyzer.unsetFields.size() * 2];
+			int i = 0;
+			for (NameAndType nameAndType : analyzer.unsetFields) {
+				unsetFields[i] = nameAndType.name;
+				unsetFields[i + 1] = nameAndType.descriptor;
+				i += 2;
+			}
+		} else {
+			unsetFields = null;
+		}
+		return new FrameSnapshot(locals, stack, unsetFields);
 	}
 
 	/**
@@ -78,7 +95,7 @@ class FrameSnapshot implements IFrame {
 	public void accept(final MethodVisitor mv) {
 		if (locals != null) {
 			mv.visitFrame(Opcodes.F_NEW, locals.length, locals, stack.length,
-					stack);
+					stack, unsetFields);
 		}
 	}
 

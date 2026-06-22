@@ -33,10 +33,11 @@ class DuplicateFrameEliminator extends MethodVisitor {
 
 	@Override
 	public void visitFrame(final int type, final int nLocal,
-			final Object[] local, final int nStack, final Object[] stack) {
+			final Object[] local, final int nStack, final Object[] stack,
+			final String[] unsetFields) {
 		if (instruction) {
 			instruction = false;
-			mv.visitFrame(type, nLocal, local, nStack, stack);
+			mv.visitFrame(type, nLocal, local, nStack, stack, unsetFields);
 		}
 	}
 

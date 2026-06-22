@@ -164,7 +164,8 @@ class ProbeInserter extends MethodVisitor implements IProbeInserter {
 
 	@Override
 	public final void visitFrame(final int type, final int nLocal,
-			final Object[] local, final int nStack, final Object[] stack) {
+			final Object[] local, final int nStack, final Object[] stack,
+			final String[] unsetFields) {
 
 		if (type != Opcodes.F_NEW) { // uncompressed frame
 			throw new IllegalArgumentException(
@@ -194,7 +195,7 @@ class ProbeInserter extends MethodVisitor implements IProbeInserter {
 			newLocal[newIdx++] = local[idx++];
 		}
 
-		mv.visitFrame(type, newIdx, newLocal, nStack, stack);
+		mv.visitFrame(type, newIdx, newLocal, nStack, stack, unsetFields);
 	}
 
 }

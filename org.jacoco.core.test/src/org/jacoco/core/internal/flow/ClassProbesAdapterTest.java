@@ -51,7 +51,7 @@ public class ClassProbesAdapterTest {
 
 		@Override
 		public void visitFrame(int type, int nLocal, Object[] local, int nStack,
-				Object[] stack) {
+				Object[] stack, String[] unsetFields) {
 			frame = true;
 		}
 	}

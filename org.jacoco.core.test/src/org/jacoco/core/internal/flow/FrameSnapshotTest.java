@@ -22,6 +22,9 @@ import org.objectweb.asm.Label;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.commons.AnalyzerAdapter;
+import org.objectweb.asm.tree.NameAndType;
+
+import java.util.Collections;
 
 /**
  * Unit tests for {@link FrameSnapshot}.
@@ -100,6 +103,18 @@ public class FrameSnapshotTest {
 
 		final Object[] stack = arr(Opcodes.INTEGER, Opcodes.LONG);
 		expectedVisitor.visitFrame(Opcodes.F_FULL, 1, arr("Foo"), 2, stack);
+	}
+
+	@Test
+	public void should_capture_early_larval_frame() {
+		analyzer = new AnalyzerAdapter("Foo",
+				Collections.singleton(new NameAndType("c", "I")), 0, "<init>",
+				"()V", null);
+
+		expectedVisitor.visitFrame(Opcodes.F_FULL, 1,
+				new Object[] { Opcodes.UNINITIALIZED_THIS }, 0, null,
+				new String[] { "c", "I" });
+		frame = FrameSnapshot.create(analyzer, 0);
 	}
 
 	/**
