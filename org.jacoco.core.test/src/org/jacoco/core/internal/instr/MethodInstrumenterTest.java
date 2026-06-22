@@ -52,7 +52,7 @@ public class MethodInstrumenterTest {
 				probeInserter);
 		frame = new IFrame() {
 			public void accept(MethodVisitor mv) {
-				mv.visitFrame(Opcodes.F_FULL, 0, null, 0, null);
+				mv.visitFrame(Opcodes.F_FULL, 0, null, 0, null, null);
 			}
 		};
 	}
@@ -186,7 +186,7 @@ public class MethodInstrumenterTest {
 		expectedVisitor.visitLdcInsn("Probe 3");
 		expectedVisitor.visitJumpInsn(Opcodes.GOTO, label);
 		expectedVisitor.visitLabel(l2);
-		expectedVisitor.visitFrame(Opcodes.F_FULL, 0, null, 0, null);
+		expectedVisitor.visitFrame(Opcodes.F_FULL, 0, null, 0, null, null);
 
 		assertEquals(expected, actual);
 	}
@@ -204,11 +204,11 @@ public class MethodInstrumenterTest {
 		expectedVisitor.visitTableSwitchInsn(3, 4, L0,
 				new Label[] { L1, L1, L2 });
 		expectedVisitor.visitLabel(L0);
-		expectedVisitor.visitFrame(Opcodes.F_FULL, 0, null, 0, null);
+		expectedVisitor.visitFrame(Opcodes.F_FULL, 0, null, 0, null, null);
 		expectedVisitor.visitLdcInsn("Probe 0");
 		expectedVisitor.visitJumpInsn(Opcodes.GOTO, new Label());
 		expectedVisitor.visitLabel(L1);
-		expectedVisitor.visitFrame(Opcodes.F_FULL, 0, null, 0, null);
+		expectedVisitor.visitFrame(Opcodes.F_FULL, 0, null, 0, null, null);
 		expectedVisitor.visitLdcInsn("Probe 1");
 		expectedVisitor.visitJumpInsn(Opcodes.GOTO, new Label());
 
@@ -228,11 +228,11 @@ public class MethodInstrumenterTest {
 		expectedVisitor.visitLookupSwitchInsn(L0, new int[] { 10, 20, 30 },
 				new Label[] { L1, L1, L2 });
 		expectedVisitor.visitLabel(L0);
-		expectedVisitor.visitFrame(Opcodes.F_FULL, 0, null, 0, null);
+		expectedVisitor.visitFrame(Opcodes.F_FULL, 0, null, 0, null, null);
 		expectedVisitor.visitLdcInsn("Probe 0");
 		expectedVisitor.visitJumpInsn(Opcodes.GOTO, new Label());
 		expectedVisitor.visitLabel(L1);
-		expectedVisitor.visitFrame(Opcodes.F_FULL, 0, null, 0, null);
+		expectedVisitor.visitFrame(Opcodes.F_FULL, 0, null, 0, null, null);
 		expectedVisitor.visitLdcInsn("Probe 1");
 		expectedVisitor.visitJumpInsn(Opcodes.GOTO, new Label());
 

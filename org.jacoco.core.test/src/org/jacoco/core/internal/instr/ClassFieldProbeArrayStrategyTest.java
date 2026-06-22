@@ -83,7 +83,7 @@ public class ClassFieldProbeArrayStrategyTest {
 					"$jacocoData", "[Z");
 			if (withFrames) {
 				expected.visitFrame(Opcodes.F_FULL, 0, new Object[] {}, 1,
-						new Object[] { "[Z" });
+						new Object[] { "[Z" }, null);
 			}
 			expected.visitLabel(label);
 			expected.visitInsn(Opcodes.ARETURN);

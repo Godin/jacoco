@@ -14,6 +14,8 @@ package org.jacoco.core.internal.flow;
 
 import static org.junit.Assert.assertEquals;
 
+import java.util.Collections;
+
 import org.jacoco.core.instr.MethodRecorder;
 import org.junit.After;
 import org.junit.Before;
@@ -23,8 +25,6 @@ import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.commons.AnalyzerAdapter;
 import org.objectweb.asm.tree.NameAndType;
-
-import java.util.Collections;
 
 /**
  * Unit tests for {@link FrameSnapshot}.

@@ -244,7 +244,7 @@ public class ProbeInserterTest {
 
 		pi.visitFrame(Opcodes.F_NEW, 3,
 				new Object[] { "Foo", Opcodes.LONG, "java/lang/String" }, 0,
-				new Object[0]);
+				new Object[0], null);
 
 		expectedVisitor.visitFrame(Opcodes.F_NEW, 5, new Object[] { //
 				"Foo", //
@@ -252,7 +252,7 @@ public class ProbeInserterTest {
 				Opcodes.TOP, // safety slot
 				"[Z", // probe array
 				"java/lang/String" //
-		}, 0, new Object[0]);
+		}, 0, new Object[0], null);
 	}
 
 	@Test
@@ -260,12 +260,13 @@ public class ProbeInserterTest {
 		ProbeInserter pi = new ProbeInserter(Opcodes.ACC_STATIC, "m", "()V",
 				actualVisitor, arrayStrategy);
 
-		pi.visitFrame(Opcodes.F_NEW, 0, new Object[] {}, 0, new Object[0]);
+		pi.visitFrame(Opcodes.F_NEW, 0, new Object[] {}, 0, new Object[0],
+				null);
 
 		expectedVisitor.visitFrame(Opcodes.F_NEW, 2, new Object[] { //
 				Opcodes.TOP, // safety slot
 				"[Z", // probe array
-		}, 0, new Object[0]);
+		}, 0, new Object[0], null);
 	}
 
 	@Test
@@ -274,14 +275,14 @@ public class ProbeInserterTest {
 				actualVisitor, arrayStrategy);
 
 		pi.visitFrame(Opcodes.F_NEW, 2, new Object[] { Opcodes.DOUBLE, "Foo" },
-				0, new Object[0]);
+				0, new Object[0], null);
 
 		expectedVisitor.visitFrame(Opcodes.F_NEW, 4, new Object[] { //
 				Opcodes.TOP, // safety slot
 				"[Z", // probe array
 				Opcodes.DOUBLE, //
 				"Foo" //
-		}, 0, new Object[0]);
+		}, 0, new Object[0], null);
 	}
 
 	@Test
@@ -289,14 +290,15 @@ public class ProbeInserterTest {
 		ProbeInserter pi = new ProbeInserter(Opcodes.ACC_STATIC, "m", "(I)V",
 				actualVisitor, arrayStrategy);
 
-		pi.visitFrame(Opcodes.F_NEW, 0, new Object[] {}, 0, new Object[] {});
+		pi.visitFrame(Opcodes.F_NEW, 0, new Object[] {}, 0, new Object[] {},
+				null);
 
 		// The locals in this frame are filled with TOP up to the probe variable
 		expectedVisitor.visitFrame(Opcodes.F_NEW, 3, new Object[] { //
 				Opcodes.TOP, //
 				Opcodes.TOP, // safety slot
 				"[Z", // probe array
-		}, 0, new Object[] {});
+		}, 0, new Object[] {}, null);
 	}
 
 	@Test
@@ -304,7 +306,8 @@ public class ProbeInserterTest {
 		ProbeInserter pi = new ProbeInserter(Opcodes.ACC_STATIC, "m", "(J)V",
 				actualVisitor, arrayStrategy);
 
-		pi.visitFrame(Opcodes.F_NEW, 0, new Object[] {}, 0, new Object[] {});
+		pi.visitFrame(Opcodes.F_NEW, 0, new Object[] {}, 0, new Object[] {},
+				null);
 
 		// The locals in this frame are filled with TOP up to the probe variable
 		expectedVisitor.visitFrame(Opcodes.F_NEW, 4, new Object[] { //
@@ -312,7 +315,7 @@ public class ProbeInserterTest {
 				Opcodes.TOP, //
 				Opcodes.TOP, // safety slot
 				"[Z", // probe array
-		}, 0, new Object[] {});
+		}, 0, new Object[] {}, null);
 	}
 
 	@Test
@@ -321,7 +324,7 @@ public class ProbeInserterTest {
 				actualVisitor, arrayStrategy);
 
 		pi.visitFrame(Opcodes.F_NEW, 1, new Object[] { Opcodes.DOUBLE }, 0,
-				new Object[] {});
+				new Object[] {}, null);
 
 		// The locals in this frame are filled with TOP up to the probe variable
 		expectedVisitor.visitFrame(Opcodes.F_NEW, 6, new Object[] { //
@@ -331,7 +334,7 @@ public class ProbeInserterTest {
 				Opcodes.TOP, //
 				Opcodes.TOP, // safety slot
 				"[Z", // probe array
-		}, 0, new Object[] {});
+		}, 0, new Object[] {}, null);
 	}
 
 	@Test
@@ -346,7 +349,7 @@ public class ProbeInserterTest {
 		expectedVisitor.visitFrame(Opcodes.F_NEW, 2, new Object[] { //
 				Opcodes.DOUBLE, //
 				"[Z" // probe array
-		}, 0, new Object[] {});
+		}, 0, new Object[] {}, null);
 	}
 
 	@Test
@@ -357,14 +360,14 @@ public class ProbeInserterTest {
 		pi.visitFrame(Opcodes.F_NEW, 2, new Object[] { //
 				Opcodes.DOUBLE, //
 				Opcodes.INTEGER //
-		}, 0, new Object[] {});
+		}, 0, new Object[] {}, null);
 
 		expectedVisitor.visitFrame(Opcodes.F_NEW, 4, new Object[] { //
 				Opcodes.DOUBLE, //
 				"[Z", // probe array
 				Opcodes.TOP, //
 				Opcodes.INTEGER, //
-		}, 0, new Object[] {});
+		}, 0, new Object[] {}, null);
 	}
 
 	@Test
@@ -372,7 +375,7 @@ public class ProbeInserterTest {
 		ProbeInserter pi = new ProbeInserter(0, "m", "()V", actualVisitor,
 				arrayStrategy);
 		try {
-			pi.visitFrame(Opcodes.F_SAME, 0, null, 0, null);
+			pi.visitFrame(Opcodes.F_SAME, 0, null, 0, null, null);
 			fail("IllegalArgumentException expected");
 		} catch (final IllegalArgumentException e) {
 			// expected

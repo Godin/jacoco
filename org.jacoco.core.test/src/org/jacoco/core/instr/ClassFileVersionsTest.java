@@ -294,7 +294,7 @@ public class ClassFileVersionsTest {
 		if (frames) {
 			mv.visitFrame(F_NEW, 2,
 					new Object[] { "org/jacoco/test/Sample", Opcodes.INTEGER },
-					0, new Object[] {});
+					0, new Object[] {}, null);
 		}
 		mv.visitInsn(RETURN);
 		mv.visitMaxs(1, 2);

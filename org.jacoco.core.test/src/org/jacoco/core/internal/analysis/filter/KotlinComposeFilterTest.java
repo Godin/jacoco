@@ -183,7 +183,8 @@ public class KotlinComposeFilterTest extends FilterTestBase {
 		m.visitJumpInsn(GOTO, label11);
 		m.visitLabel(label10);
 		m.visitFrame(Opcodes.F_SAME1, 0, null, 1,
-				new Object[] { "androidx/compose/runtime/ScopeUpdateScope" });
+				new Object[] { "androidx/compose/runtime/ScopeUpdateScope" },
+				null);
 		m.visitInsn(POP);
 		range5.toInclusive = m.instructions.getLast();
 
@@ -237,7 +238,8 @@ public class KotlinComposeFilterTest extends FilterTestBase {
 		m.visitJumpInsn(GOTO, label14);
 		m.visitLabel(label13);
 		m.visitFrame(Opcodes.F_SAME1, 0, null, 1,
-				new Object[] { "androidx/compose/runtime/ScopeUpdateScope" });
+				new Object[] { "androidx/compose/runtime/ScopeUpdateScope" },
+				null);
 		m.visitInsn(POP);
 		range7.toInclusive = m.instructions.getLast();
 

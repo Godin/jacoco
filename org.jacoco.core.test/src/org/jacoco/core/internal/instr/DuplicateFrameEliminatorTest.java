@@ -151,6 +151,6 @@ public class DuplicateFrameEliminatorTest {
 
 	private void frame(MethodVisitor mv) {
 		mv.visitFrame(Opcodes.F_NEW, 1, new Object[] { Opcodes.INTEGER }, 0,
-				new Object[0]);
+				new Object[0], null);
 	}
 }

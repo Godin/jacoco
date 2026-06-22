@@ -35,7 +35,7 @@ public class AbstractMatcherTest {
 
 	@Test
 	public void skipNonOpcodes() {
-		m.visitFrame(Opcodes.F_FULL, 0, null, 0, null);
+		m.visitFrame(Opcodes.F_FULL, 0, null, 0, null, null);
 		final Label label = new Label();
 		m.visitLabel(label);
 		m.visitLineNumber(42, label);

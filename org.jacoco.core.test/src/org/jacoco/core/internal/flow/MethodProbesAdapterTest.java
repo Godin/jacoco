@@ -174,7 +174,7 @@ public class MethodProbesAdapterTest implements IProbeIdGenerator {
 		expectedVisitor.visitJumpInsnWithProbe(Opcodes.GOTO, label, 1000,
 				frame);
 		expectedVisitor.visitFrame(Opcodes.F_FULL, 1, new Object[] { "Foo" }, 0,
-				null);
+				null, null);
 	}
 
 	@Test
@@ -189,7 +189,7 @@ public class MethodProbesAdapterTest implements IProbeIdGenerator {
 		expectedVisitor.visitJumpInsnWithProbe(Opcodes.IFLT, label, 1000,
 				frame);
 		expectedVisitor.visitFrame(Opcodes.F_FULL, 1, new Object[] { "Foo" }, 0,
-				null);
+				null, null);
 	}
 
 	@Test
@@ -215,7 +215,7 @@ public class MethodProbesAdapterTest implements IProbeIdGenerator {
 		expectedVisitor.visitJumpInsnWithProbe(Opcodes.IF_ICMPEQ, label, 1000,
 				frame);
 		expectedVisitor.visitFrame(Opcodes.F_FULL, 1, new Object[] { "Foo" }, 0,
-				null);
+				null, null);
 	}
 
 	@Test
@@ -232,7 +232,7 @@ public class MethodProbesAdapterTest implements IProbeIdGenerator {
 		expectedVisitor.visitLookupSwitchInsnWithProbes(label, keys, labels,
 				frame);
 		expectedVisitor.visitFrame(Opcodes.F_FULL, 1, new Object[] { "Foo" }, 0,
-				null);
+				null, null);
 		assertEquals(1000, LabelInfo.getProbeId(label));
 	}
 
@@ -251,7 +251,7 @@ public class MethodProbesAdapterTest implements IProbeIdGenerator {
 		expectedVisitor.visitLookupSwitchInsnWithProbes(label, keys, labels,
 				frame);
 		expectedVisitor.visitFrame(Opcodes.F_FULL, 1, new Object[] { "Foo" }, 0,
-				null);
+				null, null);
 		assertEquals(LabelInfo.NO_PROBE, LabelInfo.getProbeId(label));
 		assertEquals(1000, LabelInfo.getProbeId(label2));
 	}
@@ -280,7 +280,7 @@ public class MethodProbesAdapterTest implements IProbeIdGenerator {
 		expectedVisitor.visitTableSwitchInsnWithProbes(0, 1, label, labels,
 				frame);
 		expectedVisitor.visitFrame(Opcodes.F_FULL, 1, new Object[] { "Foo" }, 0,
-				null);
+				null, null);
 		assertEquals(1000, LabelInfo.getProbeId(label));
 	}
 
@@ -298,7 +298,7 @@ public class MethodProbesAdapterTest implements IProbeIdGenerator {
 		expectedVisitor.visitTableSwitchInsnWithProbes(0, 1, label, labels,
 				frame);
 		expectedVisitor.visitFrame(Opcodes.F_FULL, 1, new Object[] { "Foo" }, 0,
-				null);
+				null, null);
 		assertEquals(LabelInfo.NO_PROBE, LabelInfo.getProbeId(label));
 		assertEquals(1000, LabelInfo.getProbeId(label2));
 	}
