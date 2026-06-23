@@ -150,16 +150,16 @@ public class ControlStructuresTarget {
 	private static void tableSwitchWithHit() {
 
 		switch (i2()) { // assertFullyCovered(3, 1)
-		case 1:
+		case 1: // assertEmpty()
 			nop(); // assertNotCovered()
 			break;
-		case 2:
+		case 2: // assertEmpty()
 			nop(); // assertFullyCovered()
 			break;
-		case 3:
+		case 3: // assertEmpty()
 			nop(); // assertNotCovered()
 			break;
-		default:
+		default: // assertEmpty()
 			nop(); // assertNotCovered()
 			break;
 		}
@@ -169,13 +169,13 @@ public class ControlStructuresTarget {
 	private static void continuedTableSwitchWithHit() {
 
 		switch (i2()) { // assertFullyCovered(3, 1)
-		case 1:
+		case 1: // assertEmpty()
 			nop(); // assertNotCovered()
-		case 2:
+		case 2: // assertEmpty()
 			nop(); // assertFullyCovered()
-		case 3:
+		case 3: // assertEmpty()
 			nop(); // assertFullyCovered()
-		default:
+		default: // assertEmpty()
 			nop(); // assertFullyCovered()
 		}
 
@@ -184,16 +184,16 @@ public class ControlStructuresTarget {
 	private static void tableSwitchWithoutHit() {
 
 		switch (i2()) { // assertFullyCovered(3, 1)
-		case 3:
+		case 3: // assertEmpty()
 			nop(); // assertNotCovered()
 			break;
-		case 4:
+		case 4: // assertEmpty()
 			nop(); // assertNotCovered()
 			break;
-		case 5:
+		case 5: // assertEmpty()
 			nop(); // assertNotCovered()
 			break;
-		default:
+		default: // assertEmpty()
 			nop(); // assertFullyCovered()
 			break;
 		}
@@ -203,16 +203,16 @@ public class ControlStructuresTarget {
 	private static void lookupSwitchWithHit() {
 
 		switch (i2()) { // assertFullyCovered(3, 1)
-		case -123:
+		case -123: // assertEmpty()
 			nop(); // assertNotCovered()
 			break;
-		case 2:
+		case 2: // assertEmpty()
 			nop(); // assertFullyCovered()
 			break;
-		case 456:
+		case 456: // assertEmpty()
 			nop(); // assertNotCovered()
 			break;
-		default:
+		default: // assertEmpty()
 			nop(); // assertNotCovered()
 			break;
 		}
@@ -222,13 +222,13 @@ public class ControlStructuresTarget {
 	private static void continuedLookupSwitchWithHit() {
 
 		switch (i2()) { // assertFullyCovered(3, 1)
-		case -123:
+		case -123: // assertEmpty()
 			nop(); // assertNotCovered()
-		case 2:
+		case 2: // assertEmpty()
 			nop(); // assertFullyCovered()
-		case 456:
+		case 456: // assertEmpty()
 			nop(); // assertFullyCovered()
-		default:
+		default: // assertEmpty()
 			nop(); // assertFullyCovered()
 		}
 
@@ -237,16 +237,16 @@ public class ControlStructuresTarget {
 	private static void lookupSwitchWithoutHit() {
 
 		switch (i2()) { // assertFullyCovered(3, 1)
-		case -123:
+		case -123: // assertEmpty()
 			nop(); // assertNotCovered()
 			break;
-		case 456:
+		case 456: // assertEmpty()
 			nop(); // assertNotCovered()
 			break;
-		case 789:
+		case 789: // assertEmpty()
 			nop(); // assertNotCovered()
 			break;
-		default:
+		default: // assertEmpty()
 			nop(); // assertFullyCovered()
 			break;
 		}
@@ -256,13 +256,13 @@ public class ControlStructuresTarget {
 	private static void switchImplicitDefaultNotExecuted(final int i) {
 
 		switch (i) { // assertFullyCovered(1, 3)
-		case 0:
+		case 0: // assertEmpty()
 			nop(); // assertFullyCovered()
 			break;
-		case 1:
+		case 1: // assertEmpty()
 			nop(); // assertFullyCovered()
 			break;
-		case 2:
+		case 2: // assertEmpty()
 			nop(); // assertFullyCovered()
 			break;
 		}

@@ -23,16 +23,16 @@ public class StringSwitchTarget {
 
 	private static void covered(Object s) {
 		switch (String.valueOf(s)) { // assertFullyCovered(0, 4)
-		case "a":
+		case "a": // assertEmpty()
 			nop("case a"); // assertFullyCovered()
 			break;
-		case "b":
+		case "b": // assertEmpty()
 			nop("case b"); // assertFullyCovered()
 			break;
-		case "\0a":
+		case "\0a": // assertEmpty()
 			nop("case \0a"); // assertFullyCovered()
 			break;
-		default:
+		default: // assertEmpty()
 			nop("case default"); // assertFullyCovered()
 			break;
 		}
@@ -40,13 +40,13 @@ public class StringSwitchTarget {
 
 	private static void executedWithSameHashCodeAsFirstCase() {
 		switch (Stubs.string("\0a")) { // assertFullyCovered(2, 1)
-		case "a":
+		case "a": // assertEmpty()
 			nop("case a"); // assertNotCovered()
 			break;
-		case "b":
+		case "b": // assertEmpty()
 			nop("case b"); // assertNotCovered()
 			break;
-		default:
+		default: // assertEmpty()
 			nop("default"); // assertFullyCovered()
 			break;
 		}
@@ -54,16 +54,16 @@ public class StringSwitchTarget {
 
 	private static void notCovered(Object s) {
 		switch (String.valueOf(s)) { // assertNotCovered(4, 0)
-		case "a":
+		case "a": // assertEmpty()
 			nop("case a");
 			break;
-		case "b":
+		case "b": // assertEmpty()
 			nop("case b");
 			break;
-		case "\0a":
+		case "\0a": // assertEmpty()
 			nop("case \0a");
 			break;
-		default:
+		default: // assertEmpty()
 			nop("default");
 			break;
 		}
@@ -71,19 +71,20 @@ public class StringSwitchTarget {
 
 	private static void implicitDefaultNotExecuted(Object s) {
 		switch (String.valueOf(s)) { // assertFullyCovered(1, 3)
-		case "a":
+		case "a": // assertEmpty()
 			nop("case a"); // assertFullyCovered()
 			break;
-		case "b":
+		case "b": // assertEmpty()
 			nop("case b"); // assertFullyCovered()
 			break;
-		case "c":
+		case "c": // assertEmpty()
 			nop("case c"); // assertFullyCovered()
 			break;
 		}
 	}
 
 	private static void handwritten(String s) {
+		/* TODO ? */
 		int c = -1;
 		switch (s.hashCode()) { // assertFullyCovered(2, 1)
 		case 97:
@@ -120,13 +121,13 @@ public class StringSwitchTarget {
 	 */
 	private static void lookupswitch(Object s) {
 		switch (String.valueOf(s)) { // assertNotCovered(3, 0)
-		case "a":
+		case "a": // assertEmpty()
 			nop("case a");
 			break;
-		case "b":
+		case "b": // assertEmpty()
 			nop("case b");
 			break;
-		default:
+		default: // assertEmpty()
 			nop("default");
 			break;
 		}
@@ -134,10 +135,10 @@ public class StringSwitchTarget {
 
 	private static void default_is_first(Object s) {
 		switch (String.valueOf(s)) { // assertFullyCovered(0, 2)
-		default:
+		default: // assertEmpty()
 			nop("default");
 			break;
-		case "a":
+		case "a": // assertEmpty()
 			nop("case a");
 			break;
 		}

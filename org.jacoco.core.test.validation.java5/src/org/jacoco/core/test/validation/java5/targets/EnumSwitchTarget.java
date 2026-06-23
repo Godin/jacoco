@@ -25,11 +25,11 @@ public class EnumSwitchTarget {
 
 	private static void example(E e) {
 		switch (e) { // assertSwitch()
-		case V1:
+		case V1: // assertEmpty()
 			nop("V1");
 			break;
-		case V2:
-		default:
+		case V2: // assertEmpty()
+		default: // assertEmpty()
 			nop("V2");
 			break;
 		}

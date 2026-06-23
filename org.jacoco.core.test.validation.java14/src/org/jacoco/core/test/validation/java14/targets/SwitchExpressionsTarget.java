@@ -39,10 +39,14 @@ public class SwitchExpressionsTarget {
 	private static void switchExpressionWithArrows() {
 
 		nop(switch (i2()) { // assertFullyCovered(3, 1)
-		case 1 -> i1(); // assertNotCovered()
-		case 2 -> i1(); // assertFullyCovered()
-		case 3 -> i1(); // assertNotCovered()
-		default -> i1(); // assertNotCovered()
+		case 1 -> // assertEmpty()
+			i1(); // assertNotCovered()
+		case 2 -> // assertEmpty()
+			i1(); // assertFullyCovered()
+		case 3 -> // assertEmpty()
+			i1(); // assertNotCovered()
+		default -> // assertEmpty()
+			i1(); // assertNotCovered()
 		});
 
 	}
@@ -50,9 +54,12 @@ public class SwitchExpressionsTarget {
 	private static void multiValueSwitchExpressionWithArrows() {
 
 		nop(switch (i2()) { // assertFullyCovered(2, 1)
-		case 1, 2 -> i1(); // assertFullyCovered()
-		case 3, 4 -> i1(); // assertNotCovered()
-		default -> i1(); // assertNotCovered()
+		case 1, 2 -> // assertEmpty()
+			i1(); // assertFullyCovered()
+		case 3, 4 -> // assertEmpty()
+			i1(); // assertNotCovered()
+		default -> // assertEmpty()
+			i1(); // assertNotCovered()
 		});
 
 	}
@@ -60,19 +67,19 @@ public class SwitchExpressionsTarget {
 	private static void switchExpressionWithArrowsAndYield() {
 
 		nop(switch (i2()) { // assertFullyCovered(3, 1)
-		case 1 -> {
+		case 1 -> { // assertEmpty()
 			nop(); // assertNotCovered()
 			yield i1(); // assertNotCovered()
 		}
-		case 2 -> {
+		case 2 -> { // assertEmpty()
 			nop(); // assertFullyCovered()
 			yield i1(); // assertFullyCovered()
 		}
-		case 3 -> {
+		case 3 -> { // assertEmpty()
 			nop(); // assertNotCovered()
 			yield i1(); // assertNotCovered()
 		}
-		default -> {
+		default -> { // assertEmpty()
 			nop(); // assertNotCovered()
 			yield i1(); // assertNotCovered()
 		}
@@ -83,16 +90,16 @@ public class SwitchExpressionsTarget {
 	private static void switchExpressionWithYield() {
 
 		nop(switch (i2()) { // assertFullyCovered(3, 1)
-		case 1:
+		case 1: // assertEmpty()
 			nop(); // assertNotCovered()
 			yield i1(); // assertNotCovered()
-		case 2:
+		case 2: // assertEmpty()
 			nop(); // assertFullyCovered()
 			yield i1(); // assertFullyCovered()
-		case 3:
+		case 3: // assertEmpty()
 			nop(); // assertNotCovered()
 			yield i1(); // assertNotCovered()
-		default:
+		default: // assertEmpty()
 			nop(); // assertNotCovered()
 			yield i1(); // assertNotCovered()
 		});
@@ -102,9 +109,12 @@ public class SwitchExpressionsTarget {
 	private static void exhaustiveSwitchExpression(Stubs.Enum e) {
 
 		nop(switch (e) { // assertFullyCovered(0, 3)
-		case A -> i1(); // assertFullyCovered()
-		case B -> i1(); // assertFullyCovered()
-		case C -> i1(); // assertFullyCovered()
+		case A -> // assertEmpty()
+			i1(); // assertFullyCovered()
+		case B -> // assertEmpty()
+			i1(); // assertFullyCovered()
+		case C -> // assertEmpty()
+			i1(); // assertFullyCovered()
 		}); // assertEmpty()
 
 	}
