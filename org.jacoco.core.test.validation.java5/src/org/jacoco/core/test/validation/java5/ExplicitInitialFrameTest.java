@@ -24,4 +24,9 @@ public class ExplicitInitialFrameTest extends ValidationTestBase {
 		super(ExplicitInitialFrameTarget.class);
 	}
 
+	@org.junit.Test
+	public void snapshot() throws Exception {
+		snapshotAll();
+	}
+
 }

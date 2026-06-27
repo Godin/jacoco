@@ -26,6 +26,11 @@ public class SynchronizedTest extends ValidationTestBase {
 		super(SynchronizedTarget.class);
 	}
 
+	@org.junit.Test
+	public void snapshot() throws Exception {
+		snapshotAll();
+	}
+
 	public void assertMonitorEnterImplicitException(final Line line) {
 		if (isJDKCompiler) {
 			assertFullyCovered(line);

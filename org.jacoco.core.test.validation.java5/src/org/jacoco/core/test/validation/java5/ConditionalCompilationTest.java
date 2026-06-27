@@ -24,4 +24,9 @@ public class ConditionalCompilationTest extends ValidationTestBase {
 		super(ConditionalCompilationTarget.class);
 	}
 
+	@org.junit.Test
+	public void snapshot() throws Exception {
+		snapshotAll();
+	}
+
 }

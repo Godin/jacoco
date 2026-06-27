@@ -24,4 +24,9 @@ public class ControlStructuresTest extends ValidationTestBase {
 		super(ControlStructuresTarget.class);
 	}
 
+	@org.junit.Test
+	public void snapshot() throws Exception {
+		snapshotAll();
+	}
+
 }

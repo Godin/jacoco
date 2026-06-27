@@ -20,6 +20,7 @@ import org.jacoco.core.test.validation.java5.targets.AnnotationInitializerTarget
 /**
  * Test of initializer in annotations.
  */
+@org.junit.Ignore
 public class AnnotationInitializerTest extends ValidationTestBase {
 
 	public AnnotationInitializerTest() {

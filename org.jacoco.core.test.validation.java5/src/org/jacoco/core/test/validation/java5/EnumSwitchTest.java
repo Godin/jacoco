@@ -27,6 +27,12 @@ public class EnumSwitchTest extends ValidationTestBase {
 		super(EnumSwitchTarget.class);
 	}
 
+	@org.junit.Ignore()
+	@org.junit.Test
+	public void snapshot() throws Exception {
+		snapshotAll();
+	}
+
 	public void assertSwitch(final Line line) {
 		if (isJDKCompiler && JavaVersion.current().isBefore("1.6")) {
 			// class that holds "switch map" is not marked as synthetic when

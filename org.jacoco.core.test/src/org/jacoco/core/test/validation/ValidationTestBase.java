@@ -23,6 +23,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
+import java.util.Set;
 
 import org.jacoco.core.analysis.Analyzer;
 import org.jacoco.core.analysis.CoverageBuilder;
@@ -45,8 +47,12 @@ import org.jacoco.report.IReportVisitor;
 import org.jacoco.report.ISourceFileLocator;
 import org.jacoco.report.html.HTMLFormatter;
 import org.junit.Before;
+import org.junit.ComparisonFailure;
 import org.junit.Test;
 import org.junit.runners.model.MultipleFailureException;
+import org.objectweb.asm.Opcodes;
+import org.objectweb.asm.tree.ClassNode;
+import org.objectweb.asm.tree.MethodNode;
 import org.objectweb.asm.util.ASMifier;
 import org.objectweb.asm.util.Textifier;
 import org.objectweb.asm.util.TraceClassVisitor;
@@ -148,6 +154,30 @@ public abstract class ValidationTestBase {
 						asmWriter), 0);
 		textWriter.close();
 		asmWriter.close();
+	}
+
+	protected void snapshotAll(String... excludedMethodNames) throws Exception {
+		snapshotAllWithClassifier(null, excludedMethodNames);
+	}
+
+	protected void snapshotAllWithClassifier(String classifier,
+			String... excludedMethodNames) throws Exception {
+		final List<String> exclude = Arrays.asList(excludedMethodNames);
+		ClassNode classNode = new ClassNode();
+		InstrSupport.classReaderFor(TargetLoader.getClassDataAsBytes(target))
+				.accept(classNode, 0);
+		for (MethodNode m : classNode.methods) {
+			if ((m.access & Opcodes.ACC_SYNTHETIC) != 0
+					|| m.name.equals("<init>") || m.name.equals("<clinit>")
+					|| exclude.contains(m.name)) {
+				continue;
+			}
+			// try {
+			snapshot(target, m.name,
+					m.name + (classifier == null ? "" : "." + classifier));
+			// } catch (ComparisonFailure e) {
+			// }
+		}
 	}
 
 	/**

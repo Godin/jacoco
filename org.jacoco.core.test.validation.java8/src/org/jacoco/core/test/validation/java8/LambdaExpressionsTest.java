@@ -24,4 +24,9 @@ public class LambdaExpressionsTest extends ValidationTestBase {
 		super(LambdaExpressionsTarget.class);
 	}
 
+	@org.junit.Test
+	public void snapshot() throws Exception {
+		snapshotAll();
+	}
+
 }

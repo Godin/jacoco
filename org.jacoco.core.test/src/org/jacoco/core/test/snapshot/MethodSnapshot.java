@@ -153,7 +153,7 @@ public final class MethodSnapshot {
 		MethodNode result = null;
 		for (MethodNode methodNode : classNode.methods) {
 			if (methodNode.name.equals(name)) {
-				assertNull(result);
+				assertNull(name, result);
 				result = methodNode;
 			}
 		}

@@ -25,6 +25,11 @@ public class ExceptionsTest extends ValidationTestBase {
 		super(ExceptionsTarget.class);
 	}
 
+	@org.junit.Test
+	public void snapshot() throws Exception {
+		snapshotAll();
+	}
+
 	public void assertCatchNoException(final Line line) {
 		if (isJDKCompiler) {
 			assertNotCovered(line);

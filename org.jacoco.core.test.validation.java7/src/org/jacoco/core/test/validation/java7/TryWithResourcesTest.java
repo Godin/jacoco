@@ -27,6 +27,20 @@ public class TryWithResourcesTest extends ValidationTestBase {
 		super(TryWithResourcesTarget.class);
 	}
 
+	// @org.junit.Ignore
+	@org.junit.Test
+	public void snapshot() throws Exception {
+		if (JavaVersion.current().isBefore("8")) {
+			snapshotAllWithClassifier("javac_7", "read");
+		} else if (JavaVersion.current().isBefore("9")) {
+			snapshotAllWithClassifier("javac_8", "read");
+		} else if (JavaVersion.current().isBefore("11")) {
+			snapshotAllWithClassifier("javac_9_10", "read");
+		} else {
+			snapshotAll("read");
+		}
+	}
+
 	public void assertTry(final Line line) {
 		// without filter this line is covered partly:
 		if (!isJDKCompiler || JavaVersion.current().isBefore("11")) {

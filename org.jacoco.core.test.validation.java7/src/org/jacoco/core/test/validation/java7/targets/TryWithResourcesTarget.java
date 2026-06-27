@@ -23,7 +23,7 @@ import java.io.IOException;
  */
 public class TryWithResourcesTarget {
 
-	private static class Resource implements Closeable {
+	public static class Resource implements Closeable {
 		@Override
 		public void close() {
 		}

@@ -12,6 +12,7 @@
  *******************************************************************************/
 package org.jacoco.core.test.validation.java14;
 
+import org.jacoco.core.test.validation.JavaVersion;
 import org.jacoco.core.test.validation.Source.Line;
 import org.jacoco.core.test.validation.ValidationTestBase;
 import org.jacoco.core.test.validation.java14.targets.SwitchExpressionsTarget;
@@ -25,4 +26,14 @@ public class SwitchExpressionsTest extends ValidationTestBase {
 		super(SwitchExpressionsTarget.class);
 	}
 
+	@org.junit.Test
+	public void snapshot() throws Exception {
+		if (JavaVersion.current().isBefore("17")) {
+			snapshotAllWithClassifier("javac_14_15_16");
+		} else if (JavaVersion.current().isBefore("21")) {
+			snapshotAllWithClassifier("javac_17_20");
+		} else {
+			snapshotAllWithClassifier(null);
+		}
+	}
 }

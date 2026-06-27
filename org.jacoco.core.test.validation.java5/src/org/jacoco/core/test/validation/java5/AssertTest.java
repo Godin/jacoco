@@ -24,4 +24,9 @@ public class AssertTest extends ValidationTestBase {
 		super(AssertTarget.class);
 	}
 
+	@org.junit.Test
+	public void snapshot() throws Exception {
+		snapshotAll();
+	}
+
 }

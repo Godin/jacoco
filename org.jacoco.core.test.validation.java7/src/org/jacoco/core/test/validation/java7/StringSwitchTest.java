@@ -25,4 +25,9 @@ public class StringSwitchTest extends ValidationTestBase {
 		super(StringSwitchTarget.class);
 	}
 
+	@org.junit.Test
+	public void snapshot() throws Exception {
+		snapshotAll();
+	}
+
 }

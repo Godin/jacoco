@@ -24,4 +24,9 @@ public class StringSwitchInsideLambdaTest extends ValidationTestBase {
 		super(StringSwitchInsideLambdaTarget.class);
 	}
 
+	@org.junit.Test
+	public void snapshot() throws Exception {
+		snapshotAll();
+	}
+
 }

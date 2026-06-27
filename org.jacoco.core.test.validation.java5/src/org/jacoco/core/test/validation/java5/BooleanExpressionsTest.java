@@ -24,4 +24,9 @@ public class BooleanExpressionsTest extends ValidationTestBase {
 		super(BooleanExpressionsTarget.class);
 	}
 
+	@org.junit.Test
+	public void snapshot() throws Exception {
+		snapshotAll();
+	}
+
 }
