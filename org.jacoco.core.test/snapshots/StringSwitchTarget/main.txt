@@ -1,0 +1,50 @@
+   L0
+    LDC ""
+    INVOKESTATIC org/jacoco/core/test/validation/java7/targets/StringSwitchTarget.covered (Ljava/lang/Object;)V
+   L1
+    LDC "a"
+    INVOKESTATIC org/jacoco/core/test/validation/java7/targets/StringSwitchTarget.covered (Ljava/lang/Object;)V
+   L2
+    LDC "b"
+    INVOKESTATIC org/jacoco/core/test/validation/java7/targets/StringSwitchTarget.covered (Ljava/lang/Object;)V
+   L3
+    LDC "\u0000a"
+    INVOKESTATIC org/jacoco/core/test/validation/java7/targets/StringSwitchTarget.covered (Ljava/lang/Object;)V
+   L4
+    INVOKESTATIC org/jacoco/core/test/validation/java7/targets/StringSwitchTarget.executedWithSameHashCodeAsFirstCase ()V
+   L5
+    LDC "a"
+    INVOKESTATIC org/jacoco/core/test/validation/java7/targets/StringSwitchTarget.implicitDefaultNotExecuted (Ljava/lang/Object;)V
+   L6
+    LDC "b"
+    INVOKESTATIC org/jacoco/core/test/validation/java7/targets/StringSwitchTarget.implicitDefaultNotExecuted (Ljava/lang/Object;)V
+   L7
+    LDC "c"
+    INVOKESTATIC org/jacoco/core/test/validation/java7/targets/StringSwitchTarget.implicitDefaultNotExecuted (Ljava/lang/Object;)V
+   L8
+    LDC "a"
+    INVOKESTATIC org/jacoco/core/test/validation/java7/targets/StringSwitchTarget.handwritten (Ljava/lang/String;)V
+   L9
+    LDC ""
+    INVOKESTATIC org/jacoco/core/test/validation/java7/targets/StringSwitchTarget.default_is_first (Ljava/lang/Object;)V
+   L10
+    LDC "a"
+    INVOKESTATIC org/jacoco/core/test/validation/java7/targets/StringSwitchTarget.default_is_first (Ljava/lang/Object;)V
+   L11
+    RETURN
+   L12
+    LOCALVARIABLE args [Ljava/lang/String; L0 L12 0
+    LINENUMBER 5 L0
+    LINENUMBER 6 L1
+    LINENUMBER 7 L2
+    LINENUMBER 8 L3
+    LINENUMBER 10 L4
+    LINENUMBER 12 L5
+    LINENUMBER 13 L6
+    LINENUMBER 14 L7
+    LINENUMBER 16 L8
+    LINENUMBER 18 L9
+    LINENUMBER 19 L10
+    LINENUMBER 20 L11
+    MAXSTACK = 1
+    MAXLOCALS = 1

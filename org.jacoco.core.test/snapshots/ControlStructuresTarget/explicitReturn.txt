@@ -1,0 +1,5 @@
+   L0
+    RETURN
+    LINENUMBER 5 L0
+    MAXSTACK = 0
+    MAXLOCALS = 0

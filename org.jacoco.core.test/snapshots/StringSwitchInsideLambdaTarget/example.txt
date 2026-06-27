@@ -1,0 +1,22 @@
+   L0
+    ALOAD 0
+    INVOKEDYNAMIC accept()Ljava/util/function/Consumer; [
+      // handle kind 0x6 : INVOKESTATIC
+      java/lang/invoke/LambdaMetafactory.metafactory(Ljava/lang/invoke/MethodHandles$Lookup;Ljava/lang/String;Ljava/lang/invoke/MethodType;Ljava/lang/invoke/MethodType;Ljava/lang/invoke/MethodHandle;Ljava/lang/invoke/MethodType;)Ljava/lang/invoke/CallSite;
+      // arguments:
+      (Ljava/lang/Object;)V, 
+      // handle kind 0x6 : INVOKESTATIC
+      org/jacoco/core/test/validation/java8/targets/StringSwitchInsideLambdaTarget.lambda$example$0(Ljava/lang/String;)V, 
+      (Ljava/lang/String;)V
+    ]
+    INVOKEINTERFACE java/util/List.forEach (Ljava/util/function/Consumer;)V (itf)
+   L1
+    RETURN
+   L2
+    LOCALVARIABLE strings Ljava/util/List; L0 L2 0
+    // signature Ljava/util/List<Ljava/lang/String;>;
+    // declaration: strings extends java.util.List<java.lang.String>
+    LINENUMBER 5 L0
+    LINENUMBER 23 L1
+    MAXSTACK = 2
+    MAXLOCALS = 1

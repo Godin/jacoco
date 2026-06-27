@@ -1,0 +1,43 @@
+   L0
+    INVOKESTATIC org/jacoco/core/test/validation/targets/Stubs.i2 ()I
+    TABLESWITCH
+      1: L1
+      2: L2
+      3: L3
+      default: L4
+   L1
+    INVOKESTATIC org/jacoco/core/test/validation/targets/Stubs.nop ()V
+   L5
+    INVOKESTATIC org/jacoco/core/test/validation/targets/Stubs.i1 ()I
+    GOTO L6
+   L2
+    INVOKESTATIC org/jacoco/core/test/validation/targets/Stubs.nop ()V
+   L7
+    INVOKESTATIC org/jacoco/core/test/validation/targets/Stubs.i1 ()I
+    GOTO L6
+   L3
+    INVOKESTATIC org/jacoco/core/test/validation/targets/Stubs.nop ()V
+   L8
+    INVOKESTATIC org/jacoco/core/test/validation/targets/Stubs.i1 ()I
+    GOTO L6
+   L4
+    INVOKESTATIC org/jacoco/core/test/validation/targets/Stubs.nop ()V
+   L9
+    INVOKESTATIC org/jacoco/core/test/validation/targets/Stubs.i1 ()I
+   L6
+    INVOKESTATIC org/jacoco/core/test/validation/targets/Stubs.nop (I)V
+   L10
+    RETURN
+    LINENUMBER 5 L0
+    LINENUMBER 7 L1
+    LINENUMBER 8 L5
+    LINENUMBER 11 L2
+    LINENUMBER 12 L7
+    LINENUMBER 15 L3
+    LINENUMBER 16 L8
+    LINENUMBER 19 L4
+    LINENUMBER 20 L9
+    LINENUMBER 5 L6
+    LINENUMBER 24 L10
+    MAXSTACK = 1
+    MAXLOCALS = 0

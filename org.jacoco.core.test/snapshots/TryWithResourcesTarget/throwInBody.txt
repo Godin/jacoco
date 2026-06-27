@@ -1,0 +1,38 @@
+    TRYCATCHBLOCK L0 L1 L1 java/lang/Throwable
+    TRYCATCHBLOCK L2 L3 L4 java/lang/Throwable
+   L5
+    NEW org/jacoco/core/test/validation/java7/targets/TryWithResourcesTarget$Resource
+    DUP
+    INVOKESPECIAL org/jacoco/core/test/validation/java7/targets/TryWithResourcesTarget$Resource.<init> ()V
+    ASTORE 0
+   L0
+    ALOAD 0
+    INVOKESTATIC org/jacoco/core/test/validation/targets/Stubs.nop (Ljava/lang/Object;)V
+   L6
+    NEW java/lang/RuntimeException
+    DUP
+    INVOKESPECIAL java/lang/RuntimeException.<init> ()V
+    ATHROW
+   L1
+    ASTORE 1
+   L2
+    ALOAD 0
+    INVOKEINTERFACE java/io/Closeable.close ()V (itf)
+   L3
+    GOTO L7
+   L4
+    ASTORE 2
+    ALOAD 1
+    ALOAD 2
+    INVOKEVIRTUAL java/lang/Throwable.addSuppressed (Ljava/lang/Throwable;)V
+   L7
+    ALOAD 1
+    ATHROW
+   L8
+    LOCALVARIABLE r Ljava/io/Closeable; L0 L8 0
+    LINENUMBER 6 L5
+    LINENUMBER 7 L0
+    LINENUMBER 8 L6
+    LINENUMBER 5 L1
+    MAXSTACK = 2
+    MAXLOCALS = 3

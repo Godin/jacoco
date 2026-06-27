@@ -1,0 +1,31 @@
+   L0
+    INVOKESTATIC org/jacoco/core/test/validation/java7/targets/TryWithResourcesTarget.test ()Ljava/lang/Object;
+    POP
+   L1
+    INVOKESTATIC org/jacoco/core/test/validation/java7/targets/TryWithResourcesTarget.test2 ()V
+   L2
+    INVOKESTATIC org/jacoco/core/test/validation/java7/targets/TryWithResourcesTarget.returnInBody ()Ljava/lang/Object;
+    POP
+   L3
+    INVOKESTATIC org/jacoco/core/test/validation/java7/targets/TryWithResourcesTarget.nested ()V
+   L4
+    INVOKESTATIC org/jacoco/core/test/validation/java7/targets/TryWithResourcesTarget.returnInCatch ()Ljava/lang/Object;
+    POP
+   L5
+    INVOKESTATIC org/jacoco/core/test/validation/java7/targets/TryWithResourcesTarget.empty ()V
+   L6
+    INVOKESTATIC org/jacoco/core/test/validation/java7/targets/TryWithResourcesTarget.handwritten ()V
+   L7
+    RETURN
+   L8
+    LOCALVARIABLE args [Ljava/lang/String; L0 L8 0
+    LINENUMBER 5 L0
+    LINENUMBER 6 L1
+    LINENUMBER 7 L2
+    LINENUMBER 8 L3
+    LINENUMBER 10 L4
+    LINENUMBER 12 L5
+    LINENUMBER 13 L6
+    LINENUMBER 14 L7
+    MAXSTACK = 1
+    MAXLOCALS = 1

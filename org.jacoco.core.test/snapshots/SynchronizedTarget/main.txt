@@ -1,0 +1,30 @@
+    TRYCATCHBLOCK L0 L1 L2 org/jacoco/core/test/validation/targets/Stubs$StubException
+    TRYCATCHBLOCK L3 L4 L5 org/jacoco/core/test/validation/targets/Stubs$StubException
+   L6
+    INVOKESTATIC org/jacoco/core/test/validation/java5/targets/SynchronizedTarget.normal ()V
+   L0
+    INVOKESTATIC org/jacoco/core/test/validation/java5/targets/SynchronizedTarget.explicitException ()V
+   L1
+    GOTO L3
+   L2
+    ASTORE 1
+   L3
+    INVOKESTATIC org/jacoco/core/test/validation/java5/targets/SynchronizedTarget.implicitException ()V
+   L4
+    GOTO L7
+   L5
+    ASTORE 1
+   L7
+    RETURN
+   L8
+    LOCALVARIABLE args [Ljava/lang/String; L6 L8 0
+    LINENUMBER 5 L6
+    LINENUMBER 8 L0
+    LINENUMBER 10 L1
+    LINENUMBER 9 L2
+    LINENUMBER 13 L3
+    LINENUMBER 15 L4
+    LINENUMBER 14 L5
+    LINENUMBER 16 L7
+    MAXSTACK = 1
+    MAXLOCALS = 2

@@ -1,0 +1,31 @@
+   L0
+    INVOKESTATIC org/jacoco/core/test/validation/java14/targets/SwitchExpressionsTarget.switchExpressionWithArrows ()V
+   L1
+    INVOKESTATIC org/jacoco/core/test/validation/java14/targets/SwitchExpressionsTarget.multiValueSwitchExpressionWithArrows ()V
+   L2
+    INVOKESTATIC org/jacoco/core/test/validation/java14/targets/SwitchExpressionsTarget.switchExpressionWithArrowsAndYield ()V
+   L3
+    INVOKESTATIC org/jacoco/core/test/validation/java14/targets/SwitchExpressionsTarget.switchExpressionWithYield ()V
+   L4
+    GETSTATIC org/jacoco/core/test/validation/targets/Stubs$Enum.A : Lorg/jacoco/core/test/validation/targets/Stubs$Enum;
+    INVOKESTATIC org/jacoco/core/test/validation/java14/targets/SwitchExpressionsTarget.exhaustiveSwitchExpression (Lorg/jacoco/core/test/validation/targets/Stubs$Enum;)V
+   L5
+    GETSTATIC org/jacoco/core/test/validation/targets/Stubs$Enum.B : Lorg/jacoco/core/test/validation/targets/Stubs$Enum;
+    INVOKESTATIC org/jacoco/core/test/validation/java14/targets/SwitchExpressionsTarget.exhaustiveSwitchExpression (Lorg/jacoco/core/test/validation/targets/Stubs$Enum;)V
+   L6
+    GETSTATIC org/jacoco/core/test/validation/targets/Stubs$Enum.C : Lorg/jacoco/core/test/validation/targets/Stubs$Enum;
+    INVOKESTATIC org/jacoco/core/test/validation/java14/targets/SwitchExpressionsTarget.exhaustiveSwitchExpression (Lorg/jacoco/core/test/validation/targets/Stubs$Enum;)V
+   L7
+    RETURN
+   L8
+    LOCALVARIABLE args [Ljava/lang/String; L0 L8 0
+    LINENUMBER 5 L0
+    LINENUMBER 6 L1
+    LINENUMBER 7 L2
+    LINENUMBER 8 L3
+    LINENUMBER 10 L4
+    LINENUMBER 11 L5
+    LINENUMBER 12 L6
+    LINENUMBER 14 L7
+    MAXSTACK = 1
+    MAXLOCALS = 1

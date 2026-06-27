@@ -1,0 +1,37 @@
+   L0
+    GETSTATIC org/jacoco/core/test/validation/java14/targets/SwitchExpressionsTarget$1.$SwitchMap$org$jacoco$core$test$validation$targets$Stubs$Enum : [I
+    ALOAD 0
+    INVOKEVIRTUAL org/jacoco/core/test/validation/targets/Stubs$Enum.ordinal ()I
+    IALOAD
+    TABLESWITCH
+      1: L1
+      2: L2
+      3: L3
+      default: L4
+   L4
+    NEW java/lang/IncompatibleClassChangeError
+    DUP
+    INVOKESPECIAL java/lang/IncompatibleClassChangeError.<init> ()V
+    ATHROW
+   L1
+    INVOKESTATIC org/jacoco/core/test/validation/targets/Stubs.i1 ()I
+    GOTO L5
+   L2
+    INVOKESTATIC org/jacoco/core/test/validation/targets/Stubs.i1 ()I
+    GOTO L5
+   L3
+    INVOKESTATIC org/jacoco/core/test/validation/targets/Stubs.i1 ()I
+   L5
+    INVOKESTATIC org/jacoco/core/test/validation/targets/Stubs.nop (I)V
+   L6
+    RETURN
+   L7
+    LOCALVARIABLE e Lorg/jacoco/core/test/validation/targets/Stubs$Enum; L0 L7 0
+    LINENUMBER 5 L0
+    LINENUMBER 6 L1
+    LINENUMBER 7 L2
+    LINENUMBER 8 L3
+    LINENUMBER 5 L5
+    LINENUMBER 11 L6
+    MAXSTACK = 2
+    MAXLOCALS = 1

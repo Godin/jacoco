@@ -1,0 +1,85 @@
+    TRYCATCHBLOCK L0 L1 L2 java/lang/Throwable
+    TRYCATCHBLOCK L3 L4 L5 java/lang/Throwable
+    TRYCATCHBLOCK L3 L4 L6 null
+    TRYCATCHBLOCK L7 L8 L9 java/lang/Throwable
+    TRYCATCHBLOCK L5 L10 L6 null
+   L11
+    NEW org/jacoco/core/test/validation/java7/targets/TryWithResourcesTarget$Resource
+    DUP
+    INVOKESPECIAL org/jacoco/core/test/validation/java7/targets/TryWithResourcesTarget$Resource.<init> ()V
+    ASTORE 0
+   L12
+    ACONST_NULL
+    ASTORE 1
+   L3
+    ALOAD 0
+    INVOKESTATIC org/jacoco/core/test/validation/java7/targets/TryWithResourcesTarget.read (Ljava/lang/Object;)Ljava/lang/Object;
+    ASTORE 2
+   L4
+    ALOAD 0
+    IFNULL L13
+    ALOAD 1
+    IFNULL L14
+   L0
+    ALOAD 0
+    INVOKEINTERFACE java/io/Closeable.close ()V (itf)
+   L1
+    GOTO L13
+   L2
+    ASTORE 3
+   L15
+    ALOAD 1
+    ALOAD 3
+    INVOKEVIRTUAL java/lang/Throwable.addSuppressed (Ljava/lang/Throwable;)V
+   L16
+    GOTO L13
+   L14
+    ALOAD 0
+    INVOKEINTERFACE java/io/Closeable.close ()V (itf)
+   L13
+    ALOAD 2
+    ARETURN
+   L5
+    ASTORE 2
+    ALOAD 2
+    ASTORE 1
+    ALOAD 2
+    ATHROW
+   L6
+    ASTORE 4
+   L10
+    ALOAD 0
+    IFNULL L17
+    ALOAD 1
+    IFNULL L18
+   L7
+    ALOAD 0
+    INVOKEINTERFACE java/io/Closeable.close ()V (itf)
+   L8
+    GOTO L17
+   L9
+    ASTORE 5
+   L19
+    ALOAD 1
+    ALOAD 5
+    INVOKEVIRTUAL java/lang/Throwable.addSuppressed (Ljava/lang/Throwable;)V
+   L20
+    GOTO L17
+   L18
+    ALOAD 0
+    INVOKEINTERFACE java/io/Closeable.close ()V (itf)
+   L17
+    ALOAD 4
+    ATHROW
+   L21
+    LOCALVARIABLE x2 Ljava/lang/Throwable; L15 L16 3
+    LOCALVARIABLE x2 Ljava/lang/Throwable; L19 L20 5
+    LOCALVARIABLE r Ljava/io/Closeable; L12 L21 0
+    LINENUMBER 6 L11
+    LINENUMBER 5 L12
+    LINENUMBER 8 L3
+    LINENUMBER 9 L4
+    LINENUMBER 5 L5
+    LINENUMBER 9 L6
+    MAXSTACK = 2
+    MAXLOCALS = 6

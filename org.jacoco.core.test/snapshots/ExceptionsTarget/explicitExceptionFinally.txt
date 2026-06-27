@@ -1,0 +1,24 @@
+    TRYCATCHBLOCK L0 L1 L2 null
+   L3
+    INVOKESTATIC org/jacoco/core/test/validation/targets/Stubs.nop ()V
+   L0
+    INVOKESTATIC org/jacoco/core/test/validation/targets/Stubs.nop ()V
+   L4
+    NEW org/jacoco/core/test/validation/targets/Stubs$StubException
+    DUP
+    INVOKESPECIAL org/jacoco/core/test/validation/targets/Stubs$StubException.<init> ()V
+    ATHROW
+   L2
+    ASTORE 0
+   L1
+    INVOKESTATIC org/jacoco/core/test/validation/targets/Stubs.nop ()V
+   L5
+    ALOAD 0
+    ATHROW
+    LINENUMBER 5 L3
+    LINENUMBER 7 L0
+    LINENUMBER 8 L4
+    LINENUMBER 10 L2
+    LINENUMBER 11 L5
+    MAXSTACK = 2
+    MAXLOCALS = 1

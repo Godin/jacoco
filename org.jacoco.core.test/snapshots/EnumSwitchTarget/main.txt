@@ -1,0 +1,15 @@
+   L0
+    GETSTATIC org/jacoco/core/test/validation/java5/targets/EnumSwitchTarget$E.V1 : Lorg/jacoco/core/test/validation/java5/targets/EnumSwitchTarget$E;
+    INVOKESTATIC org/jacoco/core/test/validation/java5/targets/EnumSwitchTarget.example (Lorg/jacoco/core/test/validation/java5/targets/EnumSwitchTarget$E;)V
+   L1
+    GETSTATIC org/jacoco/core/test/validation/java5/targets/EnumSwitchTarget$E.V2 : Lorg/jacoco/core/test/validation/java5/targets/EnumSwitchTarget$E;
+    INVOKESTATIC org/jacoco/core/test/validation/java5/targets/EnumSwitchTarget.example (Lorg/jacoco/core/test/validation/java5/targets/EnumSwitchTarget$E;)V
+   L2
+    RETURN
+   L3
+    LOCALVARIABLE args [Ljava/lang/String; L0 L3 0
+    LINENUMBER 5 L0
+    LINENUMBER 6 L1
+    LINENUMBER 7 L2
+    MAXSTACK = 1
+    MAXLOCALS = 1

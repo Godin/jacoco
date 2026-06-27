@@ -1,0 +1,30 @@
+   L0
+    ILOAD 0
+    TABLESWITCH
+      0: L1
+      1: L2
+      2: L3
+      default: L4
+   L1
+    INVOKESTATIC org/jacoco/core/test/validation/targets/Stubs.nop ()V
+   L5
+    GOTO L4
+   L2
+    INVOKESTATIC org/jacoco/core/test/validation/targets/Stubs.nop ()V
+   L6
+    GOTO L4
+   L3
+    INVOKESTATIC org/jacoco/core/test/validation/targets/Stubs.nop ()V
+   L4
+    RETURN
+   L7
+    LOCALVARIABLE i I L0 L7 0
+    LINENUMBER 5 L0
+    LINENUMBER 7 L1
+    LINENUMBER 8 L5
+    LINENUMBER 10 L2
+    LINENUMBER 11 L6
+    LINENUMBER 13 L3
+    LINENUMBER 17 L4
+    MAXSTACK = 1
+    MAXLOCALS = 1

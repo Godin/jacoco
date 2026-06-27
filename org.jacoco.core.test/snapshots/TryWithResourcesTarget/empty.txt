@@ -1,0 +1,16 @@
+   L0
+    NEW org/jacoco/core/test/validation/java7/targets/TryWithResourcesTarget$Resource
+    DUP
+    INVOKESPECIAL org/jacoco/core/test/validation/java7/targets/TryWithResourcesTarget$Resource.<init> ()V
+    ASTORE 0
+   L1
+    ALOAD 0
+    INVOKEINTERFACE java/io/Closeable.close ()V (itf)
+   L2
+    RETURN
+    LOCALVARIABLE r Ljava/io/Closeable; L1 L2 0
+    LINENUMBER 5 L0
+    LINENUMBER 7 L1
+    LINENUMBER 8 L2
+    MAXSTACK = 2
+    MAXLOCALS = 1

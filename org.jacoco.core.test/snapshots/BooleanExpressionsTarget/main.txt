@@ -1,0 +1,371 @@
+   L0
+    INVOKESTATIC org/jacoco/core/test/validation/targets/Stubs.i2 ()I
+    ICONST_3
+    IF_ICMPLE L1
+    ICONST_1
+    GOTO L2
+   L1
+    ICONST_0
+   L2
+    INVOKESTATIC org/jacoco/core/test/validation/targets/Stubs.nop (Z)V
+   L3
+    ICONST_0
+    ISTORE 1
+   L4
+    ILOAD 1
+    ICONST_2
+    IF_ICMPGE L5
+   L6
+    ILOAD 1
+    ICONST_1
+    IF_ICMPGE L7
+    ICONST_1
+    GOTO L8
+   L7
+    ICONST_0
+   L8
+    INVOKESTATIC org/jacoco/core/test/validation/targets/Stubs.nop (Z)V
+   L9
+    IINC 1 1
+    GOTO L4
+   L5
+    INVOKESTATIC org/jacoco/core/test/validation/targets/Stubs.f ()Z
+    INVOKESTATIC org/jacoco/core/test/validation/targets/Stubs.f ()Z
+    IAND
+    IFEQ L10
+   L11
+    INVOKESTATIC org/jacoco/core/test/validation/targets/Stubs.nop ()V
+   L10
+    INVOKESTATIC org/jacoco/core/test/validation/targets/Stubs.f ()Z
+    INVOKESTATIC org/jacoco/core/test/validation/targets/Stubs.t ()Z
+    IAND
+    IFEQ L12
+   L13
+    INVOKESTATIC org/jacoco/core/test/validation/targets/Stubs.nop ()V
+   L12
+    INVOKESTATIC org/jacoco/core/test/validation/targets/Stubs.t ()Z
+    INVOKESTATIC org/jacoco/core/test/validation/targets/Stubs.f ()Z
+    IAND
+    IFEQ L14
+   L15
+    INVOKESTATIC org/jacoco/core/test/validation/targets/Stubs.nop ()V
+   L14
+    INVOKESTATIC org/jacoco/core/test/validation/targets/Stubs.t ()Z
+    INVOKESTATIC org/jacoco/core/test/validation/targets/Stubs.t ()Z
+    IAND
+    IFEQ L16
+   L17
+    INVOKESTATIC org/jacoco/core/test/validation/targets/Stubs.nop ()V
+   L16
+    INVOKESTATIC org/jacoco/core/test/validation/targets/Stubs.f ()Z
+    INVOKESTATIC org/jacoco/core/test/validation/targets/Stubs.f ()Z
+    IAND
+    INVOKESTATIC org/jacoco/core/test/validation/targets/Stubs.nop (Z)V
+   L18
+    INVOKESTATIC org/jacoco/core/test/validation/targets/Stubs.f ()Z
+    IFEQ L19
+    INVOKESTATIC org/jacoco/core/test/validation/targets/Stubs.f ()Z
+    IFEQ L19
+   L20
+    INVOKESTATIC org/jacoco/core/test/validation/targets/Stubs.nop ()V
+   L19
+    INVOKESTATIC org/jacoco/core/test/validation/targets/Stubs.f ()Z
+    IFEQ L21
+    INVOKESTATIC org/jacoco/core/test/validation/targets/Stubs.t ()Z
+    IFEQ L21
+   L22
+    INVOKESTATIC org/jacoco/core/test/validation/targets/Stubs.nop ()V
+   L21
+    INVOKESTATIC org/jacoco/core/test/validation/targets/Stubs.t ()Z
+    IFEQ L23
+    INVOKESTATIC org/jacoco/core/test/validation/targets/Stubs.f ()Z
+    IFEQ L23
+   L24
+    INVOKESTATIC org/jacoco/core/test/validation/targets/Stubs.nop ()V
+   L23
+    INVOKESTATIC org/jacoco/core/test/validation/targets/Stubs.t ()Z
+    IFEQ L25
+    INVOKESTATIC org/jacoco/core/test/validation/targets/Stubs.t ()Z
+    IFEQ L25
+   L26
+    INVOKESTATIC org/jacoco/core/test/validation/targets/Stubs.nop ()V
+   L25
+    INVOKESTATIC org/jacoco/core/test/validation/targets/Stubs.f ()Z
+    IFEQ L27
+    INVOKESTATIC org/jacoco/core/test/validation/targets/Stubs.f ()Z
+    IFEQ L27
+    ICONST_1
+    GOTO L28
+   L27
+    ICONST_0
+   L28
+    INVOKESTATIC org/jacoco/core/test/validation/targets/Stubs.nop (Z)V
+   L29
+    INVOKESTATIC org/jacoco/core/test/validation/targets/Stubs.t ()Z
+    IFEQ L30
+    INVOKESTATIC org/jacoco/core/test/validation/targets/Stubs.f ()Z
+    IFEQ L30
+    ICONST_1
+    GOTO L31
+   L30
+    ICONST_0
+   L31
+    INVOKESTATIC org/jacoco/core/test/validation/targets/Stubs.nop (Z)V
+   L32
+    INVOKESTATIC org/jacoco/core/test/validation/targets/Stubs.f ()Z
+    INVOKESTATIC org/jacoco/core/test/validation/targets/Stubs.f ()Z
+    IOR
+    IFEQ L33
+   L34
+    INVOKESTATIC org/jacoco/core/test/validation/targets/Stubs.nop ()V
+   L33
+    INVOKESTATIC org/jacoco/core/test/validation/targets/Stubs.f ()Z
+    INVOKESTATIC org/jacoco/core/test/validation/targets/Stubs.t ()Z
+    IOR
+    IFEQ L35
+   L36
+    INVOKESTATIC org/jacoco/core/test/validation/targets/Stubs.nop ()V
+   L35
+    INVOKESTATIC org/jacoco/core/test/validation/targets/Stubs.t ()Z
+    INVOKESTATIC org/jacoco/core/test/validation/targets/Stubs.f ()Z
+    IOR
+    IFEQ L37
+   L38
+    INVOKESTATIC org/jacoco/core/test/validation/targets/Stubs.nop ()V
+   L37
+    INVOKESTATIC org/jacoco/core/test/validation/targets/Stubs.t ()Z
+    INVOKESTATIC org/jacoco/core/test/validation/targets/Stubs.t ()Z
+    IOR
+    IFEQ L39
+   L40
+    INVOKESTATIC org/jacoco/core/test/validation/targets/Stubs.nop ()V
+   L39
+    INVOKESTATIC org/jacoco/core/test/validation/targets/Stubs.f ()Z
+    INVOKESTATIC org/jacoco/core/test/validation/targets/Stubs.f ()Z
+    IOR
+    INVOKESTATIC org/jacoco/core/test/validation/targets/Stubs.nop (Z)V
+   L41
+    INVOKESTATIC org/jacoco/core/test/validation/targets/Stubs.f ()Z
+    IFNE L42
+    INVOKESTATIC org/jacoco/core/test/validation/targets/Stubs.f ()Z
+    IFEQ L43
+   L42
+    INVOKESTATIC org/jacoco/core/test/validation/targets/Stubs.nop ()V
+   L43
+    INVOKESTATIC org/jacoco/core/test/validation/targets/Stubs.f ()Z
+    IFNE L44
+    INVOKESTATIC org/jacoco/core/test/validation/targets/Stubs.t ()Z
+    IFEQ L45
+   L44
+    INVOKESTATIC org/jacoco/core/test/validation/targets/Stubs.nop ()V
+   L45
+    INVOKESTATIC org/jacoco/core/test/validation/targets/Stubs.t ()Z
+    IFNE L46
+    INVOKESTATIC org/jacoco/core/test/validation/targets/Stubs.f ()Z
+    IFEQ L47
+   L46
+    INVOKESTATIC org/jacoco/core/test/validation/targets/Stubs.nop ()V
+   L47
+    INVOKESTATIC org/jacoco/core/test/validation/targets/Stubs.t ()Z
+    IFNE L48
+    INVOKESTATIC org/jacoco/core/test/validation/targets/Stubs.t ()Z
+    IFEQ L49
+   L48
+    INVOKESTATIC org/jacoco/core/test/validation/targets/Stubs.nop ()V
+   L49
+    INVOKESTATIC org/jacoco/core/test/validation/targets/Stubs.t ()Z
+    IFNE L50
+    INVOKESTATIC org/jacoco/core/test/validation/targets/Stubs.f ()Z
+    IFEQ L51
+   L50
+    ICONST_1
+    GOTO L52
+   L51
+    ICONST_0
+   L52
+    INVOKESTATIC org/jacoco/core/test/validation/targets/Stubs.nop (Z)V
+   L53
+    INVOKESTATIC org/jacoco/core/test/validation/targets/Stubs.f ()Z
+    IFNE L54
+    INVOKESTATIC org/jacoco/core/test/validation/targets/Stubs.f ()Z
+    IFEQ L55
+   L54
+    ICONST_1
+    GOTO L56
+   L55
+    ICONST_0
+   L56
+    INVOKESTATIC org/jacoco/core/test/validation/targets/Stubs.nop (Z)V
+   L57
+    INVOKESTATIC org/jacoco/core/test/validation/targets/Stubs.f ()Z
+    INVOKESTATIC org/jacoco/core/test/validation/targets/Stubs.f ()Z
+    IXOR
+    IFEQ L58
+   L59
+    INVOKESTATIC org/jacoco/core/test/validation/targets/Stubs.nop ()V
+   L58
+    INVOKESTATIC org/jacoco/core/test/validation/targets/Stubs.f ()Z
+    INVOKESTATIC org/jacoco/core/test/validation/targets/Stubs.t ()Z
+    IXOR
+    IFEQ L60
+   L61
+    INVOKESTATIC org/jacoco/core/test/validation/targets/Stubs.nop ()V
+   L60
+    INVOKESTATIC org/jacoco/core/test/validation/targets/Stubs.t ()Z
+    INVOKESTATIC org/jacoco/core/test/validation/targets/Stubs.f ()Z
+    IXOR
+    IFEQ L62
+   L63
+    INVOKESTATIC org/jacoco/core/test/validation/targets/Stubs.nop ()V
+   L62
+    INVOKESTATIC org/jacoco/core/test/validation/targets/Stubs.t ()Z
+    INVOKESTATIC org/jacoco/core/test/validation/targets/Stubs.t ()Z
+    IXOR
+    IFEQ L64
+   L65
+    INVOKESTATIC org/jacoco/core/test/validation/targets/Stubs.nop ()V
+   L64
+    INVOKESTATIC org/jacoco/core/test/validation/targets/Stubs.f ()Z
+    INVOKESTATIC org/jacoco/core/test/validation/targets/Stubs.f ()Z
+    IXOR
+    INVOKESTATIC org/jacoco/core/test/validation/targets/Stubs.nop (Z)V
+   L66
+    INVOKESTATIC org/jacoco/core/test/validation/targets/Stubs.t ()Z
+    IFEQ L67
+    INVOKESTATIC org/jacoco/core/test/validation/targets/Stubs.i1 ()I
+    GOTO L68
+   L67
+    INVOKESTATIC org/jacoco/core/test/validation/targets/Stubs.i2 ()I
+   L68
+    INVOKESTATIC org/jacoco/core/test/validation/targets/Stubs.nop (I)V
+   L69
+    INVOKESTATIC org/jacoco/core/test/validation/targets/Stubs.f ()Z
+    IFEQ L70
+    INVOKESTATIC org/jacoco/core/test/validation/targets/Stubs.i1 ()I
+    GOTO L71
+   L70
+    INVOKESTATIC org/jacoco/core/test/validation/targets/Stubs.i2 ()I
+   L71
+    INVOKESTATIC org/jacoco/core/test/validation/targets/Stubs.nop (I)V
+   L72
+    INVOKESTATIC org/jacoco/core/test/validation/targets/Stubs.t ()Z
+    IFNE L73
+    ICONST_1
+    GOTO L74
+   L73
+    ICONST_0
+   L74
+    INVOKESTATIC org/jacoco/core/test/validation/targets/Stubs.nop (Z)V
+   L75
+    INVOKESTATIC org/jacoco/core/test/validation/targets/Stubs.f ()Z
+    IFNE L76
+    ICONST_1
+    GOTO L77
+   L76
+    ICONST_0
+   L77
+    INVOKESTATIC org/jacoco/core/test/validation/targets/Stubs.nop (Z)V
+   L78
+    ICONST_2
+    NEWARRAY T_BOOLEAN
+    DUP
+    ICONST_0
+    ICONST_1
+    BASTORE
+    DUP
+    ICONST_1
+    ICONST_0
+    BASTORE
+    ASTORE 1
+    ALOAD 1
+    ARRAYLENGTH
+    ISTORE 2
+    ICONST_0
+    ISTORE 3
+   L79
+    ILOAD 3
+    ILOAD 2
+    IF_ICMPGE L80
+    ALOAD 1
+    ILOAD 3
+    BALOAD
+    ISTORE 4
+   L81
+    ILOAD 4
+    IFNE L82
+    ICONST_1
+    GOTO L83
+   L82
+    ICONST_0
+   L83
+    INVOKESTATIC org/jacoco/core/test/validation/targets/Stubs.nop (Z)V
+   L84
+    IINC 3 1
+    GOTO L79
+   L80
+    RETURN
+   L85
+    LOCALVARIABLE i I L4 L5 1
+    LOCALVARIABLE b Z L81 L84 4
+    LOCALVARIABLE args [Ljava/lang/String; L0 L85 0
+    LINENUMBER 5 L0
+    LINENUMBER 8 L3
+    LINENUMBER 9 L6
+    LINENUMBER 8 L9
+    LINENUMBER 13 L5
+    LINENUMBER 14 L11
+    LINENUMBER 16 L10
+    LINENUMBER 17 L13
+    LINENUMBER 19 L12
+    LINENUMBER 20 L15
+    LINENUMBER 22 L14
+    LINENUMBER 23 L17
+    LINENUMBER 25 L16
+    LINENUMBER 28 L18
+    LINENUMBER 29 L20
+    LINENUMBER 31 L19
+    LINENUMBER 32 L22
+    LINENUMBER 34 L21
+    LINENUMBER 35 L24
+    LINENUMBER 37 L23
+    LINENUMBER 38 L26
+    LINENUMBER 40 L25
+    LINENUMBER 41 L29
+    LINENUMBER 44 L32
+    LINENUMBER 45 L34
+    LINENUMBER 47 L33
+    LINENUMBER 48 L36
+    LINENUMBER 50 L35
+    LINENUMBER 51 L38
+    LINENUMBER 53 L37
+    LINENUMBER 54 L40
+    LINENUMBER 56 L39
+    LINENUMBER 59 L41
+    LINENUMBER 60 L42
+    LINENUMBER 62 L43
+    LINENUMBER 63 L44
+    LINENUMBER 65 L45
+    LINENUMBER 66 L46
+    LINENUMBER 68 L47
+    LINENUMBER 69 L48
+    LINENUMBER 71 L49
+    LINENUMBER 72 L53
+    LINENUMBER 75 L57
+    LINENUMBER 76 L59
+    LINENUMBER 78 L58
+    LINENUMBER 79 L61
+    LINENUMBER 81 L60
+    LINENUMBER 82 L63
+    LINENUMBER 84 L62
+    LINENUMBER 85 L65
+    LINENUMBER 87 L64
+    LINENUMBER 90 L66
+    LINENUMBER 91 L69
+    LINENUMBER 94 L72
+    LINENUMBER 95 L75
+    LINENUMBER 98 L78
+    LINENUMBER 99 L81
+    LINENUMBER 98 L84
+    LINENUMBER 102 L80
+    MAXSTACK = 4
+    MAXLOCALS = 5

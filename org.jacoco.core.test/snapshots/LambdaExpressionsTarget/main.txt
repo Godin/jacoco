@@ -1,0 +1,31 @@
+   L0
+    INVOKEDYNAMIC run()Ljava/lang/Runnable; [
+      // handle kind 0x6 : INVOKESTATIC
+      java/lang/invoke/LambdaMetafactory.metafactory(Ljava/lang/invoke/MethodHandles$Lookup;Ljava/lang/String;Ljava/lang/invoke/MethodType;Ljava/lang/invoke/MethodType;Ljava/lang/invoke/MethodHandle;Ljava/lang/invoke/MethodType;)Ljava/lang/invoke/CallSite;
+      // arguments:
+      ()V, 
+      // handle kind 0x6 : INVOKESTATIC
+      org/jacoco/core/test/validation/java8/targets/LambdaExpressionsTarget.lambda$main$0()V, 
+      ()V
+    ]
+    INVOKESTATIC org/jacoco/core/test/validation/targets/Stubs.exec (Ljava/lang/Runnable;)V
+   L1
+    INVOKEDYNAMIC run()Ljava/lang/Runnable; [
+      // handle kind 0x6 : INVOKESTATIC
+      java/lang/invoke/LambdaMetafactory.metafactory(Ljava/lang/invoke/MethodHandles$Lookup;Ljava/lang/String;Ljava/lang/invoke/MethodType;Ljava/lang/invoke/MethodType;Ljava/lang/invoke/MethodHandle;Ljava/lang/invoke/MethodType;)Ljava/lang/invoke/CallSite;
+      // arguments:
+      ()V, 
+      // handle kind 0x6 : INVOKESTATIC
+      org/jacoco/core/test/validation/java8/targets/LambdaExpressionsTarget.lambda$main$1()V, 
+      ()V
+    ]
+    INVOKESTATIC org/jacoco/core/test/validation/targets/Stubs.noexec (Ljava/lang/Runnable;)V
+   L2
+    RETURN
+   L3
+    LOCALVARIABLE args [Ljava/lang/String; L0 L3 0
+    LINENUMBER 5 L0
+    LINENUMBER 9 L1
+    LINENUMBER 13 L2
+    MAXSTACK = 1
+    MAXLOCALS = 1

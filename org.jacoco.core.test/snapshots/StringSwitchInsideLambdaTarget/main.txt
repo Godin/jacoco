@@ -1,0 +1,29 @@
+   L0
+    ICONST_4
+    ANEWARRAY java/lang/String
+    DUP
+    ICONST_0
+    LDC ""
+    AASTORE
+    DUP
+    ICONST_1
+    LDC "a"
+    AASTORE
+    DUP
+    ICONST_2
+    LDC "b"
+    AASTORE
+    DUP
+    ICONST_3
+    LDC "c"
+    AASTORE
+    INVOKESTATIC java/util/Arrays.asList ([Ljava/lang/Object;)Ljava/util/List;
+    INVOKESTATIC org/jacoco/core/test/validation/java8/targets/StringSwitchInsideLambdaTarget.example (Ljava/util/List;)V
+   L1
+    RETURN
+   L2
+    LOCALVARIABLE args [Ljava/lang/String; L0 L2 0
+    LINENUMBER 5 L0
+    LINENUMBER 6 L1
+    MAXSTACK = 4
+    MAXLOCALS = 1

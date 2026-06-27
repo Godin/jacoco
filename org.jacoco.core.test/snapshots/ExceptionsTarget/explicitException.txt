@@ -1,0 +1,11 @@
+   L0
+    INVOKESTATIC org/jacoco/core/test/validation/targets/Stubs.nop ()V
+   L1
+    NEW org/jacoco/core/test/validation/targets/Stubs$StubException
+    DUP
+    INVOKESPECIAL org/jacoco/core/test/validation/targets/Stubs$StubException.<init> ()V
+    ATHROW
+    LINENUMBER 5 L0
+    LINENUMBER 6 L1
+    MAXSTACK = 2
+    MAXLOCALS = 0
