@@ -1,0 +1,20 @@
+   L0
+    LDC ""
+   L1
+    INVOKESTATIC org/jacoco/core/test/validation/java5/targets/MethodInvocationsTarget.nested (Ljava/lang/Object;)Ljava/lang/Object;
+   L2
+    INVOKESTATIC org/jacoco/core/test/validation/java5/targets/MethodInvocationsTarget.nested (Ljava/lang/Object;)Ljava/lang/Object;
+    POP
+   L3
+    LDC ""
+    INVOKESTATIC org/jacoco/core/test/validation/java5/targets/MethodInvocationsTarget.nested (Ljava/lang/Object;)Ljava/lang/Object;
+    POP
+   L4
+    RETURN
+    LINENUMBER 5 L0
+    LINENUMBER 6 L1
+    LINENUMBER 5 L2
+    LINENUMBER 9 L3
+    LINENUMBER 11 L4
+    MAXSTACK = 1
+    MAXLOCALS = 0
