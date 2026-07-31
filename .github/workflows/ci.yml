@@ -97,6 +97,12 @@ jobs:
             verify -Djdk.version=${{ matrix.jdk }} -Dbytecode.version=${{ matrix.jdk }} \
             ${{ matrix.ecj && '-Decj' || ''}} \
             --toolchains=toolchains.xml
+      - if: failure()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: snapshots-jdk${{ matrix.jdk }}${{ matrix.ecj && '-ecj' || '' }}
+          path: '**/target/snapshots/**'
+          if-no-files-found: ignore
   Windows:
     runs-on: windows-2025
     environment: ${{ (github.repository == 'jacoco/jacoco' && github.ref == 'refs/heads/master') && 'snapshot' || null }}
