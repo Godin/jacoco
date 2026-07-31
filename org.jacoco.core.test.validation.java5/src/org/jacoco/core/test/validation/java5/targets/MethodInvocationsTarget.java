@@ -21,7 +21,7 @@ public class MethodInvocationsTarget {
 
 	public static void main(String[] args) {
 		chained();
-		nested();
+		nestedExample();
 	}
 
 	private static void chained() {
@@ -30,7 +30,7 @@ public class MethodInvocationsTarget {
 				.chained("second"); // assertMethodInvocation()
 	}
 
-	private static void nested() {
+	private static void nestedExample() {
 		nested( // assertFullyCovered()
 				nested("")); // assertMethodInvocation()
 
