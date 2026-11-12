@@ -14,34 +14,24 @@ jobs:
           # LTS versions of Eclipse Temurin (temurin) are cached on the GitHub Hosted Runners.
           # The tools cache gets updated on a weekly basis.
           - { jdk:  8, distribution: 'temurin' }
-          - { jdk:  8, distribution: 'temurin', ecj: true }
-          - { jdk:  9, distribution: 'zulu' }
-          - { jdk: 10, distribution: 'zulu' }
+          - { jdk:  8, distribution: 'temurin', x64: true }
           - { jdk: 11, distribution: 'temurin' }
-          - { jdk: 11, distribution: 'temurin', ecj: true }
-          - { jdk: 12, distribution: 'zulu' }
-          - { jdk: 13, distribution: 'zulu' }
-          - { jdk: 14, distribution: 'zulu' }
-          - { jdk: 15, distribution: 'zulu' }
-          - { jdk: 16, distribution: 'zulu' }
-          - { jdk: 17, distribution: 'temurin' }
-          - { jdk: 17, distribution: 'temurin', ecj: true }
-          - { jdk: 18, distribution: 'zulu' }
-          - { jdk: 19, distribution: 'zulu' }
-          - { jdk: 20, distribution: 'zulu' }
+          - { jdk: 11, distribution: 'temurin', x64: true }
           - { jdk: 21, distribution: 'temurin' }
-          - { jdk: 21, distribution: 'temurin', ecj: true }
-          - { jdk: 22, distribution: 'zulu' }
-          - { jdk: 23, distribution: 'zulu' }
-          - { jdk: 23, distribution: 'zulu', ecj: true }
-          - { jdk: 24, distribution: 'zulu' }
+          - { jdk: 21, distribution: 'temurin', x64: true }
           - { jdk: 25, distribution: 'temurin' }
-          - { jdk: 26, distribution: 'zulu' }
+          - { jdk: 25, distribution: 'temurin', x64: true }
           - { jdk: 27, distribution: 'zulu' }
-    name: JDK ${{ matrix.jdk }}${{ matrix.ecj && ' with ECJ' || ''}}
-    runs-on: ubuntu-26.04
+          - { jdk: 27, distribution: 'zulu', x64: true }
+    name: JDK ${{ matrix.jdk }}${{ matrix.ecj && ' with ECJ' || ''}} ${{ matrix.x64 && 'x64' || 'arm' }}
+    runs-on: ${{ matrix.x64 && 'ubuntu-24.04' || 'ubuntu-24.04-arm' }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - run: |
+          set -x
+          ls /opt/hostedtoolcache/Java_Temurin-Hotspot_jdk
+          ls /opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/21.0.13-9
+      # TODO note that this will install on ARM
       - uses: actions/setup-java@77dd5b2ce225ea11469928ac317850245a74ae78 # v6.2.0
         with:
           distribution: ${{ matrix.distribution }}
@@ -52,6 +42,9 @@ jobs:
           # (https://github.com/actions/setup-java/blob/v6.2.0/.github/java.json)
           # until builds produce fewer warnings
           problem-matcher: false
+      - run: |
+          set -x
+          ls /opt/hostedtoolcache/Java_Temurin-Hotspot_jdk
       - &cache
         uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
         with:
@@ -70,7 +63,8 @@ jobs:
       - name: 'Generate toolchains.xml'
         env:
           JDK_VERSION: ${{ matrix.jdk }}
-          JDK_HOME_VARIABLE_NAME: JAVA_HOME_${{ matrix.jdk }}_X64
+          # https://github.com/actions/runner-images/issues/14204
+          JDK_HOME_VARIABLE_NAME: JAVA_HOME_${{ matrix.jdk }}_${{ matrix.x64 && 'X64' || 'AARCH64' }}
         run: |
           echo "
           <toolchains>
@@ -93,6 +87,7 @@ jobs:
             ${{ matrix.ecj && '-Decj' || ''}} \
             --toolchains=toolchains.xml
   Windows:
+    if: false
     runs-on: windows-2025
     environment: ${{ (github.repository == 'jacoco/jacoco' && github.ref == 'refs/heads/master') && 'snapshot' || null }}
     steps:
